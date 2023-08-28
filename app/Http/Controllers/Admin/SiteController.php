@@ -219,7 +219,7 @@ class SiteController extends AppBaseController implements SiteControllerInterfac
     public function getAll()
     {
         try {
-            $sites = SiteViewModel::orderBy('name')->get();
+            $sites = SiteViewModel::orderBy('name')->where('active', 1)->get();
             return $this->response($sites, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([

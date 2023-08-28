@@ -27,6 +27,7 @@ use App\Models\SiteAdSite;
 use App\Models\SiteAdTenant;
 use App\Models\SiteBuilding;
 use App\Models\SiteBuildingLevel;
+use App\Models\SiteBuildingRoom;
 use App\Models\SiteMap;
 use App\Models\SiteScreen;
 use App\Models\SitePoint;
@@ -46,6 +47,7 @@ use App\Models\PlayList;
 use App\Models\SiteFeedback;
 use App\Models\PiProduct;
 use App\Models\SiteScreenProduct;
+use App\Models\QuestionnaireSurvey;
 
 class GetUpdateController extends AppBaseController implements GetUpdateControllerInterface
 {
@@ -60,6 +62,9 @@ class GetUpdateController extends AppBaseController implements GetUpdateControll
             $this->updateSiteMetas($last_updated_at);
             $this->updateSiteBuildings($last_updated_at);
             $this->updateSiteBuildingLevels($last_updated_at);
+            $this->updateSiteBuildingRooms($last_updated_at);
+            $this->updateQuestionnaireSurveys($last_updated_at);
+            $this->updateQuestionnaireSurveysCMSKiosk($last_updated_at);
             $this->updateSiteTenants($last_updated_at);
             $this->updateSiteTenantMetas($last_updated_at);
             $this->updateSiteMaps($last_updated_at);
@@ -432,6 +437,83 @@ class GetUpdateController extends AppBaseController implements GetUpdateControll
                         'name' => $building_level->name,
                         'active' => $building_level->active,
                         'deleted_at' => $building_level->deleted_at
+                    ]
+                );
+            } 
+        }
+    }
+
+    public function updateSiteBuildingRooms($last_updated_at)
+    {
+        $site_building_rooms = SiteBuildingRoom::on('mysql')->where('updated_at', '>=',$last_updated_at)->withTrashed()->get();
+        if($site_building_rooms) {
+            foreach($site_building_rooms as $building_room) {
+
+                $this->data[] = SiteBuildingRoom::on('mysql_server')->updateOrCreate(
+                    [
+                        'id' => $building_room->id
+                    ],
+                    [
+                        'site_id' => $building_room->site_id,
+                        'site_building_id' => $building_room->site_building_id,
+                        'site_building_level_id' => $building_room->site_building_level_id,
+                        'answer' => $building_room->answer,
+                        'active' => $building_room->active,
+                        'deleted_at' => $building_room->deleted_at
+                    ]
+                );
+            } 
+        }
+    }
+
+    public function updateQuestionnaireSurveys($last_updated_at)
+    {
+        $questionnaire_surveys = QuestionnaireSurvey::on('mysql')->where('updated_at', '>=',$last_updated_at)->withTrashed()->get();
+        if($questionnaire_surveys) {
+            foreach($questionnaire_surveys as $questionnaire_survey) {
+
+                $this->data[] = QuestionnaireSurvey::on('mysql_server')->updateOrCreate(
+                    [
+                        'id' => $questionnaire_survey->id
+                    ],
+                    [
+                        'questionnaire_id' => $questionnaire_survey->questionnaire_id,
+                        'questionnaire_answer_id' => $questionnaire_survey->questionnaire_answer_id,
+                        'site_id' => $questionnaire_survey->site_id,
+                        'site_building_id' => $questionnaire_survey->site_building_id,
+                        'site_building_level_id' => $questionnaire_survey->site_building_level_id,
+                        'site_building_room_id' => $questionnaire_survey->site_building_room_id,
+                        'remarks' => $questionnaire_survey->remarks,
+                        'status' => $questionnaire_survey->status,
+                        'active' => $questionnaire_survey->active,
+                        'deleted_at' => $questionnaire_survey->deleted_at
+                    ]
+                );
+            } 
+        }
+    }
+
+    public function updateQuestionnaireSurveysCMSKiosk($last_updated_at)
+    {
+        $questionnaire_surveys = QuestionnaireSurvey::on('mysql_server')->where('updated_at', '>=',$last_updated_at)->withTrashed()->get();
+        if($questionnaire_surveys) {
+            foreach($questionnaire_surveys as $questionnaire_survey) {
+
+                $this->data[] = QuestionnaireSurvey::on('mysql')->updateOrCreate(
+                    [
+                        'id' => $questionnaire_survey->id
+                    ],
+                    [
+                        'questionnaire_id' => $questionnaire_survey->questionnaire_id,
+                        'questionnaire_answer_id' => $questionnaire_survey->questionnaire_answer_id,
+                        'site_id' => $questionnaire_survey->site_id,
+                        'site_building_id' => $questionnaire_survey->site_building_id,
+                        'site_building_level_id' => $questionnaire_survey->site_building_level_id,
+                        'site_building_room_id' => $questionnaire_survey->site_building_room_id,
+                        'remarks' => $questionnaire_survey->remarks,
+                        'status' => $questionnaire_survey->status,
+                        'active' => $questionnaire_survey->active,
+                        'deleted_at' => $questionnaire_survey->deleted_at
                     ]
                 );
             } 

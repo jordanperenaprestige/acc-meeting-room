@@ -68,15 +68,21 @@ Route::group(['prefix' => 'v1'], function ()
 
     Route::get('/employee/get-concerns', 'Kiosk\MainController@getConcerns')->name('kiosk.employee.concerns');
     Route::get('/employee/get-answer-details/{id}', 'Kiosk\MainController@getAnswerDetails')->where('id', '[0-9]+')->name('kiosk.employee.concern.details');
-    Route::get('/employee/get-rooms', 'Kiosk\MainController@getrooms')->name('kiosk.employee.rooms');
+    Route::get('/employee/get-rooms', 'Kiosk\MainController@getRooms')->name('kiosk.employee.rooms');
+    Route::get('/employee/get-default-room', 'Kiosk\MainController@getDefaultRoom')->name('kiosk.employee.default.room');
     Route::get('/employee/get-buildings', 'Kiosk\MainController@getBuildings')->name('kiosk.employee.buildings');
     Route::post('/employee/store-concern', 'Kiosk\MainController@storeConcern')->name('kiosk.employee.store-concern');
-
+    Route::post('/employee/store-concern-pending', 'Kiosk\MainController@storeConcernPending')->name('kiosk.employee.store-concern-pending');
+    Route::get('/employee/get-sms', 'Kiosk\MainController@getSMS')->name('kiosk.employee.sms');
     Route::get('/employee/get-building-details', 'Kiosk\MainController@getBuildingDetails')->name('kiosk.building.details');
     Route::get('/employee/get-survey/{id}', 'Kiosk\MainController@getSurvey')->where('id', '[0-9]+')->name('kiosk.employee.survey');
+    Route::get('/employee/get-room-survey/{id}', 'Kiosk\MainController@getRoomSurvey')->where('id', '[0-9]+')->name('kiosk.employee.room.survey');
     Route::get('/employee/get-answer-details/{id}', 'Kiosk\MainController@getAnswerDetails')->where('id', '[0-9]+')->name('kiosk.employee.concern.details');
     Route::post('employee/update-status', 'Kiosk\MainController@updateStatus')->name('kiosk.employee.update-status');
     Route::post('/employee/local-login', 'Kiosk\MainController@localLogin')->name('kiosk.employee.local-login');
+    Route::post('/employee/switch-room', 'Kiosk\MainController@switchRoom')->name('kiosk.employee.switch-room');
+   
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -86,6 +92,12 @@ Route::group(['prefix' => 'v1'], function ()
     Route::get('/get-update', 'Api\GetUpdateController@updateContent')->name('api.get-update');
     Route::post('/save-logs', 'Api\LogsController@storeLogs')->name('api.save-logs');
     Route::post('/screen-uptime', 'Api\UpTimeController@storeUpTime')->name('api.screen-uptime');
+    /*
+    |--------------------------------------------------------------------------
+    | Get Update Meeting Room
+    |--------------------------------------------------------------------------
+    */
+    //Route::get('/get-update-meeting-room', 'Api\GetUpdateController@updateContent')->name('api.get-update');
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

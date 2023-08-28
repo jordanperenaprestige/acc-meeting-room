@@ -11,6 +11,19 @@
 
 @push('scripts')
 <script>
+    var screensaver_handle = null;
+   
+    //setInterval(getUpdate, (2 * 60 * 1000));
+    setInterval(getUpdate, 10000);
+
+    function getUpdate() {
+        $.get( "/api/v1/get-update", function( data ) {
+            console.log(data);
+            if(data.data.length > 0) {
+                location.reload(); 
+            }
+        });
+    }
 
 
 </script>

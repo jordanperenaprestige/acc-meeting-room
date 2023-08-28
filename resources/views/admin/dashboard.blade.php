@@ -16,7 +16,7 @@
     </div><!-- /.row -->
   </div><!-- /.container-fluid -->
 </div>
-  <!-- /.content-header -->
+<!-- /.content-header -->
 
 <!-- Main content -->
 <div class="content">
@@ -24,22 +24,40 @@
     <!-- <div class="row">
       <div class="col-lg-12">
         <admin-sceen_uptime></admin-sceen_uptime>
-      </div>
+      </div> 
     </div> -->
     <div class="row">
-      <div class="col-lg-3">
+      <div class="col-lg-12">
+        <admin-dashboard_restroom_monitoring></admin-dashboard_restroom_monitoring>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <admin-dashboard_questionnaire_survey></admin-dashboard_questionnaire_survey>
+      </div>
+      <div class="col-lg-6">
+        <!-- <admin-dashboard_questionnaire_survey_two></admin-dashboard_questionnaire_survey_two> -->
+      </div>
+    </div>
+    <!-- <div class="row">
+      <div class="col-lg-12">
+      <admin-dashboard_is_helpful></admin-dashboard_is_helpful>>
+      </div>
+    </div> -->
+    <div class="row"> 
+      <!-- <div class="col-lg-3">
         <admin-dashboard_is_helpful></admin-dashboard_is_helpful>
       </div>
       <div class="col-lg-4">
         <admin-dashboard_population></admin-dashboard_population>
-      </div>
-      <!-- /.col-md-6 -->
-      <div class="col-lg-5">
+      </div>  -->
+
+      <!-- <div class="col-lg-5">
         <admin-dashboard_monthly_usage></admin-dashboard_monthly_usage>
-      </div>
-      <!-- /.col-md-6 -->
-    </div>
-    <div class="row">
+      </div>   -->
+
+    </div> 
+    <!-- <div class="row">
       <div class="col-lg-6">
         <admin-dashboard_tenant_search></admin-dashboard_tenant_search>
       </div>
@@ -52,17 +70,18 @@
       <div class="col-lg-6">
         <admin-dashboard_kiosk_usage></admin-dashboard_kiosk_usage>
       </div>
-    </div>
-    <div class="row">
+    </div>  -->
+    <!-- <div class="row">
       <div class="col-lg-12">
         <admin-dashboard_merchant_usage></admin-dashboard_merchant_usage>
       </div>
-    </div>
-    <!-- /.row -->
-  </div><!-- /.container-fluid -->
-</div>
-<!-- /.content -->
-@stop
+    </div> -->
+ 
+  </div>
+ 
+  </div>
 
-@push('scripts')
-@endpush
+  @stop
+
+  @push('scripts')
+  @endpush

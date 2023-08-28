@@ -67,6 +67,11 @@ Vue.component('admin-dashboard_highest_usage', require('./components/Admin/Dashb
 Vue.component('admin-dashboard_is_helpful', require('./components/Admin/DashboardIsHelpful.vue').default);
 Vue.component('admin-dashboard_kiosk_usage', require('./components/Admin/DashboardKioskUsage.vue').default);
 Vue.component('admin-sceen_uptime', require('./components/Admin/DashboardScreenUptime.vue').default);
+//Dashboard monitoring
+Vue.component('admin-dashboard_restroom_monitoring', require('./components/Admin/RestroomStatusMonitoring.vue').default);
+Vue.component('admin-dashboard_questionnaire_survey', require('./components/Admin/DashboardIsQuestionnaireSurvey.vue').default);
+Vue.component('admin-dashboard_questionnaire_survey_two', require('./components/Admin/DashboardIsQuestionnaireSurveyTwo.vue').default);
+Vue.component('admin-dashboard_room', require('./components/Admin/DashboardRoom.vue').default);
 
 Vue.component('admin-client_user', require('./components/Admin/ClientUser.vue').default);
 Vue.component('admin-faqs', require('./components/Admin/FAQs.vue').default);

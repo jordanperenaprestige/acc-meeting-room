@@ -75,10 +75,14 @@
 						// 	}
 						// };
 
+                        console.log('>>>>>>>>>>>>>');
+                        console.log(data);
+                        console.log('>>>>>>>>>>>>>');
+
 						if(data.data.length > 0) {
                             $.each(data.data, function(key,value) {
-                                labels.push(value.category_parent_name);
-                                data_value.push(value.tenant_count);
+                                labels.push(value.questionnaire_answer);
+                                data_value.push(value.tenant_survey);
                                 //randomBackgroundColor.push(dynamicColors());
                             });
                         }

@@ -211,3 +211,54 @@
 .offline {
     color: #FE5E80;
 }
+
+
+.button_red_round {
+    border-color: #000000;
+    background-color: #FF0000;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 8px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+
+  .button_orange_round {
+    border-color: #000000;
+    background-color: #ffc107;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 8px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+  .button_green_round {
+    border-color: #000000;
+    background-color: #28a745;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 8px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 50%;
+  }  
+
+  .button_border_black_round {
+    border-color: #000000;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 8px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 50%;
+  }

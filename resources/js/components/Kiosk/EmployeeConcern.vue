@@ -19,11 +19,36 @@
                 </div>
             </div>
         </div>
+        <div v-show="show_concern_pendings">
+            <div class="row justify-content-center">
+                <div class="col-12 concern-title">
+                    <p @click="reloadPage">Local Admin: {{ this.user_role_name }} - {{ this.user.full_name }}</p>
+                </div>
+            </div>
+            <!-- this.user.roles[0].id -->
+            <div class="grid-container">
+                <div v-for="(survey_pending, index) in survey_pendings" class="grid-item"
+                    v-if="survey_pending.questionnaire_user_role == user_role">
+                    <div><img v-if="survey_pending.questionnaire_survey_id > 0" :src="check_red_logo"
+                            @click="switchImagePending($event)" :id="'pending_' + survey_pending.questionnaire_answer_id"
+                            class="responsive">
+                        <img v-else :src="survey_pending.questionnaire_button" class="responsive">
+                    </div>
+
+                    <div>{{ survey_pending.questionnaire_name }}</div>
+                </div>
+            </div>
+            <div v-show="show_submit_pending_button" class="row justify-content-center">
+                <div class="col-2">
+                    <img :src="this.resolve_logo" @click="submit_pending()" class="responsive">
+                </div>
+            </div>
+        </div>
         <div v-show="show_success">
             <div class="row justify-content-center">
-                <div class="col-2">
+                <div class="col-2 mr-2">
                     <img :src="this.success_logo" class="responsive">
-                </div>
+                </div> 
             </div>
             <div class="row justify-content-center" style="border: 1cm;">
                 <div class="col-5 concern-title">
@@ -41,13 +66,42 @@
                 </div>
             </div>
         </div>
-        <!-- <div>put</div>
-        <div>put</div> -->
-        <div>
-
-            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-default">
-                Admin
-            </button>
+        <div v-show="show_pending_success">
+            <div class="row justify-content-center" style="border: 1cm;">
+                <div class="col-2 mr-2">
+                    <img :src="this.success_logo" class="responsive">
+                </div>
+                <div class="col-5 concern-title">
+                    THANK YOU!
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-6 concern-message">
+                    The concern has been successfully resolved.
+                </div>
+            </div>
+        </div>
+        <div v-show="show_switch_room_success">
+            <div class="row justify-content-center">
+                <div class="col-2 mr-2">
+                    <img :src="this.success_logo" class="responsive">
+                </div>
+            </div>
+            <div class="row justify-content-center" style="border: 1cm;">
+                <div class="col-5 concern-title">
+                    THANK YOU!
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-6 concern-message">
+                    The room has been changed successfully.
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-6 concern-message">
+                    This will be attended shortly.
+                </div>
+            </div>
         </div>
         <div class="modal fade" id="modal-default">
             <div class="modal-dialog">
@@ -74,21 +128,57 @@
                             <div v-for="(login_button, index) in login_buttons">
                                 <div><img :src="'assets/images/logos/keypad/' + login_button + '.png'"
                                         @click="input(login_button)" class="button1"></div>
-                                <!-- <button type="button" class="btn btn-outline-primary"><img :src="'assets/images/logos/keypad/'+ login_button + '.png'" @click="switchImage($event)" class="button1"></button> -->
-                                <!-- <button type="button" class="btn btn-outline-primary"><img :src="'assets/images/logos/keypad/'+ login_button + '.png'" @click="switchImage($event)" class="button1"></button> -->
-
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button v-show="show_resolve" type="button" @click="loginLocalAdmin"
-                            class="btn btn-warning">Resolve</button>
+                            class="btn btn-warning">Submit</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
             </div>
             <!-- /.modal-dialog -->
+        </div>
+        <div v-show="show_default_room">
+            <div class="row justify-content-right">
+                <div class="col-4 building-floor-room-title">
+
+                </div>
+                <div class="col-4 building-floor-room-title">
+                </div>
+                <div class="col-4 building-floor-room-title2 passingID" data-toggle="modal" data-target="#modal-default" 
+                    @click="pincodeModal($event)" :id=1 >
+                   {{ this.room.building_level_room }}
+                </div>
+            </div>
+        </div>
+        <div v-show="show_admin_button" class="row">
+            <img :src="acc_transparent_logo" class="passingID" data-toggle="modal" data-target="#modal-default"
+                @click="pincodeModal($event)" :id=0>
+        </div>
+        <div v-show="show_rooms">
+            <div class="row justify-content-center">
+                <div class="col-2 concern-title">
+                    <p @click="reloadPage">KIOSK ID</p>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-4">
+                    <select class="custom-select" @change="onChange($event)" v-model="room.id">
+                        <option value="0">Select Room</option>
+                        <option v-for="room in rooms" :value="room.id"> {{ room.building_name }}--{{
+                            room.building_floor_name }}--{{ room.name }}</option>
+                    </select>
+
+                </div>
+            </div>
+            <div v-show="show_save_button" class="row justify-content-center">
+                <div class="-2">
+                    <img :src="this.save_logo" @click="switchRoom" class="responsive">
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -103,60 +193,147 @@ export default {
                 input_two: '',
                 input_three: '',
                 input_four: '',
+                building_level_room: '',
             },
+            survey: {
+                questionnaire_id: '',
+                questionnaire_answer_id: '',
+                site_id: '',
+                site_building_id: '',
+                site_building_level_id: '',
+                site_building_room_id: '',
+            },
+            show_admin_button: true,
             show_concerns: true,
+            show_concern_pendings: false,
+            show_rooms: false,
             show_submit_button: false,
+            show_submit_pending_button: false,
             show_save_button: false,
             show_success: false,
+            show_pending_success: false,
             show_resolve: false,
+            show_switch_room_success: false,
+            show_default_room: true,
             questionnaires: [],
             rooms: [],
             concern: [],
+            concern_pending: [],
             view: ['login'],
             check_logo: 'assets/images/logos/check.png',
+            check_red_logo: 'assets/images/logos/check_red.png',
             submit_logo: 'assets/images/logos/buttons/submit.png',
+            resolve_logo: 'assets/images/logos/buttons/resolve.png',
             save_logo: 'assets/images/logos/buttons/save.png',
             success_logo: 'assets/images/logos/buttons/success.png',
+            acc_transparent_logo: 'assets/images/logos/accenture-logo-transparent.png',
             login_buttons: ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'clear', '0', 'backspace'],
             input_digit: [],
             max: 1,
+            survey_pendings: [],
+            message: '',
+            user: [],
+            user_role: '',
+            user_role_name: '',
+            jordan: 'pogi',
+            pincode_modal: 0,
+
         }
     },
 
     created() {
         this.getQuestionnaires();
-        this.getRoom();
+        this.getDefaultRoom();
+        setInterval(this.getDefaultRoomInterval, 30000);
+        
     },
 
     methods: {
+        reloadPage: function (){
+            window.location.reload();
+        },
         getQuestionnaires: function () {
             axios.get('/api/v1/employee/get-concerns')
-                .then(response => this.questionnaires = response.data.data);
+                .then(response => {
+                    this.questionnaires = response.data.data
+                });
         },
-        getRoom: function () {
-            axios.get('/api/v1/employee/get-rooms')
+        getDefaultRoom: function () {
+            axios.get('/api/v1/employee/get-default-room')
                 .then(response => {
                     var room = response.data.data;
                     this.room.id = room.id;
+                    this.survey.site_id = room.site_id;
+                    this.survey.site_building_id = room.site_building_id;
+                    this.survey.site_building_level_id = room.site_building_level_id;
+                    this.survey_pendings = room.building_floor_room_survey_pendings;
+                    this.room.building_level_room = room.building_name + '.' + room.building_floor_name + '.' + room.name;
+                    this.user_role = '';
+                    this.user_role_name = '';
+                  //  console.log(room);
+                    
                 });
+        },
+        getDefaultRoomInterval: function () {
+            axios.get('/api/v1/employee/get-default-room')
+                .then(response => {
+                    var room = response.data.data;
+                    // this.room.id = room.id;
+                    // this.survey.site_id = room.site_id;
+                    // this.survey.site_building_id = room.site_building_id;
+                    // this.survey.site_building_level_id = room.site_building_level_id;
+                    this.survey_pendings = room.building_floor_room_survey_pendings;
+                    // this.room.building_level_room = room.building_name + '.' + room.building_floor_name + '.' + room.name;
+                    // this.user_role = '';
+                    // this.user_role_name = '';
+                  //  console.log(room);
+                    
+                });
+        },
+        getRooms: function () {
+            axios.get('/api/v1/employee/get-rooms')
+                .then(response => this.rooms = response.data.data);
         },
         switchImage(event) {
             var id = event.target.id;
             const index = this.concern.indexOf(id);
-            if (index > -1) { // only splice array when item is found
-                this.concern.splice(index, 1); // 2nd parameter means remove one item only
+            if (index > -1) {//  alert('1');
+                this.concern.splice(index, 1); 
                 axios.get('/api/v1/employee/get-answer-details/' + id)
                     .then(response => {
                         var answer = response.data.data;
                         $("#" + id).attr('src', answer.button);
                         this.show_button();
                     });
-            } else {
-                this.concern.push(id); 
+            } else {// alert('2');
+                this.concern.push(id);
                 $("#" + id).attr('src', this.check_logo);
                 this.show_button();
             }
             console.log(this.concern);
+        },
+        pincodeModal(event) {
+            var id = event.target.id;
+            this.pincode_modal = id;
+        },
+
+        switchImagePending(event) {
+            var id = event.target.id;
+            const index = this.concern_pending.indexOf(id);
+            if (index > -1) {
+                this.concern_pending.splice(index, 1); // 2nd parameter means remove one item only
+                $("#" + id).attr('src', this.check_red_logo);
+                this.show_pending_button();
+            } else {
+                this.concern_pending.push(id);
+                axios.get('/api/v1/employee/get-answer-details/' + id.replace('pending_', ''))
+                    .then(response => {
+                        var answer = response.data.data;
+                        $("#" + id).attr('src', answer.button);
+                        this.show_pending_button();
+                    });
+            }
+            //console.log(this.concern_pending);
         },
 
         submit: function () {
@@ -170,13 +347,46 @@ export default {
             })
                 .then(response => {
                     //toastr.success(response.data.message);
-                    this.$refs.dataTable.fetchData();
+                    // this.$refs.dataTable.fetchData();
 
                 });
 
             this.show_concerns = false;
             this.show_success = true;
-           // setTimeout(function () { location.reload(); }, 10000);
+            this.input_digit = [];
+            this.room.input_one = '';
+            this.room.input_two = '';
+            this.room.input_three = '';
+            this.room.input_four = '';
+            this.show_resolve = false;
+            this.show_admin_button = false;
+            setTimeout(function () { window.location.reload(); }, 5000);
+
+        },
+        submit_pending: function () {
+            let formData = new FormData();
+            formData.append("concern_pending", this.concern_pending);
+            formData.append("room_id", this.room.id);
+            formData.append("site_id", this.survey.site_id);
+            formData.append("site_building_id", this.survey.site_building_id);
+            formData.append("site_building_level_id", this.survey.site_building_level_id);
+
+            axios.post('/api/v1/employee/store-concern-pending/', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+            })
+                .then(response => {
+                    //toastr.success(response.data.message);
+                    // this.$refs.dataTable.fetchData();
+
+                });
+
+            this.show_concern_pendings = false;
+            this.show_pending_success = true;
+            this.show_admin_button = false;
+
+            setTimeout(function () { window.location.reload(); }, 5000);
 
         },
         show_button: function () {
@@ -184,6 +394,13 @@ export default {
                 this.show_submit_button = true;
             } else {
                 this.show_submit_button = false;
+            }
+        },
+        show_pending_button: function () {
+            if (this.concern_pending.length > 0) {
+                this.show_submit_pending_button = true;
+            } else {
+                this.show_submit_pending_button = false;
             }
         },
         onChange(event) {
@@ -239,7 +456,6 @@ export default {
                 }
 
             }
-            console.log(this.input_digit.length);
         },
 
         loginLocalAdmin: function () {
@@ -251,15 +467,53 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 },
             })
-                .then(response => { alert(response.data.message);
-                    // this.$router.push('/portal') ;
-                    //  window.location = '/portal';
-                    // toastr.success(response.data.message);
-                    // this.$refs.dataTable.fetchData();
-                    // $('#faqs-form').modal('hide');
-                    
+                .then(response => {
+                    if (response.data.data) { 
+                        this.input_digit = [];
+                        this.room.input_one = '';
+                        this.room.input_two = '';
+                        this.room.input_three = '';
+                        this.room.input_four = '';
+                        this.show_resolve = false;
+                        $('.close').click();
+                        this.show_concerns = false;
+                        if (this.pincode_modal == 0) {
+                            this.show_concern_pendings = true;
+                        } else {
+                            this.show_rooms = true;
+                            this.show_concern_pendings = false;
+                            this.show_admin_button = false;
+                            this.show_default_room = false;
+                            this.getRooms();
+                        }
+                        this.user = response.data.data;
+                        this.user_role = this.user.roles[0].id;
+                        this.user_role_name = this.user.roles[0].name;
+                    } else {
+                        this.input_digit = [];
+                        this.room.input_one = '';
+                        this.room.input_two = '';
+                        this.room.input_three = '';
+                        this.room.input_four = '';
+                        this.show_resolve = false;
+                    }
                 });
         },
+        switchRoom() {
+            let formData = new FormData();
+            formData.append("room_id", this.room.id);
+            axios.post('/api/v1/employee/switch-room/', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+            })
+                .then(response => {
+                    this.show_switch_room_success = true;
+                    this.show_rooms = false;
+                    setTimeout(function () { window.location.reload(); }, 5000);
+                });
+        },
+
     },
 };
 </script> 

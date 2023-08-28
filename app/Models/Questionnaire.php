@@ -15,6 +15,7 @@ class Questionnaire extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        
         'serial_number',
         'questions',
         // 'descriptions',

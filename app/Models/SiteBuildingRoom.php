@@ -20,6 +20,7 @@ class SiteBuildingRoom extends Model
         'site_building_level_id',
         'name',
         'active',
+        'is_default',
     ];
 
     /**

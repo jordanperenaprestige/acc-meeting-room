@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Str;
 use App\Models\Company;
+use App\Models\QuestionnaireSurvey;
+use App\Models\ViewModels\QuestionnaireSurveyViewModel;
 
 class QuestionnaireAnswerViewModel extends Model
 {
@@ -26,7 +28,7 @@ class QuestionnaireAnswerViewModel extends Model
      * The table associated with the model.
      *
      * @var string
-    */
+     */
     protected $table = 'questionnaire_answers';
 
     /**
@@ -41,7 +43,8 @@ class QuestionnaireAnswerViewModel extends Model
      *
      * @var string
      */
-	public $appends = [
+    public $appends = [
+        'questionnaire_survey',
         // 'descriptions_ellipsis',
         // 'details',
         // 'short_code',
@@ -60,8 +63,8 @@ class QuestionnaireAnswerViewModel extends Model
     // }
 
     /****************************************
-    *           ATTRIBUTES PARTS            *
-    ****************************************/
+     *           ATTRIBUTES PARTS            *
+     ****************************************/
     // public function getDetailsAttribute() 
     // {
     //     return $this->getSiteDetails()->pluck('meta_value','meta_key')->toArray();
@@ -94,7 +97,7 @@ class QuestionnaireAnswerViewModel extends Model
     //         return Str::limit($this->descriptions, 95);
     //     return null;
     // }
-    
+
     // public function getShortCodeAttribute()
     // {
     //     $site_details = $this->getSiteDetails()->where('meta_key', 'site_code')->first();
@@ -134,4 +137,16 @@ class QuestionnaireAnswerViewModel extends Model
     //         return $company_details->name;
     //     return null;
     // }
+    public function getQuestionnaireSurveyAttribute()
+    {
+        $survey = QuestionnaireSurveyViewModel::where('questionnaire_answer_id', $this->id)
+            ->where('remarks', 'pending')
+            ->orderBy('id', 'DESC')
+            ->limit(1)
+            ->get();
+        // if($site_details)
+        //     return $site_details->meta_value;
+        // return null;
+        return count($survey);
+    }
 }

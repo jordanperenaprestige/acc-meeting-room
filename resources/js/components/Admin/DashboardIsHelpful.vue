@@ -50,13 +50,15 @@
 						let data_value = [];
 						let yes_vote = '';
 
-						$.each(data.data, function(key,value) {
+                       console.log(data);
+						
+                        $.each(data.data, function(key,value) {
 							labels.push(value.helpful);
 							data_value.push(value.percentage);
 							if(value.helpful == 'Yes') 
 								yes_vote = value.percentage;
 						});
-
+                        
 						var donutData = {
 							labels: labels,
 							datasets: [
@@ -66,7 +68,7 @@
 								}
 							]
 						}
-
+                       
 						var pieChartCanvas = $('#donutChart').get(0).getContext('2d')
 						var pieData        = donutData;
 						var pieOptions     = {

@@ -75,6 +75,9 @@
 						// };
 
 						let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272'];
+						console.log('>>>>>>>ddd>>>>>>');
+                        console.log(data);
+                        console.log('>>>>>>>zzzz>>>>>>');
 
 						$.each(data.data, function(key,value) {
 							let background_color = dynamicColors[key];

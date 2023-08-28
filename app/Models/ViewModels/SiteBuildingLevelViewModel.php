@@ -10,6 +10,8 @@ use App\Models\SiteBuilding;
 use App\Models\SiteBuildingRoom;
 use App\Models\ViewModels\SiteBuildingRoomViewModel;
 use App\Models\ViewModels\QuestionnaireAnswerViewModel;
+use App\Models\QuestionnaireSurvey;
+
 
 class SiteBuildingLevelViewModel extends Model
 {
@@ -49,6 +51,7 @@ class SiteBuildingLevelViewModel extends Model
         'building_name',
         'building_floor_name',
         'building_level_rooms',
+        'rest_room_pendings',
     ];
 
     public function getBuildingLevelRoomDetails()
@@ -58,6 +61,10 @@ class SiteBuildingLevelViewModel extends Model
             ->where('site_building_id', $this->site_building_id)
             ->where('site_building_level_id', $this->id)
             ->get();
+    }
+    public function getQuestionnaireAnswer()
+    {
+        return QuestionnaireAnswerViewModel::get();
     }
 
     /****************************************
@@ -76,5 +83,34 @@ class SiteBuildingLevelViewModel extends Model
     public function getBuildingLevelRoomsAttribute()
     {
         return $this->getBuildingLevelRoomDetails();
+    }
+
+    public function getRestRoomPendingsAttribute()
+    {
+        $answers = $this->getQuestionnaireAnswer();
+        $survey = array();
+        $data = array();
+        foreach ($answers as $v) {
+            // echo  $v->id;
+            // echo $v->questionnaire_id; 
+            $survey[] =  QuestionnaireSurvey::where('questionnaire_id', $v->questionnaire_id)
+                ->where('questionnaire_answer_id', $v->id)
+                ->where('site_id', $this->site_id)
+                ->where('site_building_id', $this->site_building_id)
+                ->where('site_building_level_id', $this->id)
+                ->where('remarks', 'Pending')
+                ->orderBy('id', 'DESC')
+                ->limit(1)
+                ->get();
+            // $data[] =  [
+            //     'questionnaire_id' => $v->questionnaire_id,
+            //     'questionnaire_answer_id' => $v->id,
+            //     'site_id' => $this->site_id,
+            //     'site_building_id' => $this->site_building_id,
+            //     'site_building_level_id' => $this->id,
+            // ];
+        }
+       // print_r($data );
+        return $survey;
     }
 }

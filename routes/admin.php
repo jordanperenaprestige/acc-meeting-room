@@ -20,6 +20,9 @@ Route::post('/admin/login', 'AdminAuth\AuthController@adminLogin')->name('admin.
 Route::group(['middleware' => 'auth:admin'], function () {
 
     Route::get('/admin', 'Admin\DashboardController@index')->name('admin.dashboard');
+    Route::get('/admin/dashboad/room/update/{id}', 'Admin\DashboardController@update')->name('admin.room.update');
+    Route::get('/admin/dashboad/room/get-survey', 'Admin\DashboardController@getRoomSurvey')->name('admin.room.surveys');
+    Route::post('/admin/dashboard/room/store-update', 'Admin\DashboardController@storeUpdate')->name('admin.room.store-update');
 
     /*
     |--------------------------------------------------------------------------
@@ -413,6 +416,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     */
     Route::get('/admin/reports/merchant-population', 'Admin\ReportsController@index')->name('admin.reports.merchant-population');
     Route::get('/admin/reports/merchant-population/list', 'Admin\ReportsController@getPopulationReport')->name('admin.reports.merchant-population.list');
+    Route::get('/admin/reports/merchant-population-two/list', 'Admin\ReportsController@getPopulationReportTwo')->name('admin.reports.merchant-population-two.list');
     Route::get('/admin/reports/merchant-population/download-csv', 'Admin\ReportsController@downloadCsvPopulation')->name('admin.reports.merchant-population.download-csv');
     Route::get('/admin/reports/top-tenant-search', 'Admin\ReportsController@topTenantSearch')->name('admin.reports.top-tenant-search');
     Route::get('/admin/reports/top-tenant-search/list', 'Admin\ReportsController@getTenantSearch')->where('id', '[0-9]+')->name('admin.reports.top-tenant-search.list');
@@ -423,14 +427,19 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/reports/merchant-usage', 'Admin\ReportsController@merchantUsage')->name('admin.reports.merchant-usage');
     Route::get('/admin/reports/merchant-usage/list', 'Admin\ReportsController@getMerchantUsage')->where('id', '[0-9]+')->name('admin.reports.merchant-usage.list');
     Route::get('/admin/reports/merchant-usage/download-csv', 'Admin\ReportsController@downloadCsvmerchantUsage')->where('id', '[0-9]+')->name('admin.reports.merchant-usage.download-csv');
-    Route::get('/admin/reports/monthly-usage', 'Admin\ReportsController@monthlyUsage')->name('admin.reports.monthly-usage');
-    Route::get('/admin/reports/monthly-usage/list', 'Admin\ReportsController@getMonthlyUsage')->where('id', '[0-9]+')->name('admin.reports.monthly-usage.list');
+    Route::get('/admin/reports/monthly-usage/list', 'Admin\ReportsController@monthlyUsage')->name('admin.reports.monthly-usage');
+    
+    Route::get('/admin/reports/trend/list', 'Admin\ReportsController@getTrend')->where('id', '[0-9]+')->name('admin.reports.trend.list');//
+    Route::get('/admin/reports/trend-report-by-day/list', 'Admin\ReportsController@getTrendReportByDay')->where('id', '[0-9]+')->name('admin.reports.trend-report-by-day.list');
+    Route::get('/admin/reports/trend-incident-by-day/list', 'Admin\ReportsController@getTrendIncidentByDay')->where('id', '[0-9]+')->name('admin.reports.trend-incident-by-day.list');
+    
     Route::get('/admin/reports/monthly-usage/download-csv', 'Admin\ReportsController@downloadCsvMonthlyUsage')->where('id', '[0-9]+')->name('admin.reports.monthly-usage.download-csv');
     Route::get('/admin/reports/yearly-usage', 'Admin\ReportsController@yearlyUsage')->name('admin.reports.yearly-usage');
     Route::get('/admin/reports/yearly-usage/list', 'Admin\ReportsController@getYearlyUsage')->where('id', '[0-9]+')->name('admin.reports.yearly-usage.list');
     Route::get('/admin/reports/yearly-usage/download-csv', 'Admin\ReportsController@downloadCsvYearlyUsage')->where('id', '[0-9]+')->name('admin.reports.yearly-usage.download-csv');
     Route::get('/admin/reports/is-helpful', 'Admin\ReportsController@isHelpful')->name('admin.reports.is-helpful');
-    Route::get('/admin/reports/is-helpful/list', 'Admin\ReportsController@getIsHelpful')->name('admin.reports.is-helpful.list');
+    Route::get('/admin/reports/is-helpful/list', 'Admin\ReportsController@getIsHelpful')->name('admin.reports.is-helpful.list');//
+    Route::get('/admin/reports/questionnaire-survey/list', 'Admin\ReportsController@getQuestionnaireSurvey')->name('admin.reports.questionnaire-survey.list');//
     Route::get('/admin/reports/is-helpful/response', 'Admin\ReportsController@getResponseNo')->name('admin.reports.is-helpful.response');
     Route::get('/admin/reports/is-helpful/other-response', 'Admin\ReportsController@getOtherResponse')->name('admin.reports.is-helpful.other-response');
     Route::get('/admin/reports/is-helpful/download-csv', 'Admin\ReportsController@downloadCsvIsHelpful')->name('admin.reports.is-helpful.download-csv');
