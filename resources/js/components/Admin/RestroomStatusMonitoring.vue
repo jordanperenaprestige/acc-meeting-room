@@ -144,7 +144,7 @@
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" :class=" [`btn btn-secondary`] " data-bs-dismiss="modal">Close</button>
-              <button type="button" :class=" [`btn btn-primary`] " @click=" updateSurvey ">Save changes</button>
+              <button type="button" :class=" [`btn btn-primary`] " data-bs-dismiss="modal" @click=" updateSurvey ">Save changes</button>
             </div>
           </div>
         </div>
@@ -335,7 +335,8 @@ export default {
           },
         })
           .then(response => {
-            toastr.success(response.data.message);
+            toastr.success(response.data.message); alert('ssss');
+            $('.close').click();
             //location.reload();
 
           })
@@ -371,7 +372,7 @@ export default {
       })
         .then(response => {
           toastr.success(response.data.message);
-          location.reload();
+          //location.reload();
 
         })
     },
