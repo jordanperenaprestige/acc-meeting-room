@@ -54,7 +54,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <div class="col-sm-4    ">
+                                    <div class="col-sm-4">
                                         <label for="userName" class="col-form-label">Site</label>
                                         <select class="custom-select mr-2" v-model="filter.site_id" @change="filterChart()">
                                             <option value="">Select All</option>
