@@ -414,6 +414,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
     | Reports Routes
     |--------------------------------------------------------------------------
     */
+   
+    
     Route::get('/admin/reports/merchant-population', 'Admin\ReportsController@index')->name('admin.reports.merchant-population');
     Route::get('/admin/reports/merchant-population/list', 'Admin\ReportsController@getPopulationReport')->name('admin.reports.merchant-population.list');
     Route::get('/admin/reports/merchant-population-two/list', 'Admin\ReportsController@getPopulationReportTwo')->name('admin.reports.merchant-population-two.list');
@@ -431,8 +433,14 @@ Route::group(['middleware' => 'auth:admin'], function () {
     
     Route::get('/admin/reports/trend/list', 'Admin\ReportsController@getTrend')->where('id', '[0-9]+')->name('admin.reports.trend.list');//
     Route::get('/admin/reports/trend-report-by-day/list', 'Admin\ReportsController@getTrendReportByDay')->where('id', '[0-9]+')->name('admin.reports.trend-report-by-day.list');
-    Route::get('/admin/reports/trend-incident-by-day/list', 'Admin\ReportsController@getTrendIncidentByDay')->where('id', '[0-9]+')->name('admin.reports.trend-incident-by-day.list');
+    Route::get('/admin/reports/trend-report-by-month/list', 'Admin\ReportsController@getTrendReportByMonth')->where('id', '[0-9]+')->name('admin.reports.trend-report-by-month.list');
+    Route::get('/admin/reports/trend-report-by-year/list', 'Admin\ReportsController@getTrendReportByYear')->where('id', '[0-9]+')->name('admin.reports.trend-report-by-year.list');
     
+    Route::get('/admin/reports/trend-incident-by-day/list', 'Admin\ReportsController@getTrendIncidentByDay')->where('id', '[0-9]+')->name('admin.reports.trend-incident-by-day.list');
+    Route::get('/admin/reports/donut-report-by-day/list', 'Admin\ReportsController@getDonutReportByDay')->name('admin.reports.donut-by-day.list');
+
+
+
     Route::get('/admin/reports/monthly-usage/download-csv', 'Admin\ReportsController@downloadCsvMonthlyUsage')->where('id', '[0-9]+')->name('admin.reports.monthly-usage.download-csv');
     Route::get('/admin/reports/yearly-usage', 'Admin\ReportsController@yearlyUsage')->name('admin.reports.yearly-usage');
     Route::get('/admin/reports/yearly-usage/list', 'Admin\ReportsController@getYearlyUsage')->where('id', '[0-9]+')->name('admin.reports.yearly-usage.list');

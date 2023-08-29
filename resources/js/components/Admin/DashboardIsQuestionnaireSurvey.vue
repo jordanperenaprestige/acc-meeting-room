@@ -133,7 +133,7 @@ export default {
                 useCurrent: false,
             },
             options_M: {
-                format: 'M',
+                format: 'YYYY-MM',
                 useCurrent: false,
             },
             options_D: {
@@ -261,7 +261,7 @@ export default {
         },
 
         filterChartByDay: function () {
-           
+
             var filter = this.filter;
             $.get("admin/reports/trend-report-by-day/list", filter, function (data) {
                 let datasets = [];
@@ -314,154 +314,230 @@ export default {
                 })
             });
 
-            // $.get("admin/reports/trend-incident-by-day/list", filter, function (data) {
-            //     let datasets = [];
+            //$.get("/admin/reports/merchant-population/list", filter, function (data) {
+            $.get("admin/reports/donut-report-by-day/list", filter, function (data) {
+                let labels = [];
+                let data_value = [];
+                let incident_report = 0;
 
-            //     let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
 
 
-            //     $.each(data.data, function (key, value) {
-            //         let background_color = dynamicColors[key];
-            //         datasets.push({
-            //             label: value.building_name + '(Incident: ' + value.reports + ')',
-            //             backgroundColor: background_color,
-            //             borderColor: background_color,
-            //             pointRadius: false,
-            //             pointColor: '#3b8bba',
-            //             pointStrokeColor: background_color,
-            //             pointHighlightFill: '#fff',
-            //             pointHighlightStroke: background_color,
-            //             data: [value.twentyfour, value.one, value.two, value.three, value.four, value.five, value.six, value.seven, value.eight, value.nine, value.ten, value.eleven, value.twelve, value.thirteen, value.forteen, value.fifteen, value.sixteen, value.seventeen, value.eighteen, value.nineteen, value.twenty, value.twentyone, value.twentytwo, value.twentythree]
-            //         });
-            //     });
+                if (data.data.length > 0) {
+                    $.each(data.data, function (key, value) {
+                        //labels.push(value.questionnaire_answer);
+                        labels.push(value.questionnaire);
+                        //data_value.push(1);
+                        // incident_report.push(value.tenant_survey);
+                        incident_report += parseInt(value.tenant_survey);
+                        data_value.push(value.percentage_share);
+                        //randomBackgroundColor.push(dynamicColors());
+                    });
+                }
+                else {
+                    labels = ['Empty']
+                    data_value = [1];
+                    //randomBackgroundColor = ['#d2d6de'];
+                }
 
-            //     var areaChartData = {
-            //         labels: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
-            //         datasets: datasets
-            //     };
+                var donutData = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: data_value,
+                            backgroundColor: ['#728FCE', '#90EE90', '#FED8B1', '#A52A2A', '#a59fa2'],
+                        }
+                    ]
+                }
 
-            //     var barChartData = $.extend(true, {}, areaChartData);
+                var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
+                var pieData = donutData;
+                var pieOptions = {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                }
 
-            //     var incidentBarCharCanvas = $('#incidentBarChar').get(0).getContext('2d')
-            //     var incidentBarCharData = $.extend(true, {}, barChartData)
+                // new Chart(pieChartSurveyCanvas, {
+                //     type: 'pie',
+                //     data: pieData,
+                //     options: pieOptions
+                // })
+                var myChart = new Chart(pieChartSurveyCanvas, {
+                    type: 'doughnut',
+                    data: pieData,
+                    plugins: [{ //plugin added for this chart
+                        beforeDraw: function (chart) {
+                            var width = chart.chart.width,
+                                height = chart.chart.height,
+                                ctx = chart.chart.ctx;
 
-            //     var incidentBarCharOptions = {
-            //         responsive: true,
-            //         maintainAspectRatio: false,
-            //         scales: {
-            //             xAxes: [{
-            //                 stacked: true,
-            //             }],
-            //             yAxes: [{
-            //                 stacked: true
-            //             }]
-            //         }
-            //     }
+                            ctx.restore();
+                            var fontSize = 2.5;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
 
-            //     new Chart(incidentBarCharCanvas, {
-            //         type: 'bar',
-            //         data: incidentBarCharData,
-            //         options: incidentBarCharOptions
-            //     })
+                            var text = incident_report,
+                                textX = 250,//Math.round((width - ctx.measureText(text).width) / 2),
+                                textY = height / 2;
 
-            // });
+                            ctx.fillText(text, textX + 45, textY);
+
+                            ctx.restore();
+                            var fontSize = 2;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
+
+                            ctx.fillText("INCIDENTS", textX, textY + 45);
+
+                            ctx.save();
+                        }
+                    }],
+                    options: pieOptions
+                });
+            });
+
+
 
             //var filter = this.filter;
             // $(function () {
-                $.get("/admin/reports/merchant-population/list", filter, function (data) { 
-                let labels = [];
-                let data_value = [];
-                let incident_report = 0;
+            //     var filter = this.filter;
+            //     $.get("/admin/reports/merchant-population/list", filter, function (data) { 
+            //     let labels = [];
+            //     let data_value = [];
+            //     let incident_report = 0;
 
-              
 
-                if (data.data.length > 0) {
-                    $.each(data.data, function (key, value) {
-                        //labels.push(value.questionnaire_answer);
-                        labels.push(value.questionnaire);
-                        //data_value.push(1);
-                        // incident_report.push(value.tenant_survey);
-                        incident_report += parseInt(value.tenant_survey);
-                        data_value.push(value.percentage_share);
-                        //randomBackgroundColor.push(dynamicColors());
-                    });
-                }
-                else {
-                    labels = ['Empty']
-                    data_value = [1];
-                    //randomBackgroundColor = ['#d2d6de'];
-                }
 
-                var donutData = {
-                    labels: labels,
-                    datasets: [
-                        {
-                            data: data_value,
-                            backgroundColor: ['#728FCE', '#90EE90', '#FED8B1', '#A52A2A', '#a59fa2'],
-                        }
-                    ]
-                }
+            //     if (data.data.length > 0) {
+            //         $.each(data.data, function (key, value) {
+            //             //labels.push(value.questionnaire_answer);
+            //             labels.push(value.questionnaire);
+            //             //data_value.push(1);
+            //             // incident_report.push(value.tenant_survey);
+            //             incident_report += parseInt(value.tenant_survey);
+            //             data_value.push(value.percentage_share);
+            //             //randomBackgroundColor.push(dynamicColors());
+            //         });
+            //     }
+            //     else {
+            //         labels = ['Empty']
+            //         data_value = [1];
+            //         //randomBackgroundColor = ['#d2d6de'];
+            //     }
 
-                var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
-                var pieData = donutData;
-                var pieOptions = {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                }
+            //     var donutData = {
+            //         labels: labels,
+            //         datasets: [
+            //             {
+            //                 data: data_value,
+            //                 backgroundColor: ['#728FCE', '#90EE90', '#FED8B1', '#A52A2A', '#a59fa2'],
+            //             }
+            //         ]
+            //     }
 
-                // new Chart(pieChartSurveyCanvas, {
-                //     type: 'pie',
-                //     data: pieData,
-                //     options: pieOptions
-                // })
-                var myChart = new Chart(pieChartSurveyCanvas, {
-                    type: 'doughnut',
-                    data: pieData,
-                    plugins: [{ //plugin added for this chart
-                        beforeDraw: function (chart) {
-                            var width = chart.chart.width,
-                                height = chart.chart.height,
-                                ctx = chart.chart.ctx;
+            //     var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
+            //     var pieData = donutData;
+            //     var pieOptions = {
+            //         maintainAspectRatio: false,
+            //         responsive: true,
+            //     }
+            //     var myChart = new Chart(pieChartSurveyCanvas, {
+            //         type: 'doughnut',
+            //         data: pieData,
+            //         plugins: [{ //plugin added for this chart
+            //             beforeDraw: function (chart) {
+            //                 var width = chart.chart.width,
+            //                     height = chart.chart.height,
+            //                     ctx = chart.chart.ctx;
 
-                            ctx.restore();
-                            var fontSize = 2.5;
-                            ctx.font = fontSize + "em sans-serif";
-                            ctx.textBaseline = "middle";
+            //                 ctx.restore();
+            //                 var fontSize = 2.5;
+            //                 ctx.font = fontSize + "em sans-serif";
+            //                 ctx.textBaseline = "middle";
 
-                            var text = incident_report,
-                                textX = 250,//Math.round((width - ctx.measureText(text).width) / 2),
-                                textY = height / 2;
+            //                 var text = incident_report,
+            //                     textX = 250,//Math.round((width - ctx.measureText(text).width) / 2),
+            //                     textY = height / 2;
 
-                            ctx.fillText(text, textX + 45, textY);
+            //                 ctx.fillText(text, textX + 45, textY);
 
-                            ctx.restore();
-                            var fontSize = 2;
-                            ctx.font = fontSize + "em sans-serif";
-                            ctx.textBaseline = "middle";
+            //                 ctx.restore();
+            //                 var fontSize = 2;
+            //                 ctx.font = fontSize + "em sans-serif";
+            //                 ctx.textBaseline = "middle";
 
-                            ctx.fillText("INCIDENTS", textX, textY + 45);
+            //                 ctx.fillText("INCIDENTS", textX, textY + 45);
 
-                            ctx.save();
-                        }
-                    }],
-                    options: pieOptions
-                });
-            });
+            //                 ctx.save();
+            //             }
+            //         }],
+            //         options: pieOptions
+            //     });
+            // });
         },
-        
+
 
         filterChartByMonth: function () {
-            //console.log(this.filter);
-            alert('monthez');
+            //this.filter.month);
+            // var filter = this.filter;
 
             var filter = this.filter;
-            // $(function () {
-            $.get("/admin/reports/merchant-population/list", filter, function (data) {
+            $.get("admin/reports/trend-report-by-month/list", filter, function (data) {
+                let datasets = [];
+
+                let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8'];
+
+
+                $.each(data.data, function (key, value) {
+                    let background_color = dynamicColors[key];
+                    datasets.push({
+                        label: value.building_name + '(Reports: ' + value.reports + ')',
+                        backgroundColor: background_color,
+                        borderColor: background_color,
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: background_color,
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: background_color,
+                        data: [value.week_one, value.week_two, value.week_three, value.week_four]
+                    });
+                });
+
+                var areaChartData = {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: datasets
+                };
+
+                var barChartData = $.extend(true, {}, areaChartData);
+
+                var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+                var stackedBarChartData = $.extend(true, {}, barChartData)
+
+                var stackedBarChartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    }
+                }
+
+                new Chart(stackedBarChartCanvas, {
+                    type: 'bar',
+                    data: stackedBarChartData,
+                    options: stackedBarChartOptions
+                })
+            });
+
+            $.get("admin/reports/donut-report-by-day/list", filter, function (data) {
                 let labels = [];
                 let data_value = [];
                 let incident_report = 0;
 
-
+                // alert('sss');
 
                 if (data.data.length > 0) {
                     $.each(data.data, function (key, value) {
@@ -535,16 +611,232 @@ export default {
                     options: pieOptions
                 });
             });
+
 
         },
         filterChartByYear: function () {
             //console.log(this.filter);
-            alert('yearz');
+            //alert('yearz');
+
+            //alert(this.filter.year);
+            //var filter = this.filter;
+            var filter = this.filter;
+            $.get("admin/reports/trend-report-by-year/list", filter, function (data) {
+                let datasets = [];
+
+                let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8','#00FF00','#808000','#FFA500','#86608E','#B666D2','#F3E8EA','#F5F5F5'];
+
+
+                $.each(data.data, function (key, value) {
+                    let background_color = dynamicColors[key];
+                    datasets.push({
+                        label: value.building_name + '(Reports: ' + value.reports + ')',
+                        backgroundColor: background_color,
+                        borderColor: background_color,
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: background_color,
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: background_color,
+                        data: [value.jan, value.feb, value.mar, value.apr, value.may, value.jun, value.jul, value.aug, value.sep, value.oct, value.nov, value.dec]
+                    });
+                });
+
+                var areaChartData = {
+                    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+                    datasets: datasets
+                };
+
+                var barChartData = $.extend(true, {}, areaChartData);
+
+                var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+                var stackedBarChartData = $.extend(true, {}, barChartData)
+
+                var stackedBarChartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    }
+                }
+
+                new Chart(stackedBarChartCanvas, {
+                    type: 'bar',
+                    data: stackedBarChartData,
+                    options: stackedBarChartOptions
+                })
+            });
+
+            $.get("admin/reports/donut-report-by-day/list", filter, function (data) {
+                let labels = [];
+                let data_value = [];
+                let incident_report = 0;
+
+
+                if (data.data.length > 0) {
+                    $.each(data.data, function (key, value) {
+                        //labels.push(value.questionnaire_answer);
+                        labels.push(value.questionnaire);
+                        //data_value.push(1);
+                        // incident_report.push(value.tenant_survey);
+                        incident_report += parseInt(value.tenant_survey);
+                        data_value.push(value.percentage_share);
+                        //randomBackgroundColor.push(dynamicColors());
+                    });
+                }
+                else {
+                    labels = ['Empty']
+                    data_value = [1];
+                    //randomBackgroundColor = ['#d2d6de'];
+                }
+
+                var donutData = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: data_value,
+                            backgroundColor: ['#728FCE', '#90EE90', '#FED8B1', '#A52A2A', '#a59fa2'],
+                        }
+                    ]
+                }
+
+                var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
+                var pieData = donutData;
+                var pieOptions = {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                }
+
+                // new Chart(pieChartSurveyCanvas, {
+                //     type: 'pie',
+                //     data: pieData,
+                //     options: pieOptions
+                // })
+                var myChart = new Chart(pieChartSurveyCanvas, {
+                    type: 'doughnut',
+                    data: pieData,
+                    plugins: [{ //plugin added for this chart
+                        beforeDraw: function (chart) {
+                            var width = chart.chart.width,
+                                height = chart.chart.height,
+                                ctx = chart.chart.ctx;
+
+                            ctx.restore();
+                            var fontSize = 2.5;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
+
+                            var text = incident_report,
+                                textX = 250,//Math.round((width - ctx.measureText(text).width) / 2),
+                                textY = height / 2;
+
+                            ctx.fillText(text, textX + 45, textY);
+
+                            ctx.restore();
+                            var fontSize = 2;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
+
+                            ctx.fillText("INCIDENTS", textX, textY + 45);
+
+                            ctx.save();
+                        }
+                    }],
+                    options: pieOptions
+                });
+            });
 
         },
         filterChartByLifetime: function () {
             //console.log(this.filter);
-            alert('lifetimez');
+            //alert('yearz');
+
+            //alert(this.filter.lifetime);
+            var filter = this.filter;
+            $.get("admin/reports/donut-report-by-day/list", filter, function (data) {
+                let labels = [];
+                let data_value = [];
+                let incident_report = 0;
+
+                //alert('sss');
+
+                if (data.data.length > 0) {
+                    $.each(data.data, function (key, value) {
+                        //labels.push(value.questionnaire_answer);
+                        labels.push(value.questionnaire);
+                        //data_value.push(1);
+                        // incident_report.push(value.tenant_survey);
+                        incident_report += parseInt(value.tenant_survey);
+                        data_value.push(value.percentage_share);
+                        //randomBackgroundColor.push(dynamicColors());
+                    });
+                }
+                else {
+                    labels = ['Empty']
+                    data_value = [1];
+                    //randomBackgroundColor = ['#d2d6de'];
+                }
+
+                var donutData = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: data_value,
+                            backgroundColor: ['#728FCE', '#90EE90', '#FED8B1', '#A52A2A', '#a59fa2'],
+                        }
+                    ]
+                }
+
+                var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
+                var pieData = donutData;
+                var pieOptions = {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                }
+
+                // new Chart(pieChartSurveyCanvas, {
+                //     type: 'pie',
+                //     data: pieData,
+                //     options: pieOptions
+                // })
+                var myChart = new Chart(pieChartSurveyCanvas, {
+                    type: 'doughnut',
+                    data: pieData,
+                    plugins: [{ //plugin added for this chart
+                        beforeDraw: function (chart) {
+                            var width = chart.chart.width,
+                                height = chart.chart.height,
+                                ctx = chart.chart.ctx;
+
+                            ctx.restore();
+                            var fontSize = 2.5;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
+
+                            var text = incident_report,
+                                textX = 250,//Math.round((width - ctx.measureText(text).width) / 2),
+                                textY = height / 2;
+
+                            ctx.fillText(text, textX + 45, textY);
+
+                            ctx.restore();
+                            var fontSize = 2;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
+
+                            ctx.fillText("INCIDENTS", textX, textY + 45);
+
+                            ctx.save();
+                        }
+                    }],
+                    options: pieOptions
+                });
+            });
 
         },
     },
