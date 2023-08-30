@@ -46,30 +46,16 @@ use Hash;
 
 class MainController extends AppBaseController
 {
-    public $room_idz;
-    public $site_idz;
-    public $site_building_idz;
-    public $site_building_level_idz;
-    public $room_namez;
-    public $jordan;
-
-    public function __construct()
-    {
-        // $this->room_idz = $room_idz; 
-    }
-
     public function index($id)
     {
-
-        $jordan = 'ee';
         $room = SiteBuildingRoomViewModel::find($id);
-        $this->jordan = $this->setId($room->id);
-        $this->room_idz = $jordan;
-        $this->room_idz = 'zzz'; //$room->id;
-        $this->room_namez = 'zzz'; // $room->name;
-        $this->site_idz = 'zz'; // $room->site_id;
-        $this->site_building_idz = 'zz'; // $room->site_building_id;
-        $this->site_building_level_idz = 'zz'; //     $room->site_building_level_id; 
+    //    // $this->jordan = $this->setId($room->id);
+    //     //$this->room_idz = $jordan;
+    //     $this->room_idz = 'zzz'; //$room->id;
+    //     $this->room_namez = 'zzz'; // $room->name;
+    //     $this->site_idz = 'zz'; // $room->site_id;
+    //     $this->site_building_idz = 'zz'; // $room->site_building_id;
+    //     $this->site_building_level_idz = 'zz'; //     $room->site_building_level_id; 
 
 
         $site = Site::where('is_default', 1)->where('active', 1)->first();
@@ -596,11 +582,5 @@ class MainController extends AppBaseController
                 'status_code' => 422,
             ], 422);
         }
-    }
-
-    public function setId($id)
-    {
-
-        return $id;
     }
 }
