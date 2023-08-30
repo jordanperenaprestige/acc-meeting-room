@@ -1797,6 +1797,16 @@ span {
     margin-top: 4rem;
 
 }
+.concern-title2 {
+    font-family: Henry Sans Regular;
+    /* color: #; */
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    -webkit-text-stroke: 2px #ffdb00;
+    margin-top: 1rem;
+
+}
 
 .building-floor-room-title {
     font-family: Henry Sans Regular;

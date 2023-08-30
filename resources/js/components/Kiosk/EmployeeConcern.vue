@@ -13,9 +13,13 @@
                     <div>{{ questionnaire.answer }}</div>
                 </div>
             </div>
-            <div v-show="show_submit_button" class="row justify-content-center">
-                <div class="col-2">
-                    <img :src="this.submit_logo" @click="submit()" class="responsive">
+            <div class="row justify-content-center">
+                <div class="col-5">
+                </div>
+                <div class="col-2 concern-title">
+                    <div v-show="show_submit_button"><img :src="this.submit_logo" @click="submit()" class="responsive"></div>
+                </div>
+                <div class="col-5">
                 </div>
             </div>
         </div>
@@ -26,7 +30,7 @@
                 </div>
             </div>
             <!-- this.user.roles[0].id -->
-            <div class="grid-container">
+            <div class="grid-container" >
                 <div v-for="(survey_pending, index) in survey_pendings" class="grid-item"
                     v-if="survey_pending.questionnaire_user_role == user_role">
                     <div><img v-if="survey_pending.questionnaire_survey_id > 0" :src="check_red_logo"
@@ -143,9 +147,10 @@
         </div>
         <div v-show="show_default_room">
             <div class="row justify-content-right">
-                <div class="col-4 building-floor-room-title">
-
-                </div>
+                <div class="col-4 concern-title" data-toggle="modal" data-target="#modal-default" @click="pincodeModal($event)"
+                :id=0>
+                FIRST
+            </div>
                 <div class="col-4 building-floor-room-title">
                 </div>
                 <div class="col-4 building-floor-room-title2 passingID" data-toggle="modal" data-target="#modal-default"
@@ -154,28 +159,13 @@
                 </div>
             </div>
         </div>
-        <div v-show="show_admin_button" class="row">
-            <img :src="acc_transparent_logo" class="passingID" data-toggle="modal" data-target="#modal-default"
-                @click="pincodeModal($event)" :id=0>
-        </div>
         <div v-show="show_rooms">
             <div class="row justify-content-center">
-                <div class="col-2 concern-title">
-                    <p @click="reloadPage">KIOSK ID</p>
+                <div class="col-12">
+                    <p class="concern-title" @click="reloadPage">FIRST KIOSK</p>
+                    <p class="concern-title2" @click="reloadPage">First Immediate Response Support Team</p>
                 </div>
             </div>
-
-
-            <!-- <div class="row justify-content-center">
-                <div class="col-4">
-                    <select class="custom-select" @change="onChange($event)" v-model="room.id">
-                        <option value="0">Select Room</option>
-                        <option v-for="room in rooms" :value="room.id"> {{ room.building_name }}--{{
-                            room.building_floor_name }}--{{ room.name }}</option>
-                    </select>
-
-                </div>
-            </div> -->
             <div class="row justify-content-center" style="margin-top: 2rem;">
                 <div class="col-4">
                     <select class="custom-select" v-model="kiosk.site_id" @change="getBuildings($event.target.value)">
@@ -556,7 +546,7 @@ export default {
         switchRoom: function () {
             var room_id = this.kiosk.site_building_room_id
             this.$router
-                .push({ path: '/'+ room_id})
+                .push({ path: '/' + room_id })
                 .then(() => { this.$router.go() })
 
             // let formData = new FormData();
