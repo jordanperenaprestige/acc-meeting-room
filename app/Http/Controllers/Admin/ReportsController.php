@@ -557,7 +557,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-           // echo 'xxxxxx'; print_r($request->year); echo 'zzzzzzzzzzzzzzzz';
+           //    echo 'xxxxxx'; print_r($request->year); echo 'zzzzzzzzzzzzzzzz';
             $start_date  = $request->year . '-01-01 00:00:00';
             $end_date = $request->year . '-12-31 23:59:59';
             // echo '-----'.$start_date;

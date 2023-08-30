@@ -184,6 +184,13 @@
 </template>
 <script>
 export default {
+
+    props: ['defaultRoom'],
+    mounted () {
+      // Do something useful with the data in the template
+     // alert(this.defaultRoom);
+    },
+    
     name: "Questionnaires",
     data() {
         return {
@@ -244,7 +251,7 @@ export default {
     created() {
         this.getQuestionnaires();
         this.getDefaultRoom();
-        setInterval(this.getDefaultRoomInterval, 30000);
+       // setInterval(this.getDefaultRoomInterval, 30000);
         
     },
 
@@ -252,16 +259,16 @@ export default {
         reloadPage: function (){
             window.location.reload();
         },
-        getQuestionnaires: function () {
+        getQuestionnaires: function () { 
             axios.get('/api/v1/employee/get-concerns')
                 .then(response => {
                     this.questionnaires = response.data.data
                 });
         },
-        getDefaultRoom: function () {
-            axios.get('/api/v1/employee/get-default-room')
+        getDefaultRoom: function () {  
+            axios.get('/api/v1/employee/get-default-room/' + this.defaultRoom)
                 .then(response => {
-                    var room = response.data.data;
+                    var room = response.data.data; 
                     this.room.id = room.id;
                     this.survey.site_id = room.site_id;
                     this.survey.site_building_id = room.site_building_id;
@@ -270,14 +277,12 @@ export default {
                     this.room.building_level_room = room.building_name + '.' + room.building_floor_name + '.' + room.name;
                     this.user_role = '';
                     this.user_role_name = '';
-                  //  console.log(room);
-                    
                 });
         },
-        getDefaultRoomInterval: function () {
-            axios.get('/api/v1/employee/get-default-room')
+        getDefaultRoomInterval: function () { 
+            axios.get('/api/v1/employee/get-default-room/' + this.defaultRoom)
                 .then(response => {
-                    var room = response.data.data;
+                    var room = response.data.data; 
                     // this.room.id = room.id;
                     // this.survey.site_id = room.site_id;
                     // this.survey.site_building_id = room.site_building_id;

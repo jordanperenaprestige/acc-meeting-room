@@ -69,7 +69,7 @@ Route::group(['prefix' => 'v1'], function ()
     Route::get('/employee/get-concerns', 'Kiosk\MainController@getConcerns')->name('kiosk.employee.concerns');
     Route::get('/employee/get-answer-details/{id}', 'Kiosk\MainController@getAnswerDetails')->where('id', '[0-9]+')->name('kiosk.employee.concern.details');
     Route::get('/employee/get-rooms', 'Kiosk\MainController@getRooms')->name('kiosk.employee.rooms');
-    Route::get('/employee/get-default-room', 'Kiosk\MainController@getDefaultRoom')->name('kiosk.employee.default.room');
+    Route::get('/employee/get-default-room/{id}', 'Kiosk\MainController@getDefaultRoom')->where('id', '[0-9]+')->name('kiosk.employee.default.room');
     Route::get('/employee/get-buildings', 'Kiosk\MainController@getBuildings')->name('kiosk.employee.buildings');
     Route::post('/employee/store-concern', 'Kiosk\MainController@storeConcern')->name('kiosk.employee.store-concern');
     Route::post('/employee/store-concern-pending', 'Kiosk\MainController@storeConcernPending')->name('kiosk.employee.store-concern-pending');

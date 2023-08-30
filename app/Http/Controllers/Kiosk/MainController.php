@@ -46,8 +46,32 @@ use Hash;
 
 class MainController extends AppBaseController
 {
-    public function index()
+    public $room_idz;
+    public $site_idz;
+    public $site_building_idz;
+    public $site_building_level_idz;
+    public $room_namez;
+    public $jordan;
+
+    public function __construct()
     {
+        // $this->room_idz = $room_idz; 
+    }
+
+    public function index($id)
+    {
+
+        $jordan = 'ee';
+        $room = SiteBuildingRoomViewModel::find($id);
+        $this->jordan = $this->setId($room->id);
+        $this->room_idz = $jordan;
+        $this->room_idz = 'zzz'; //$room->id;
+        $this->room_namez = 'zzz'; // $room->name;
+        $this->site_idz = 'zz'; // $room->site_id;
+        $this->site_building_idz = 'zz'; // $room->site_building_id;
+        $this->site_building_level_idz = 'zz'; //     $room->site_building_level_id; 
+
+
         $site = Site::where('is_default', 1)->where('active', 1)->first();
         // $site_screen_id = SiteScreen::where('is_default', 1)->where('active', 1)->where('site_id', $site->id)->first()->id;
         // $site['site_screen_id'] = $site_screen_id;
@@ -63,7 +87,7 @@ class MainController extends AppBaseController
             $site_name = 'generic';
             $site['site_name'] = $site_name;
         }
-
+        $site['default_room'] = $id;
         return view('kiosk.main', $site);
     }
 
@@ -108,11 +132,11 @@ class MainController extends AppBaseController
         }
     }
 
-    public function getRooms()
+    public function getRooms($id)
     {
         try {
-            $site = Site::where('is_default', 1)->where('active', 1)->first(); 
-            $room = SiteBuildingRoomViewModel::where('site_id', $site->id)->get();
+            //$site = Site::where('is_default', 1)->where('active', 1)->first(); 
+            $room = SiteBuildingRoomViewModel::where('id', $id)->get();
             return $this->response($room, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -121,10 +145,13 @@ class MainController extends AppBaseController
             ], 200);
         }
     }
-    public function getDefaultRoom()
+    public function getDefaultRoom($id)
     {
+        // echo 'xxxxxxxxxxxxxxx' . $this->jordan;
+        // print_r($this);
         try {
-            $room = SiteBuildingRoomViewModel::where('is_default', 1)->where('active', 1)->first();
+            //$room = SiteBuildingRoomViewModel::where('is_default', 1)->where('active', 1)->first();
+            $room = SiteBuildingRoomViewModel::where('id', $id)->first();
             return $this->response($room, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -328,7 +355,7 @@ class MainController extends AppBaseController
     public function getRoomSurvey($id)
     {
         $room = SiteBuildingRoomViewModel::find($id);
-        
+
         $question_answers = QuestionnaireAnswer::orderBy('questionnaire_id', 'asc')->get();
 
         $data = array();
@@ -474,7 +501,8 @@ class MainController extends AppBaseController
         }
     }
     public function switchRoom(Request $request)
-    {   try {
+    {
+        try {
             SiteBuildingRoom::where('is_default', 1)->update(['is_default' => 0]);
             $room = SiteBuildingRoom::find($request->room_id);
             $room->update(['is_default' => 1]);
@@ -486,7 +514,7 @@ class MainController extends AppBaseController
                 'status' => false,
                 'status_code' => 422,
             ], 422);
-        }               
+        }
     }
 
     public function getSMS()
@@ -568,5 +596,11 @@ class MainController extends AppBaseController
                 'status_code' => 422,
             ], 422);
         }
+    }
+
+    public function setId($id)
+    {
+
+        return $id;
     }
 }

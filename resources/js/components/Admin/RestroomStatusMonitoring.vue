@@ -335,7 +335,7 @@ export default {
           },
         })
           .then(response => {
-            toastr.success(response.data.message); alert('ssss');
+            toastr.success(response.data.message); 
             $('.close').click();
             //location.reload();
 
