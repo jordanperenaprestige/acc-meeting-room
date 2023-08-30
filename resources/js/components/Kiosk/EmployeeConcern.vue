@@ -48,7 +48,7 @@
             <div class="row justify-content-center">
                 <div class="col-2 mr-2">
                     <img :src="this.success_logo" class="responsive">
-                </div> 
+                </div>
             </div>
             <div class="row justify-content-center" style="border: 1cm;">
                 <div class="col-5 concern-title">
@@ -148,9 +148,9 @@
                 </div>
                 <div class="col-4 building-floor-room-title">
                 </div>
-                <div class="col-4 building-floor-room-title2 passingID" data-toggle="modal" data-target="#modal-default" 
-                    @click="pincodeModal($event)" :id=1 >
-                   {{ this.room.building_level_room }}
+                <div class="col-4 building-floor-room-title2 passingID" data-toggle="modal" data-target="#modal-default"
+                    @click="pincodeModal($event)" :id=1>
+                    {{ this.room.building_level_room }}
                 </div>
             </div>
         </div>
@@ -164,7 +164,9 @@
                     <p @click="reloadPage">KIOSK ID</p>
                 </div>
             </div>
-            <div class="row justify-content-center">
+
+
+            <!-- <div class="row justify-content-center">
                 <div class="col-4">
                     <select class="custom-select" @change="onChange($event)" v-model="room.id">
                         <option value="0">Select Room</option>
@@ -172,6 +174,41 @@
                             room.building_floor_name }}--{{ room.name }}</option>
                     </select>
 
+                </div>
+            </div> -->
+            <div class="row justify-content-center" style="margin-top: 2rem;">
+                <div class="col-4">
+                    <select class="custom-select" v-model="kiosk.site_id" @change="getBuildings($event.target.value)">
+                        <option value="">Select Site</option>
+                        <option v-for="site in sites" :value="site.id"> {{ site.name }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-center" style="margin-top: 2rem;">
+                <div class="col-4">
+                    <select class="custom-select" v-model="kiosk.site_building_id"
+                        @change="getFloorLevels($event.target.value)">
+                        <option value="">Select Building</option>
+                        <option v-for="building in buildings" :value="building.id"> {{ building.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-center" style="margin-top: 2rem;">
+                <div class="col-4">
+                    <select class="custom-select" v-model="kiosk.site_building_level_id"
+                        @change="getRoom($event.target.value)">
+                        <option value="">Select Floor</option>
+                        <option v-for="floor in floors" :value="floor.id"> {{ floor.name }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-center" style="margin-top: 2rem;">
+                <div class="col-4">
+                    <select class="custom-select" v-model="kiosk.site_building_room_id">
+                        <option value="">Select Room</option>
+                        <option v-for="room in roomss" :value="room.id"> {{ room.name }}</option>
+                    </select>
                 </div>
             </div>
             <div v-show="show_save_button" class="row justify-content-center">
@@ -186,11 +223,11 @@
 export default {
 
     props: ['defaultRoom'],
-    mounted () {
-      // Do something useful with the data in the template
-     // alert(this.defaultRoom);
+    mounted() {
+        // Do something useful with the data in the template
+        // alert(this.defaultRoom);
     },
-    
+
     name: "Questionnaires",
     data() {
         return {
@@ -205,6 +242,13 @@ export default {
             survey: {
                 questionnaire_id: '',
                 questionnaire_answer_id: '',
+                site_id: '',
+                site_building_id: '',
+                site_building_level_id: '',
+                site_building_room_id: '',
+            },
+            kiosk: {
+                id: '',
                 site_id: '',
                 site_building_id: '',
                 site_building_level_id: '',
@@ -244,6 +288,10 @@ export default {
             user_role_name: '',
             jordan: 'pogi',
             pincode_modal: 0,
+            sites: [],
+            buildings: [],
+            floors: [],
+            roomss: [],
 
         }
     },
@@ -251,24 +299,25 @@ export default {
     created() {
         this.getQuestionnaires();
         this.getDefaultRoom();
-       // setInterval(this.getDefaultRoomInterval, 30000);
-        
+        setInterval(this.getDefaultRoomInterval, 30000);
+        this.getSites();
+
     },
 
     methods: {
-        reloadPage: function (){
+        reloadPage: function () {
             window.location.reload();
         },
-        getQuestionnaires: function () { 
+        getQuestionnaires: function () {
             axios.get('/api/v1/employee/get-concerns')
                 .then(response => {
                     this.questionnaires = response.data.data
                 });
         },
-        getDefaultRoom: function () {  
+        getDefaultRoom: function () {
             axios.get('/api/v1/employee/get-default-room/' + this.defaultRoom)
                 .then(response => {
-                    var room = response.data.data; 
+                    var room = response.data.data;
                     this.room.id = room.id;
                     this.survey.site_id = room.site_id;
                     this.survey.site_building_id = room.site_building_id;
@@ -279,10 +328,10 @@ export default {
                     this.user_role_name = '';
                 });
         },
-        getDefaultRoomInterval: function () { 
+        getDefaultRoomInterval: function () {
             axios.get('/api/v1/employee/get-default-room/' + this.defaultRoom)
                 .then(response => {
-                    var room = response.data.data; 
+                    var room = response.data.data;
                     // this.room.id = room.id;
                     // this.survey.site_id = room.site_id;
                     // this.survey.site_building_id = room.site_building_id;
@@ -291,8 +340,8 @@ export default {
                     // this.room.building_level_room = room.building_name + '.' + room.building_floor_name + '.' + room.name;
                     // this.user_role = '';
                     // this.user_role_name = '';
-                  //  console.log(room);
-                    
+                    //  console.log(room);
+
                 });
         },
         getRooms: function () {
@@ -303,7 +352,7 @@ export default {
             var id = event.target.id;
             const index = this.concern.indexOf(id);
             if (index > -1) {//  alert('1');
-                this.concern.splice(index, 1); 
+                this.concern.splice(index, 1);
                 axios.get('/api/v1/employee/get-answer-details/' + id)
                     .then(response => {
                         var answer = response.data.data;
@@ -408,13 +457,13 @@ export default {
                 this.show_submit_pending_button = false;
             }
         },
-        onChange(event) {
-            if (event.target.value > 0) {
-                this.show_save_button = true;
-            } else {
-                this.show_save_button = false;
-            }
-        },
+        // onChange(event) {
+        //     if (event.target.value > 0) {
+        //         this.show_save_button = true;
+        //     } else {
+        //         this.show_save_button = false;
+        //     }
+        // },
         input: function (value) {
             if (value == "backspace") {
                 this.input_digit.pop();
@@ -473,7 +522,7 @@ export default {
                 },
             })
                 .then(response => {
-                    if (response.data.data) { 
+                    if (response.data.data) {
                         this.input_digit = [];
                         this.room.input_one = '';
                         this.room.input_two = '';
@@ -504,19 +553,51 @@ export default {
                     }
                 });
         },
-        switchRoom() {
-            let formData = new FormData();
-            formData.append("room_id", this.room.id);
-            axios.post('/api/v1/employee/switch-room/', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                },
-            })
-                .then(response => {
-                    this.show_switch_room_success = true;
-                    this.show_rooms = false;
-                    setTimeout(function () { window.location.reload(); }, 5000);
-                });
+        switchRoom: function () {
+            var room_id = this.kiosk.site_building_room_id
+            this.$router
+                .push({ path: '/'+ room_id})
+                .then(() => { this.$router.go() })
+
+            // let formData = new FormData();
+            // formData.append("room_id", this.room.id);
+            // axios.post('/api/v1/employee/switch-room/', formData, {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'
+            //     },
+            // })
+            //     .then(response => {
+            //         this.show_switch_room_success = true;
+            //         this.show_rooms = false;
+            //         setTimeout(function () { window.location.reload(); }, 5000);
+            //     });
+        },
+
+        getSites: function () {
+            axios.get('/api/v1/employee/site/get-all')
+                .then(response => this.sites = response.data.data);
+        },
+
+        getBuildings: function (id) {
+            axios.get('/api/v1/employee/site/get-buildings/' + id)
+                .then(response => this.buildings = response.data.data);
+        },
+
+        getFloorLevels: function (id) {
+            axios.get('/api/v1/employee/site/floors/' + id)
+                .then(response => this.floors = response.data.data);
+        },
+        getRoom: function (id) {
+            axios.get('/api/v1/employee/site/floors/rooms/' + id)
+                .then(
+                    response => {
+                        this.roomss = response.data.data;
+                        if (this.roomss.length != 0) {
+                            this.show_save_button = true;
+                        } else {
+                            this.show_save_button = false;
+                        }
+                    });
         },
 
     },

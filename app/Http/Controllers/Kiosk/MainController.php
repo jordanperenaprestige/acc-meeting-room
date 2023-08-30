@@ -41,7 +41,9 @@ use App\Models\SendSMS;
 use App\Models\User;
 use App\Models\UserRole;
 use App\Models\Role;
+use App\Models\SiteBuildingLevel;
 use App\Models\SiteBuildingRoom;
+
 use Hash;
 
 class MainController extends AppBaseController
@@ -215,69 +217,6 @@ class MainController extends AppBaseController
                 }
             }
         }
-        //     try {
-        //         $ReturnValue = '';
-
-        //         $URLTarget = 'https://api.m360.com.ph/v3/api/broadcast';
-
-        //         $URLBodyParams = array(
-        //             'app_key' => 'hpnqOJChhT926MoH',
-        //             'app_secret' => 'gwuVX95iJPxZGfyKEA75NBDNYbhJYSPQ',
-        //             'msisdn' =>  '09163305124',
-        //             'content' => 'Hi Local',
-        //             'shortcode_mask' => 'WorkplacePH',
-        //         );
-
-        //         $PostFields = '';
-
-        //         foreach ($URLBodyParams as $Key => $Value)
-
-        //             $PostFields .= urlencode($Key) . '=' . urlencode($Value) . '&';
-
-        //         ////////////testphp/////////////////
-
-        //         // $ch = curl_init($URLTarget);
-        //         // curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        //         // curl_setopt($ch, CURLOPT_POST, TRUE);
-        //         // curl_setopt($ch, CURLOPT_HEADER, FALSE);
-        //         // curl_setopt($ch, CURLOPT_POSTFIELDS, $PostFields);
-        //         // $CURLReturn = curl_exec($ch);
-        //         // check if the curl was successful
-        //         //////////////smshelper////////////////     
-
-        //         $ch = curl_init();
-        //         curl_setopt($ch, CURLOPT_URL, 'https://api.m360.com.ph/v3/api/broadcast');
-        //         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        //         //curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
-        //         curl_setopt($ch, CURLOPT_POST, TRUE);
-        //         curl_setopt($ch, CURLOPT_POSTFIELDS, $PostFields);
-        //         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        //         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-
-        //         // $movies = json_decode(curl_exec($ch));
-        //         $CURLReturn = curl_exec($ch);
-
-        //         ////////////////////////////////
-
-        //         if (curl_errno($ch) != 0)
-
-        //             //throw new Exception("CURL ERROR (" . curl_errno($ch) . ") " . curl_error($ch), 20001);
-        //             curl_close($ch);
-
-        //         $ReturnValue = $CURLReturn;
-        //         // echo 'zzzzzzzzzzzzzzzzzzz';
-        //     } catch (\Exception $e) {
-
-        //         $ReturnValue = $e->getMessage();
-        //     }
-        //     return $this->response($ReturnValue, 'Successfully Created!', 200);
-        // } catch (\Exception $e) {
-        //     return response([
-        //         'message' => $e->getMessage(),
-        //         'status' => false,
-        //         'status_code' => 422,
-        //     ], 422);
-        // }
     }
 
     public function storeConcernPending(Request $request)
@@ -576,6 +515,71 @@ class MainController extends AppBaseController
 
             return $this->response($questionnaire_survey, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
+    public function getAll()
+    {
+        try {
+            $sites = SiteViewModel::orderBy('name')->where('active', 1)->get();
+            return $this->response($sites, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
+    public function getBuildingss($id)
+    {
+        try
+    	{
+            $buildings = SiteBuilding::where('site_id', $id)->get();
+            return $this->response($buildings, 'Successfully Deleted!', 200);
+        }
+        catch (\Exception $e) 
+        {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
+    public function getFloors($id)
+    {
+        try
+    	{
+            $building_levels = SiteBuildingLevel::where('site_building_id', $id)->get();
+            return $this->response($building_levels, 'Successfully Retreived!', 200);
+        }
+        catch (\Exception $e) 
+        {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
+    public function getRoomss($id)
+    {
+        try
+    	{   
+            $building_rooms = SiteBuildingRoom::where('site_building_level_id', $id)->get();
+            return $this->response($building_rooms, 'Successfully Retreived!', 200);
+        }
+        catch (\Exception $e) 
+        {
             return response([
                 'message' => $e->getMessage(),
                 'status' => false,
