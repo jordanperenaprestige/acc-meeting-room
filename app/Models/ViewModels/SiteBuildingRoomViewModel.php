@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\SiteMap;
+use App\Models\Site;
 use App\Models\SiteBuilding;
 use App\Models\SiteBuildingLevel;
 use App\Models\QuestionnaireSurvey;
@@ -45,6 +46,7 @@ class SiteBuildingRoomViewModel extends Model
      * @var string
      */
     public $appends = [
+        'site_name',
         'building_name',
         'building_floor_name',
         'building_floor_room_surveys',
@@ -64,7 +66,11 @@ class SiteBuildingRoomViewModel extends Model
     /****************************************
      *           ATTRIBUTES PARTS            *
      ****************************************/
-    public function getBuildingNameAttribute()
+    public function getSiteNameAttribute()
+    {
+        return Site::find($this->site_id)->name;
+    }
+     public function getBuildingNameAttribute()
     {
         return SiteBuilding::find($this->site_building_id)->name;
     }

@@ -17,7 +17,8 @@
                 <div class="col-5">
                 </div>
                 <div class="col-2 concern-title">
-                    <div v-show="show_submit_button"><img :src="this.submit_logo" @click="submit()" class="responsive"></div>
+                    <div v-show="show_submit_button"><img :src="this.submit_logo" @click="submit()" class="responsive">
+                    </div>
                 </div>
                 <div class="col-5">
                 </div>
@@ -30,7 +31,7 @@
                 </div>
             </div>
             <!-- this.user.roles[0].id -->
-            <div class="grid-container" >
+            <div class="grid-container">
                 <div v-for="(survey_pending, index) in survey_pendings" class="grid-item"
                     v-if="survey_pending.questionnaire_user_role == user_role">
                     <div><img v-if="survey_pending.questionnaire_survey_id > 0" :src="check_red_logo"
@@ -111,7 +112,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">ENTER 4-DIGIT PIN TO PROCEED</h4>
+                        <h4 class="modal-title" style="color: #212529;">ENTER 4-DIGIT PIN TO PROCEED</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -146,14 +147,12 @@
             <!-- /.modal-dialog -->
         </div>
         <div v-show="show_default_room">
-            <div class="row justify-content-right">
-                <div class="col-4 concern-title" data-toggle="modal" data-target="#modal-default" @click="pincodeModal($event)"
-                :id=0>
-                FIRST
-            </div>
-                <div class="col-4 building-floor-room-title">
+            <div class="row justify-content-right col-8" style ="position: absolute; bottom: 93px;">
+                <div class="col-4 first-title" data-toggle="modal" data-target="#modal-default"
+                    @click="pincodeModal($event)" :id=0>
+                    FIRST
                 </div>
-                <div class="col-4 building-floor-room-title2 passingID" data-toggle="modal" data-target="#modal-default"
+                <div class="col-8 building-floor-room-title2 passingID" data-toggle="modal" data-target="#modal-default"
                     @click="pincodeModal($event)" :id=1>
                     {{ this.room.building_level_room }}
                 </div>
@@ -289,7 +288,7 @@ export default {
     created() {
         this.getQuestionnaires();
         this.getDefaultRoom();
-        setInterval(this.getDefaultRoomInterval, 30000);
+        //setInterval(this.getDefaultRoomInterval, 30000);
         this.getSites();
 
     },
@@ -313,7 +312,7 @@ export default {
                     this.survey.site_building_id = room.site_building_id;
                     this.survey.site_building_level_id = room.site_building_level_id;
                     this.survey_pendings = room.building_floor_room_survey_pendings;
-                    this.room.building_level_room = room.building_name + '.' + room.building_floor_name + '.' + room.name;
+                    this.room.building_level_room = room.site_name + '.' + room.building_name + '.' + room.building_floor_name + '.' + room.name;
                     this.user_role = '';
                     this.user_role_name = '';
                 });

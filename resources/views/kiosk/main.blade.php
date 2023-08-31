@@ -4,7 +4,7 @@
     <div class="row">
     </div>
 </div>
-<employee-concern :default-room="{{$default_room}}"></employee-concern> 
+<employee-concern :default-room ="{{$default_room}}"></employee-concern> 
 
 <!-- /.content -->
 @stop
@@ -20,7 +20,7 @@
         $.get("/api/v1/get-update", function(data) {
             console.log(data);
             if (data.data.length > 0) {
-                location.reload();
+               // location.reload();
             }
         });
     }

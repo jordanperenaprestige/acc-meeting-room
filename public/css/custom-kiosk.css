@@ -1794,6 +1794,16 @@ span {
     font-weight: 500;
     text-align: center;
     -webkit-text-stroke: 2px #ffdb00;
+    margin-top: 2rem;
+
+}
+.first-title {
+    font-family: Henry Sans Regular;
+    /* color: #; */
+    font-size: 30px;
+    font-weight: 500;
+    text-align: left;
+    -webkit-text-stroke: 2px #ffdb00;
     margin-top: 4rem;
 
 }
@@ -1803,7 +1813,8 @@ span {
     font-size: 20px;
     font-weight: 500;
     text-align: center;
-    -webkit-text-stroke: 2px #ffdb00;
+    color: #ffdb00;
+    /* -webkit-text-stroke: 2px #ffdb00; */
     margin-top: 1rem;
 
 }
@@ -1820,9 +1831,9 @@ span {
     font-family: Henry Sans Regular;
     color: #FFFFFF;
     font-size: 25px;
-    text-align: center;
+    text-align: right;
     padding: 0.5em;
-    margin-top: 4rem;
+    margin-top: 3rem;
 }
 
 .responsive {
@@ -1833,15 +1844,15 @@ span {
 
 .grid-keypad {
     display: grid;
-    column-gap: 10px;
+    column-gap: 20px;
     row-gap: 10px;
     grid-template-columns: auto auto auto;
     padding: 5px;
     grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: 80px;
+    grid-auto-rows: 90px;
     grid-auto-columns: 50px;
     margin-top: 1rem;
-    margin-left: 0rem;
+    margin-left: 2rem;
     margin-right: 0rem;
     padding-left: 5rem;
     padding-right: 5rem;
