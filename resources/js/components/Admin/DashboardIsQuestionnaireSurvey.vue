@@ -150,7 +150,8 @@ export default {
                 format: 'YYYY-MM-DD',
                 useCurrent: false,
             },
-            filters_by: ['Day', 'Week', 'Month', 'Year', 'Lifetime'],
+            //filters_by: ['Day', 'Week', 'Month', 'Year', 'Lifetime'],
+            filters_by: ['Day','Month', 'Year'],
             by_day: false,
             by_month: false,
             by_year: false,
@@ -263,7 +264,7 @@ export default {
                 $.each(data.data, function (key, value) {
                     let background_color = dynamicColors[key];
                     datasets.push({
-                        label: value.building_name + '(Reports: ' + value.reports + ')',
+                        label: value.building_name + '(Report(s): ' + value.reports + ')',
                         backgroundColor: background_color,
                         borderColor: background_color,
                         pointRadius: false,
@@ -358,14 +359,10 @@ export default {
 
             });
 
-            //$.get("/admin/reports/merchant-population/list", filter, function (data) {
             $.get("admin/reports/donut-report-by-day/list", filter, function (data) {
                 let labels = [];
                 let data_value = [];
                 let incident_report = 0;
-
-
-
                 if (data.data.length > 0) {
                     $.each(data.data, function (key, value) {
                         //labels.push(value.questionnaire_answer);
@@ -389,7 +386,7 @@ export default {
                     datasets: [
                         {
                             data: data_value,
-                            backgroundColor: ['#728FCE', '#90EE90', '#FED8B1', '#A52A2A', '#a59fa2'],
+                            backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
                         }
                     ]
                 }
@@ -503,50 +500,12 @@ export default {
                     data: pieData_answer,
                     options: pieOptions_answer
                 })
-                // var myChart = new Chart(pieChartSurveyCanvas_answer, {
-                //     type: 'doughnut',
-                //     data: pieData_answer,
-                //     plugins: [{ //plugin added for this chart
-                //         beforeDraw: function (chart) {
-                //             var width = chart.chart.width,
-                //                 height = chart.chart.height,
-                //                 ctx = chart.chart.ctx;
-
-                //             ctx.restore();
-                //             var fontSize = 1.5;
-                //             ctx.font = fontSize + "em sans-serif";
-                //             ctx.textBaseline = "middle";
-
-                //             var text = incident_report_answer,
-                //                 textX = 170,//Math.round((width - ctx.measureText(text).width) / 2),
-                //                 textY = height / 2;
-
-                //             ctx.fillText(text, textX + 45, textY);
-
-                //             ctx.restore();
-                //             var fontSize = 1;
-                //             ctx.font = fontSize + "em sans-serif";
-                //             ctx.textBaseline = "middle";
-
-                //             ctx.fillText("INCIDENTS", textX, textY + 45);
-
-                //             ctx.save();
-                //         }
-                //     }],
-                //     options: {
-                //         pieOptions_answer,
-                //         tooltips: { enabled: true },
-                //         hover: { mode: null },
-                //     }
-                // });
             });
         },
 
 
         filterChartByMonth: function () {
-            //this.filter.month);
-            // var filter = this.filter;
-
+            
             var filter = this.filter;
             $.get("admin/reports/trend-report-by-month/list", filter, function (data) {
                 let datasets = [];
@@ -598,14 +557,61 @@ export default {
                     options: reportBarChartOptions
                 })
             });
+            $.get("admin/reports/trend-incident-by-month/list", filter, function (data) {
+                let datasets = [];
+
+                let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8'];
+
+
+                $.each(data.data, function (key, value) {
+                    let background_color = dynamicColors[key];
+                    datasets.push({
+                        label: value.building_name + '(Incident(s): ' + value.reports + ')',
+                        backgroundColor: background_color,
+                        borderColor: background_color,
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: background_color,
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: background_color,
+                        data: [value.week_one, value.week_two, value.week_three, value.week_four]
+                    });
+                });
+
+                var areaChartData = {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: datasets
+                };
+
+                var barChartData = $.extend(true, {}, areaChartData);
+
+                var reportBarChartCanvas = $('#incidentBarChart').get(0).getContext('2d')
+                var reportBarChartData = $.extend(true, {}, barChartData)
+
+                var reportBarChartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    }
+                }
+
+                new Chart(reportBarChartCanvas, {
+                    type: 'bar',
+                    data: reportBarChartData,
+                    options: reportBarChartOptions
+                })
+            });
 
             $.get("admin/reports/donut-report-by-day/list", filter, function (data) {
                 let labels = [];
                 let data_value = [];
                 let incident_report = 0;
-
-                // alert('sss');
-
                 if (data.data.length > 0) {
                     $.each(data.data, function (key, value) {
                         //labels.push(value.questionnaire_answer);
@@ -616,6 +622,7 @@ export default {
                         data_value.push(value.percentage_share);
                         //randomBackgroundColor.push(dynamicColors());
                     });
+                    console.log(labels);
                 }
                 else {
                     labels = ['Empty']
@@ -628,10 +635,13 @@ export default {
                     datasets: [
                         {
                             data: data_value,
-                            backgroundColor: ['#728FCE', '#90EE90', '#FED8B1', '#A52A2A', '#a59fa2'],
+                            backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
                         }
                     ]
                 }
+                var cleanliness = '#728FCE';
+                var supplies = '#90EE90';
+                var functionality = '#FED8B1';
 
                 var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
                 var pieData = donutData;
@@ -655,28 +665,90 @@ export default {
                                 ctx = chart.chart.ctx;
 
                             ctx.restore();
-                            var fontSize = 2.5;
+                            var fontSize = 1.5;
                             ctx.font = fontSize + "em sans-serif";
                             ctx.textBaseline = "middle";
 
                             var text = incident_report,
-                                textX = 250,//Math.round((width - ctx.measureText(text).width) / 2),
+                                textX = 185,//Math.round((width - ctx.measureText(text).width) / 2),
                                 textY = height / 2;
 
-                            ctx.fillText(text, textX + 45, textY);
+                            ctx.fillText(text, 165 + 45, textY);
 
                             ctx.restore();
-                            var fontSize = 2;
+                            var fontSize = 1;
                             ctx.font = fontSize + "em sans-serif";
                             ctx.textBaseline = "middle";
 
-                            ctx.fillText("INCIDENTS", textX, textY + 45);
+                            ctx.fillText("INCIDENTS", textX, textY + 35);
 
                             ctx.save();
                         }
                     }],
-                    options: pieOptions
+                    options: {
+                        pieOptions,
+                        events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
+                    }
                 });
+            });
+
+            $.get("admin/reports/donut-report-by-day-answer/list", filter, function (data) {
+                let labels_answer = [];
+                let data_value_answer = [];
+                let incident_report_answer = 0;
+                let randomBackgroundColor = [];
+                var cleanliness = '#728FCE';
+                var supplies = '#90EE90';
+                var functionality = '#FED8B1';
+
+
+                if (data.data.length > 0) {
+                    $.each(data.data, function (key, value) {
+                        labels_answer.push(value.questionnaire_answer);
+                        //console.log(value.questionnaire);
+                        //labels_answer.push(value.questionnaire);
+                        //data_value.push(1);
+                        // incident_report.push(value.tenant_survey);
+                        incident_report_answer += parseInt(value.tenant_survey);
+                        data_value_answer.push(value.percentage_share);
+                        if (value.questionnaire == 'CLEANLINESS') {
+                            randomBackgroundColor.push(cleanliness);
+                        } else if (value.questionnaire == 'SUPPLIES') {
+                            randomBackgroundColor.push(supplies);
+                        } else {
+                            randomBackgroundColor.push(functionality);
+                        }
+
+                    });
+                }
+                else {
+                    labels_answer = ['Empty']
+                    data_value_answer = [1];
+                    randomBackgroundColor = [cleanliness];
+                }
+                //console.log();
+                var donutData_answer = {
+                    labels: labels_answer,
+                    datasets: [
+                        {
+                            data: data_value_answer,
+                            backgroundColor: randomBackgroundColor,
+                        }
+                    ]
+                }
+
+                var pieChartSurveyCanvas_answer = $('#pieChartSurveyAnswer').get(0).getContext('2d')
+                var pieData_answer = donutData_answer;
+                var pieOptions_answer = {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                }
+
+                new Chart(pieChartSurveyCanvas_answer, {
+                    type: 'pie',
+                    data: pieData_answer,
+                    options: pieOptions_answer
+                })
             });
 
 
@@ -692,7 +764,7 @@ export default {
                 $.each(data.data, function (key, value) {
                     let background_color = dynamicColors[key];
                     datasets.push({
-                        label: value.building_name + '(Reports: ' + value.reports + ')',
+                        label: value.building_name + '(Report(s): ' + value.reports + ')',
                         backgroundColor: background_color,
                         borderColor: background_color,
                         pointRadius: false,
@@ -733,13 +805,62 @@ export default {
                     options: reportBarChartOptions
                 })
             });
+            $.get("admin/reports/trend-incident-by-year/list", filter, function (data) {
+                let datasets = [];
+
+                let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#00FF00', '#808000', '#FFA500', '#86608E', '#B666D2', '#F3E8EA', '#F5F5F5'];
+
+
+                $.each(data.data, function (key, value) {
+                    let background_color = dynamicColors[key];
+                    datasets.push({
+                        label: value.building_name + '(Incident(s): ' + value.reports + ')',
+                        backgroundColor: background_color,
+                        borderColor: background_color,
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: background_color,
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: background_color,
+                        data: [value.jan, value.feb, value.mar, value.apr, value.may, value.jun, value.jul, value.aug, value.sep, value.oct, value.nov, value.dec]
+                    });
+                });
+
+                var areaChartData = {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: datasets
+                };
+
+                var barChartData = $.extend(true, {}, areaChartData);
+
+                var reportBarChartCanvas = $('#incidentBarChart').get(0).getContext('2d')
+                var reportBarChartData = $.extend(true, {}, barChartData)
+
+                var reportBarChartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    }
+                }
+
+                new Chart(reportBarChartCanvas, {
+                    type: 'bar',
+                    data: reportBarChartData,
+                    options: reportBarChartOptions
+                })
+            });
+            
 
             $.get("admin/reports/donut-report-by-day/list", filter, function (data) {
                 let labels = [];
                 let data_value = [];
                 let incident_report = 0;
-
-
                 if (data.data.length > 0) {
                     $.each(data.data, function (key, value) {
                         //labels.push(value.questionnaire_answer);
@@ -750,6 +871,7 @@ export default {
                         data_value.push(value.percentage_share);
                         //randomBackgroundColor.push(dynamicColors());
                     });
+                    console.log(labels);
                 }
                 else {
                     labels = ['Empty']
@@ -762,10 +884,13 @@ export default {
                     datasets: [
                         {
                             data: data_value,
-                            backgroundColor: ['#728FCE', '#90EE90', '#FED8B1', '#A52A2A', '#a59fa2'],
+                            backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
                         }
                     ]
                 }
+                var cleanliness = '#728FCE';
+                var supplies = '#90EE90';
+                var functionality = '#FED8B1';
 
                 var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
                 var pieData = donutData;
@@ -789,28 +914,89 @@ export default {
                                 ctx = chart.chart.ctx;
 
                             ctx.restore();
-                            var fontSize = 2.5;
+                            var fontSize = 1.5;
                             ctx.font = fontSize + "em sans-serif";
                             ctx.textBaseline = "middle";
 
                             var text = incident_report,
-                                textX = 250,//Math.round((width - ctx.measureText(text).width) / 2),
+                                textX = 185,//Math.round((width - ctx.measureText(text).width) / 2),
                                 textY = height / 2;
 
-                            ctx.fillText(text, textX + 45, textY);
+                            ctx.fillText(text, 165 + 45, textY);
 
                             ctx.restore();
-                            var fontSize = 2;
+                            var fontSize = 1;
                             ctx.font = fontSize + "em sans-serif";
                             ctx.textBaseline = "middle";
 
-                            ctx.fillText("INCIDENTS", textX, textY + 45);
+                            ctx.fillText("INCIDENTS", textX, textY + 35);
 
                             ctx.save();
                         }
                     }],
-                    options: pieOptions
+                    options: {
+                        pieOptions,
+                        events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
+                    }
                 });
+            });
+            $.get("admin/reports/donut-report-by-day-answer/list", filter, function (data) {
+                let labels_answer = [];
+                let data_value_answer = [];
+                let incident_report_answer = 0;
+                let randomBackgroundColor = [];
+                var cleanliness = '#728FCE';
+                var supplies = '#90EE90';
+                var functionality = '#FED8B1';
+
+
+                if (data.data.length > 0) {
+                    $.each(data.data, function (key, value) {
+                        labels_answer.push(value.questionnaire_answer);
+                        //console.log(value.questionnaire);
+                        //labels_answer.push(value.questionnaire);
+                        //data_value.push(1);
+                        // incident_report.push(value.tenant_survey);
+                        incident_report_answer += parseInt(value.tenant_survey);
+                        data_value_answer.push(value.percentage_share);
+                        if (value.questionnaire == 'CLEANLINESS') {
+                            randomBackgroundColor.push(cleanliness);
+                        } else if (value.questionnaire == 'SUPPLIES') {
+                            randomBackgroundColor.push(supplies);
+                        } else {
+                            randomBackgroundColor.push(functionality);
+                        }
+
+                    });
+                }
+                else {
+                    labels_answer = ['Empty']
+                    data_value_answer = [1];
+                    randomBackgroundColor = [cleanliness];
+                }
+                //console.log();
+                var donutData_answer = {
+                    labels: labels_answer,
+                    datasets: [
+                        {
+                            data: data_value_answer,
+                            backgroundColor: randomBackgroundColor,
+                        }
+                    ]
+                }
+
+                var pieChartSurveyCanvas_answer = $('#pieChartSurveyAnswer').get(0).getContext('2d')
+                var pieData_answer = donutData_answer;
+                var pieOptions_answer = {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                }
+
+                new Chart(pieChartSurveyCanvas_answer, {
+                    type: 'pie',
+                    data: pieData_answer,
+                    options: pieOptions_answer
+                })
             });
 
         },
