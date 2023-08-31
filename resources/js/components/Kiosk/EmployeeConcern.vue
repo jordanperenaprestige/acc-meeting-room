@@ -353,14 +353,14 @@ export default {
                 $("#" + id).attr('src', this.check_logo);
                 this.show_button();
             }
-            console.log(this.concern);
+            //console.log(this.concern);
         },
         pincodeModal(event) {
             var id = event.target.id;
             this.pincode_modal = id;
         },
 
-        switchImagePending(event) {
+        switchImagePending(event) { alert('eeee');
             var id = event.target.id;
             const index = this.concern_pending.indexOf(id);
             if (index > -1) {

@@ -18,7 +18,7 @@
 
     function getUpdate() {
         $.get("/api/v1/get-update", function(data) {
-            console.log(data);
+          //  console.log(data);
             if (data.data.length > 0) {
                // location.reload();
             }
