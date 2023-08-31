@@ -147,12 +147,12 @@
             <!-- /.modal-dialog -->
         </div>
         <div v-show="show_default_room">
-            <div class="row justify-content-right col-8" style ="position: absolute; bottom: 93px;">
-                <div class="col-4 first-title" data-toggle="modal" data-target="#modal-default"
+            <div class="row justify-content-right col-12" style ="position: absolute; bottom: 12px;">
+                <div class="col-5 first-title" data-toggle="modal" data-target="#modal-default"
                     @click="pincodeModal($event)" :id=0>
                     FIRST
                 </div>
-                <div class="col-8 building-floor-room-title2 passingID" data-toggle="modal" data-target="#modal-default"
+                <div class="col-6 building-floor-room-title2 passingID" data-toggle="modal" data-target="#modal-default"
                     @click="pincodeModal($event)" :id=1>
                     {{ this.room.building_level_room }}
                 </div>
