@@ -369,8 +369,8 @@ export default {
 		filterChartByDay: function () {
 
 			var filter = this.filter;
-			
-			$.get("../../../../admin/dashboard/trend-report-by-day/list", filter, function (data) {
+			//../../../../
+			$.get("/admin/dashboard/trend-report-by-day/list", filter, function (data) {
 				let datasets = [];
 
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
@@ -422,7 +422,7 @@ export default {
 
 			});
 
-			$.get("../../../../admin/dashboard/trend-incident-by-day/list", filter, function (data) {
+			$.get("/admin/dashboard/trend-incident-by-day/list", filter, function (data) {
 				let datasetsz = [];
 
 				let dynamicColorsz = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
@@ -474,7 +474,7 @@ export default {
 
 			});
 
-			$.get("../../../../admin/dashboard/donut-report-by-day/list", filter, function (data) {
+			$.get("/admin/dashboard/donut-report-by-day/list", filter, function (data) {
 				let labels = [];
 				let data_value = [];
 				let incident_report = 0;
@@ -558,7 +558,7 @@ export default {
 				});
 			});
 
-			$.get("../../../../admin/dashboard/donut-report-by-day-answer/list", filter, function (data) {
+			$.get("/admin/dashboard/donut-report-by-day-answer/list", filter, function (data) {
 				let labels_answer = [];
 				let data_value_answer = [];
 				let incident_report_answer = 0;
@@ -622,7 +622,7 @@ export default {
 		filterChartByMonth: function () {
 
 			var filter = this.filter;
-			$.get("../../../../admin/dashboard/trend-report-by-month/list", filter, function (data) {
+			$.get("/admin/dashboard/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
 
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8'];
@@ -672,7 +672,7 @@ export default {
 					options: reportBarChartOptions
 				})
 			});
-			$.get("../../../../admin/dashboard/trend-incident-by-month/list", filter, function (data) {
+			$.get("/admin/dashboard/trend-incident-by-month/list", filter, function (data) {
 				let datasets = [];
 
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8'];
@@ -723,7 +723,7 @@ export default {
 				})
 			});
 
-			$.get("../../../../admin/dashboard/donut-report-by-day/list", filter, function (data) {
+			$.get("/admin/dashboard/donut-report-by-day/list", filter, function (data) {
 				let labels = [];
 				let data_value = [];
 				let incident_report = 0;
@@ -807,7 +807,7 @@ export default {
 				});
 			});
 
-			$.get("../../../../admin/dashboard/donut-report-by-day-answer/list", filter, function (data) {
+			$.get("/admin/dashboard/donut-report-by-day-answer/list", filter, function (data) {
 				let labels_answer = [];
 				let data_value_answer = [];
 				let incident_report_answer = 0;
@@ -870,7 +870,7 @@ export default {
 		},
 		filterChartByYear: function () {
 			var filter = this.filter;
-			$.get("../../../../admin/dashboard/trend-report-by-year/list", filter, function (data) {
+			$.get("/admin/dashboard/trend-report-by-year/list", filter, function (data) {
 				let datasets = [];
 
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#00FF00', '#808000', '#FFA500', '#86608E', '#B666D2', '#F3E8EA', '#F5F5F5'];
@@ -920,7 +920,7 @@ export default {
 					options: reportBarChartOptions
 				})
 			});
-			$.get("../../../../admin/dashboard/trend-incident-by-year/list", filter, function (data) {
+			$.get("/admin/dashboard/trend-incident-by-year/list", filter, function (data) {
 				let datasets = [];
 
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#00FF00', '#808000', '#FFA500', '#86608E', '#B666D2', '#F3E8EA', '#F5F5F5'];
@@ -972,7 +972,7 @@ export default {
 			});
 
 
-			$.get("../../../../admin/dashboard/donut-report-by-day/list", filter, function (data) {
+			$.get("/admin/dashboard/donut-report-by-day/list", filter, function (data) {
 				let labels = [];
 				let data_value = [];
 				let incident_report = 0;
@@ -1055,7 +1055,7 @@ export default {
 					}
 				});
 			});
-			$.get("../../../../admin/dashboard/donut-report-by-day-answer/list", filter, function (data) {
+			$.get("/admin/dashboard/donut-report-by-day-answer/list", filter, function (data) {
 				let labels_answer = [];
 				let data_value_answer = [];
 				let incident_report_answer = 0;
@@ -1121,7 +1121,7 @@ export default {
 
 			//alert(this.filter.lifetime);
 			var filter = this.filter;
-			$.get("../../../../admin/dashboard/donut-report-by-day/list", filter, function (data) {
+			$.get("/admin/dashboard/donut-report-by-day/list", filter, function (data) {
 				let labels = [];
 				let data_value = [];
 				let incident_report = 0;
