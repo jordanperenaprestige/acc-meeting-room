@@ -179,21 +179,23 @@ export default {
                 this.by_year = false;
                 this.by_start = false;
                 this.by_end = false;
-            } else if (this.filter.by == 1) {
-                this.clear_filter();
-                this.by_day = false;
-                this.by_month = false;
-                this.by_year = false;
-                this.by_start = false;
-                this.by_end = false;
-            } else if (this.filter.by == 2) {
+            } 
+            //else if (this.filter.by == 1) {
+            //     this.clear_filter();
+            //     this.by_day = false;
+            //     this.by_month = false;
+            //     this.by_year = false;
+            //     this.by_start = false;
+            //     this.by_end = false;
+            //} 
+            else if (this.filter.by == 1) {
                 this.clear_filter();
                 this.by_day = false;
                 this.by_month = true;
                 this.by_year = false;
                 this.by_start = false;
                 this.by_end = false;
-            } else if (this.filter.by == 3) {
+            } else if (this.filter.by == 2) {
                 this.clear_filter();
                 this.by_day = false;
                 this.by_month = false;
