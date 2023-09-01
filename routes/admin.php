@@ -23,7 +23,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/dashboad/room/update/{id}', 'Admin\DashboardController@update')->name('admin.room.update');
     Route::get('/admin/dashboad/room/get-survey', 'Admin\DashboardController@getRoomSurvey')->name('admin.room.surveys');
     Route::post('/admin/dashboard/room/store-update', 'Admin\DashboardController@storeUpdate')->name('admin.room.store-update');
-
+// for report
     Route::get('/admin/dashboard/trend-report-by-day/list', 'Admin\DashboardController@getTrendReportByDay')->where('id', '[0-9]+')->name('admin.dashboard.trend-report-by-day.list');
     Route::get('/admin/dashboard/trend-incident-by-day/list', 'Admin\DashboardController@getTrendIncidentByDay')->where('id', '[0-9]+')->name('admin.dashboard.trend-incident-by-day.list');
     Route::get('/admin/dashboard/donut-report-by-day/list', 'Admin\DashboardController@getDonutReportByDay')->name('admin.dashboard.donut-by-day-answer.list');
