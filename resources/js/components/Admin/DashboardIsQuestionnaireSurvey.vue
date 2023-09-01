@@ -172,13 +172,17 @@ export default {
                 .then(response => this.sites = response.data.data);
         },
         filterBy: function () {
-            if (this.filter.by == 0) {
-                this.clear_filter();
+            if (this.filter.by == 0) { alert(0);
+               // this.clear_filter();
                 this.by_day = true;
                 this.by_month = false;
                 this.by_year = false;
                 this.by_start = false;
                 this.by_end = false;
+
+                const currentDay = moment(new Date()).format("YYYY-MM-DD");
+                this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
+                this.filterChartByDay();
             } 
             //else if (this.filter.by == 1) {
             //     this.clear_filter();
@@ -188,22 +192,26 @@ export default {
             //     this.by_start = false;
             //     this.by_end = false;
             //} 
-            else if (this.filter.by == 1) {
-                this.clear_filter();
+            else if (this.filter.by == 1) {alert(1);
+                //this.clear_filter();
                 this.by_day = false;
                 this.by_month = true;
                 this.by_year = false;
                 this.by_start = false;
                 this.by_end = false;
-            } else if (this.filter.by == 2) {
-                this.clear_filter();
+
+                const currentMonth = moment().month();
+                this.filter.month = (this.filter.month == '') ? currentMonth : this.filter.month;
+                this.filterChartByMonth();
+            } else if (this.filter.by == 2) { alert(2);
+                //this.clear_filter();
                 this.by_day = false;
                 this.by_month = false;
                 this.by_year = true;
                 this.by_start = false;
                 this.by_end = false;
             } else {
-                this.clear_filter();
+               // this.clear_filter();
                 this.by_day = false;
                 this.by_month = false;
                 this.by_year = false;
@@ -222,15 +230,16 @@ export default {
                 this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
                 this.filterChartByDay();
 
+            } 
+            // else if (this.filter.by == 1) {//Week
 
-            } else if (this.filter.by == 1) {//Week
-
-            } else if (this.filter.by == 2) {//Month
+            // } 
+            else if (this.filter.by == 1) {//Month
                 const currentMonth = moment().month();
                 this.filter.month = (this.filter.month == '') ? currentMonth : this.filter.month;
                 this.filterChartByMonth();
 
-            } else if (this.filter.by == 3) {//Year
+            } else if (this.filter.by == 2) {//Year
                 const currentYear = moment().year();
                 this.filter.year = (this.filter.year == '') ? currentYear : this.filter.year;
                 this.filterChartByYear();

@@ -287,7 +287,7 @@ export default {
 		},
 		filterBy: function () {
 			if (this.filter.by == 0) {
-				this.clear_filter();
+				//this.clear_filter();
 				this.by_day = true;
 				this.by_month = false;
 				this.by_year = false;
@@ -303,21 +303,21 @@ export default {
 			// 	this.by_end = false;
 			// } 
 			else if (this.filter.by == 1) {
-				this.clear_filter();
+				//this.clear_filter();
 				this.by_day = false;
 				this.by_month = true;
 				this.by_year = false;
 				this.by_start = false;
 				this.by_end = false;
 			} else if (this.filter.by == 2) {
-				this.clear_filter();
+				//this.clear_filter();
 				this.by_day = false;
 				this.by_month = false;
 				this.by_year = true;
 				this.by_start = false;
 				this.by_end = false;
 			} else {
-				this.clear_filter();
+				//this.clear_filter();
 				this.by_day = false;
 				this.by_month = false;
 				this.by_year = false;
