@@ -132,7 +132,6 @@ class DashboardController extends AppBaseController
                         QuestionnaireSurvey::create($data);
                     }
                 } else {
-                    echo $pending_done;
                     $data = [
                         'questionnaire_answer_id' => $answer_id,
                         'site_building_room_id' => $room_id,
@@ -153,7 +152,7 @@ class DashboardController extends AppBaseController
                         ->limit(1)
                         ->get();
 
-                    if (count($questionnaire_surveyz) != 0) {
+                    if (count($questionnaire_surveyz) != 0) { echo 'meron';
                         // $data = [
                         //     'Remarks' => 'Done',
                         // ];
@@ -181,7 +180,11 @@ class DashboardController extends AppBaseController
                             site_building_room_id = "' . $room_id . '"'
 
                         );
-                    }
+
+                       // echo 'zzzzzzzzzzzzzzzzzzzzzzzzzzzz';
+                        //return $this->response('', 'Successfully Modified!', 200);
+                    }echo 'zzzzzzzzzzzzzzzzzzzzzzzzzzzz';
+                    return $this->response('', 'Successfully Modified!', 200);
                 }
             }
         }

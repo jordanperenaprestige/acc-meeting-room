@@ -29,7 +29,7 @@
                                     <textarea class="form-control" v-model="site.descriptions" placeholder="Descriptions" rows="8"></textarea>
 								</div>
 							</div>
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label for="firstName" class="col-sm-3 col-form-label">Logo</label>
 								<div class="col-sm-5">
                                     <input type="file" accept="image/*" ref="site_logo" @change="siteLogoChange">
@@ -101,7 +101,7 @@
 								<div class="col-sm-9">
 									<input type="text" class="form-control" v-model="site.website" placeholder="Website">
 								</div>
-							</div>
+							</div> -->
 							<div class="form-group row">
 								<div class="col-sm-12 text-right">
 									<button type="button" class="btn btn-secondary btn-sm" @click="backToList"><i class="fa fa-angle-double-left" aria-hidden="true"></i>&nbsp;Back to list</button>

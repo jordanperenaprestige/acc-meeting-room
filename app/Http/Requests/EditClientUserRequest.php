@@ -38,9 +38,11 @@ class EditClientUserRequest extends FormRequest
                 'regex:/[@$!%*#?&]/', // must contain a special character
             ],
             "company" => "required",
-            "brands" => "required|array",
-            "sites" => "required|array",
-            "screens" => "required|array",
+            //"brands" => "required|array",
+            //"sites" => "required|array",
+            //"screens" => "required|array",
+            "mobile" =>  "required|regex:/^([0-9\s\-\+\(\)]*)$/|min:11|max:11",
+            "pass_int" => "required|regex:/^([0-9\s\-\+\(\)]*)$/|min:4|max:4",
         ];;
     }
 }

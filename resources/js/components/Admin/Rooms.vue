@@ -95,7 +95,7 @@
 		</div>
 		<!-- End Modal Add New User -->
 		<!-- Modal -->
-		<div class="modal fade" id="levelDeleteModal" tabindex="-1" aria-labelledby="levelDeleteModal" aria-hidden="true">
+		<div class="modal fade" id="roomDeleteModal" tabindex="-1" aria-labelledby="roomDeleteModal" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header bg-danger">
@@ -223,7 +223,7 @@ export default {
 			axios.get('/admin/site/room/' + id)
 				.then(response => {
 					var room = response.data.data;
-					this.getFloorLevel(screen.site_building_id);
+					this.getFloorLevel(room.site_building_id);
 					this.room.id = room.id;
 					this.room.site_building_id = room.site_building_id;
 					this.room.name = room.name;
@@ -244,19 +244,18 @@ export default {
 		},
 
 		DeleteRoom: function (data) {
-			this.id_to_deleted = data.id;
-			$('#levelDeleteModal').modal('show');
+			this.id_to_deleted = data.id; 
+			$('#roomDeleteModal').modal('show');
 		},
 
-		removeRoom: function () {
+		removeRoom: function () { 
 			axios.get('/admin/site/room/delete/' + this.id_to_deleted)
 				.then(response => {
 					this.$refs.roomsDataTable.fetchData();
 					this.id_to_deleted = 0;
-					$('#levelDeleteModal').modal('hide');
+					$('#roomDeleteModal').modal('hide');
 				});
-		}
-
+		},
 	},
 
 	components: {

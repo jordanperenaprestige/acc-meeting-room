@@ -59,8 +59,8 @@ class ClientUserController extends AppBaseController implements ClientUserContro
         }
     }
 
-    // public function store(ClientUserRequest $request)
-    public function store(Request $request)
+    public function store(ClientUserRequest $request)
+    //public function store(Request $request)
     {
         try
     	{
@@ -72,7 +72,9 @@ class ClientUserController extends AppBaseController implements ClientUserContro
                 'email' => $request->email,
                 'salt' => $salt,
                 'password' => $password,
-                'pass_int' => $request->password,
+                'pass_int' => $request->pass_int,
+                'mobile' => $request->mobile,
+                'pin_int' => $request->pin_int,
                 'active' => 1
             ];
 
@@ -114,8 +116,8 @@ class ClientUserController extends AppBaseController implements ClientUserContro
         }
     }
 
-    // public function update(EditClientUserRequest $request)
-    public function update(Request $request)
+    public function update(EditClientUserRequest $request)
+    //public function update(Request $request)
     {
         try
     	{
@@ -126,6 +128,8 @@ class ClientUserController extends AppBaseController implements ClientUserContro
                 'full_name' => $request->last_name.', '.$request->first_name,
                 'email' => $request->email,
                 'pass_int' => $request->password,
+                'pass_int' => $request->pass_int,
+                'mobile' => $request->mobile,
                 'active' => $request->isActive
             ];
 

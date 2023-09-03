@@ -268,7 +268,7 @@ export default {
 
 		},
 		updateRoomAnswerStatus: function () {
-			console.log(this.concern);
+			//console.log(this.concern);
 			let formData = new FormData();
 			formData.append("concern", this.concern);
 			axios.post('/admin/dashboard/room/store-update', formData, {
@@ -276,8 +276,14 @@ export default {
 					'Content-Type': 'multipart/form-data'
 				},
 			})
-				.then(response => {
-					toastr.success(response.data.message);
+				.then(response => { 
+					if(response.data.message == 'undefined'){
+						toastr.success('Successfully Modified!');
+					}else{
+						//toastr.success(response.data.message);
+						toastr.success('Successfully Modified!');
+					}
+					
 				})
 		},
 		//////////for reports
@@ -328,14 +334,12 @@ export default {
 
 		filterChart: function () {
 
-
 			const moment = require('moment');
 
 			if (this.filter.by == 0) {//day
 				const currentDay = moment(new Date()).format("YYYY-MM-DD");
 				this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
 				this.filterChartByDay();
-
 
 			} else if (this.filter.by == 1) {//Week
 
@@ -358,6 +362,7 @@ export default {
 
 			}
 		},
+
 		clear_filter: function () {
 			this.filter.select_date = '';
 			this.filter.start_date = '';
@@ -371,7 +376,7 @@ export default {
 		filterChartByDay: function () {
 
 			var filter = this.filter;
-			//../../../../
+			
 			$.get("/admin/dashboard/trend-report-by-day/list", filter, function (data) {
 				let datasets = [];
 
@@ -867,8 +872,6 @@ export default {
 					options: pieOptions_answer
 				})
 			});
-
-
 		},
 		filterChartByYear: function () {
 			var filter = this.filter;

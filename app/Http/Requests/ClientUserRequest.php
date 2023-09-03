@@ -38,6 +38,8 @@ class ClientUserRequest extends FormRequest
                 //'regex:/[@$!%*#?&]/', // must contain a special character
             ],
             "company" => "required",
+            "mobile" =>  "required|regex:/^([0-9\s\-\+\(\)]*)$/|min:11",
+            "pass_int" => "required|regex:/^([0-9\s\-\+\(\)]*)$/|min:4",
         ];
     }
 }
