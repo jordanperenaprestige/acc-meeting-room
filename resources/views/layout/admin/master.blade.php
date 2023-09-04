@@ -55,6 +55,8 @@
     <script src="{{ URL::to('plugins/toastr/toastr.min.js') }}"></script>
     <!-- ChartJS -->
     <script src="{{ URL::to('plugins/chart.js/Chart.min.js') }}"></script>
+    <!-- ChartLabelJS -->
+    <script src="{{ URL::to('plugins/chart.js/chartjs-plugin-labels.js') }}"></script>
     <!-- Ekko Lightbox -->
     <script src="{{ URL::to('plugins/ekko-lightbox/ekko-lightbox.min.js') }}"></script>
     <!-- Filterizr-->
