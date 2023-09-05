@@ -70,13 +70,13 @@
                                 <div class="col-md-6">
                                     <div class="chart-responsive">
                                         <canvas id="reportBarChart"
-                                            style="min-height: 350px; height: 350px; max-height: 350px; max-width: 100%;"></canvas>
+                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="chart-responsive">
                                         <canvas id="incidentBarChart"
-                                            style="min-height: 350px; height: 350px; max-height: 350px; max-width: 100%;"></canvas>
+                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -87,13 +87,13 @@
                                 <div class="col-md-6">
                                     <div class="chart-responsive">
                                         <canvas id="pieChartSurvey"
-                                            style="min-height: 350px; height: 350px; max-height: 350px; max-width: 100%;"></canvas>
+                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="chart-responsive">
                                         <canvas id="pieChartSurveyAnswer"
-                                            style="min-height: 350px; height: 350px; max-height: 350px; max-width: 100%;"></canvas>
+                                            style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -175,7 +175,7 @@ export default {
                 .then(response => this.sites = response.data.data);
         },
         filterBy: function () {
-            if (this.filter.by == 0) { 
+            if (this.filter.by == 0) {
                 // this.clear_filter();
                 this.by_day = true;
                 this.by_month = false;
@@ -183,8 +183,8 @@ export default {
                 this.by_start = false;
                 this.by_end = false;
 
-                const currentDay = moment(new Date()).format("YYYY-MM-DD"); 
-                this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day; 
+                const currentDay = moment(new Date()).format("YYYY-MM-DD");
+                this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
                 this.filterChartByDay();
             }
             //else if (this.filter.by == 1) {
@@ -267,15 +267,10 @@ export default {
         },
 
         filterChartByDay: function () {
-
             var filter = this.filter;
-console.log(filter);
             $.get("/admin/reports/trend-report-by-day/list", filter, function (data) {
                 let datasets = [];
-
                 let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
-
-console.log('>>>>>>>>>>>>>>'); console.log(data); console.log('<<<<<<<<<<<<<<');
                 $.each(data.data, function (key, value) {
                     let background_color = dynamicColors[key];
                     datasets.push({
@@ -290,7 +285,7 @@ console.log('>>>>>>>>>>>>>>'); console.log(data); console.log('<<<<<<<<<<<<<<');
                         data: [value.twentyfour, value.one, value.two, value.three, value.four, value.five, value.six, value.seven, value.eight, value.nine, value.ten, value.eleven, value.twelve, value.thirteen, value.forteen, value.fifteen, value.sixteen, value.seventeen, value.eighteen, value.nineteen, value.twenty, value.twentyone, value.twentytwo, value.twentythree]
                     });
                 });
-
+                
                 var areaChartData = {
                     labels: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
                     datasets: datasets
@@ -311,7 +306,12 @@ console.log('>>>>>>>>>>>>>>'); console.log(data); console.log('<<<<<<<<<<<<<<');
                         yAxes: [{
                             stacked: true
                         }]
-                    }
+                    },
+                    plugins: {
+                            labels: {
+                                render: 'value'
+                            }
+                        }
                 }
 
                 new Chart(reportBarChartCanvas, {
@@ -363,7 +363,12 @@ console.log('>>>>>>>>>>>>>>'); console.log(data); console.log('<<<<<<<<<<<<<<');
                         yAxes: [{
                             stacked: true
                         }]
-                    }
+                    },
+                    plugins: {
+                            labels: {
+                                render: 'value'
+                            }
+                        }
                 }
 
                 new Chart(reportBarChartCanvasz, {
@@ -384,7 +389,7 @@ console.log('>>>>>>>>>>>>>>'); console.log(data); console.log('<<<<<<<<<<<<<<');
                         incident_report += parseInt(value.tenant_survey);
                         data_value.push(value.percentage_share);
                     });
-                    console.log(labels);
+                   // console.log(labels);
                 }
                 else {
                     labels = ['Empty']
@@ -417,7 +422,7 @@ console.log('>>>>>>>>>>>>>>'); console.log(data); console.log('<<<<<<<<<<<<<<');
                 var myChart = new Chart(pieChartSurveyCanvas, {
                     type: 'doughnut',
                     data: pieData,
-                    plugins: [{ 
+                    plugins: [{
                         beforeDraw: function (chart) {
                             var width = chart.chart.width,
                                 height = chart.chart.height,
@@ -463,7 +468,8 @@ console.log('>>>>>>>>>>>>>>'); console.log(data); console.log('<<<<<<<<<<<<<<');
 
                 if (data.data.length > 0) {
                     $.each(data.data, function (key, value) {
-                        labels_answer.push(value.questionnaire_answer);
+                        var jordan = value.questionnaire_answer;
+                        labels_answer.push(jordan);
                         //console.log(value.questionnaire);
                         //labels_answer.push(value.questionnaire);
                         //data_value.push(1);
@@ -501,6 +507,22 @@ console.log('>>>>>>>>>>>>>>'); console.log(data); console.log('<<<<<<<<<<<<<<');
                 var pieOptions_answer = {
                     maintainAspectRatio: false,
                     responsive: true,
+                    plugins: {
+                        labels: [
+                            {
+                                render: 'label',
+                                position: 'outside'
+                            },
+                            {
+                                render: 'percentage'
+                            }
+                        ],
+
+
+                    },
+                    legend: {
+                        display: false,
+                    },
                 }
 
                 new Chart(pieChartSurveyCanvas_answer, {
@@ -629,7 +651,7 @@ console.log('>>>>>>>>>>>>>>'); console.log(data); console.log('<<<<<<<<<<<<<<');
                         data_value.push(value.percentage_share);
                         //randomBackgroundColor.push(dynamicColors());
                     });
-                    console.log(labels);
+                   // console.log(labels);
                 }
                 else {
                     labels = ['Empty']
@@ -878,7 +900,7 @@ console.log('>>>>>>>>>>>>>>'); console.log(data); console.log('<<<<<<<<<<<<<<');
                         data_value.push(value.percentage_share);
                         //randomBackgroundColor.push(dynamicColors());
                     });
-                    console.log(labels);
+                   // console.log(labels);
                 }
                 else {
                     labels = ['Empty']
