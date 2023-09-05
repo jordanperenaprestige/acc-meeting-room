@@ -34,7 +34,7 @@
                 </div>
                 <div class="grid-container">
                     <div v-for="(survey_pending, index) in survey_pendings" class="grid-item">
-                        <!-- <div v-if="survey_pending.questionnaire_user_role == user_role">
+                        <div v-if="survey_pending.questionnaire_user_role == user_role">
                             <img v-if="survey_pending.questionnaire_survey_id > 0" :src="check_red_logo"
                                 @click="switchImagePending($event)"
                                 :id="'pending_' + survey_pending.questionnaire_answer_id" class="responsive">
@@ -42,7 +42,7 @@
                         </div>
                         <div v-else>
                             <img :src="survey_pending.questionnaire_button.replace('.png', '_red.png')" class="responsive">
-                        </div> -->
+                        </div>
 <!-- test -->
                         <div>{{ survey_pending.questionnaire_name }}</div>
                     </div>
