@@ -32,21 +32,15 @@
                         <p @click="reloadPage">Local Admin: {{ this.user_role_name }} - {{ this.user.full_name }}</p>
                     </div>
                 </div>
-                <!-- this.user.roles[0].id -->
                 <div class="grid-container">
-                    <!-- <div v-for="(survey_pending, index) in survey_pendings" class="grid-item"
-                        v-if="survey_pending.questionnaire_user_role == user_role"> -->
                     <div v-for="(survey_pending, index) in survey_pendings" class="grid-item">
                         <div v-if="survey_pending.questionnaire_user_role == user_role">
                             <img v-if="survey_pending.questionnaire_survey_id > 0" :src="check_red_logo"
                                 @click="switchImagePending($event)"
                                 :id="'pending_' + survey_pending.questionnaire_answer_id" class="responsive">
-                            <!-- <img v-else :src="survey_pending.questionnaire_button" class="responsive"> -->
                             <img v-else :src="check_green_logo" class="responsive">
                         </div>
                         <div v-else>
-                            <!-- st1 | replace('cse','computer science') -->
-                            <!-- {{ survey_pending.questionnaire_button.replace('.png', '_red.png') }}zz -->
                             {{ survey_pending.questionnaire_button.replace('.png', '_red.png') }}
                             <!-- <img :src="survey_pending.questionnaire_button.replace('.png', '_red.png')" class="responsive"> -->
                         </div>
