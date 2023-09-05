@@ -9,19 +9,24 @@
 							<!-- <div class="card-tools"> -->
 							<form class="col-sm-12">
 								<div class="form-group row">
-									<div class="col-sm-6">
-										<h3>Status</h3>
-									</div>
-									<div class="col-sm-6">
-										<h3>Select to Apply</h3>
+									<div class="col-sm-12">
+										Room: <label>{{ this.room_name }}</label>	
 									</div>
 								</div>
-								<div class="form-group row" v-for="(  room_survey, index  ) in   room_surveys  ">
+								<div class="form-group row">
+									<div class="col-sm-6">
+										<label>Status</label>
+									</div>
+									<div class="col-sm-6">
+										<label>Select to Apply</label>
+									</div>
+								</div>
+								<div class="form-group row" v-for="(  room_survey, index  ) in room_surveys">
 									<!-- <div class="form-group row"> -->
 									<div class="col-sm-4">
-										<label for="question" class="col-form-label">
+										<!-- <label for="question" class=""> -->
 											{{ room_survey.questionnaire_name }}
-										</label>
+										<!-- </label> -->
 									</div>
 									<div class="col-sm-3"><button type="button"
 											:class="[`btn btn-block`, room_survey.pending]"
@@ -161,6 +166,7 @@ export default {
 			//     start_date: '',
 			//     end_date: '',
 			// },
+			room_name: '',
 			room_surveys: [],
 			concern: [],
 			pending: '',
@@ -224,7 +230,8 @@ export default {
 			axios.get('/admin/dashboad/room/get-survey')
 				.then(response => {
 					var room_survey = response.data.data;
-					this.room_surveys = room_survey; console.log(room_survey);
+					this.room_surveys = room_survey;
+					this.room_name = room_survey[0].site_building_room_name;
 				});
 		},
 
@@ -276,20 +283,22 @@ export default {
 					'Content-Type': 'multipart/form-data'
 				},
 			})
-				.then(response => { 
-					if(response.data.message == 'undefined'){
+				.then(response => {
+					if (response.data.message == 'undefined') {
 						toastr.success('Successfully Modified!');
-					}else{
+					} else {
 						//toastr.success(response.data.message);
 						toastr.success('Successfully Modified!');
 					}
-					
+
 				})
 		},
 		//////////for reports
-		getSites: function () { 
+		getSites: function () {
 			axios.get('/admin/site/get-all')
-				.then(response => this.sites = response.data.data);
+				.then(response => {
+					this.sites = response.data.data
+				});
 		},
 		filterBy: function () {
 			if (this.filter.by == 0) {
@@ -299,7 +308,7 @@ export default {
 				this.by_year = false;
 				this.by_start = false;
 				this.by_end = false;
-			} 
+			}
 			// else if (this.filter.by == 1) {
 			// 	this.clear_filter();
 			// 	this.by_day = false;
@@ -376,7 +385,7 @@ export default {
 		filterChartByDay: function () {
 
 			var filter = this.filter;
-			
+
 			$.get("/admin/dashboard/trend-report-by-day/list", filter, function (data) {
 				let datasets = [];
 
@@ -439,14 +448,15 @@ export default {
 					let background_colorz = dynamicColorsz[key];
 					datasetsz.push({
 						label: value.building_name + '(Incident: ' + value.reports + ')',
-						backgroundColor: background_colorz,
-						borderColor: background_colorz,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_colorz,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_colorz,
-						data: [value.twentyfour, value.one, value.two, value.three, value.four, value.five, value.six, value.seven, value.eight, value.nine, value.ten, value.eleven, value.twelve, value.thirteen, value.forteen, value.fifteen, value.sixteen, value.seventeen, value.eighteen, value.nineteen, value.twenty, value.twentyone, value.twentytwo, value.twentythree]
+						// backgroundColor: background_colorz,
+						// borderColor: background_colorz,
+						// pointRadius: false,
+						// pointColor: '#3b8bba',
+						// pointStrokeColor: background_colorz,
+						// pointHighlightFill: '#fff',
+						// pointHighlightStroke: background_colorz,
+						//data: [value.twentyfour, value.one, value.two, value.three, value.four, value.five, value.six, value.seven, value.eight, value.nine, value.ten, value.eleven, value.twelve, value.thirteen, value.forteen, value.fifteen, value.sixteen, value.seventeen, value.eighteen, value.nineteen, value.twenty, value.twentyone, value.twentytwo, value.twentythree]
+						data: ['1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0']
 					});
 				});
 
