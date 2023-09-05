@@ -175,7 +175,7 @@ export default {
                 .then(response => this.sites = response.data.data);
         },
         filterBy: function () {
-            if (this.filter.by == 0) { //alert(0);
+            if (this.filter.by == 0) { 
                 // this.clear_filter();
                 this.by_day = true;
                 this.by_month = false;
@@ -183,8 +183,8 @@ export default {
                 this.by_start = false;
                 this.by_end = false;
 
-                const currentDay = moment(new Date()).format("YYYY-MM-DD");
-                this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
+                const currentDay = moment(new Date()).format("YYYY-MM-DD"); 
+                this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day; 
                 this.filterChartByDay();
             }
             //else if (this.filter.by == 1) {
@@ -269,13 +269,13 @@ export default {
         filterChartByDay: function () {
 
             var filter = this.filter;
-
-            $.get("/admin/dashboard/trend-report-by-day/list", filter, function (data) {
+console.log(filter);
+            $.get("/admin/reports/trend-report-by-day/list", filter, function (data) {
                 let datasets = [];
 
                 let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
 
-
+console.log('>>>>>>>>>>>>>>'); console.log(data); console.log('<<<<<<<<<<<<<<');
                 $.each(data.data, function (key, value) {
                     let background_color = dynamicColors[key];
                     datasets.push({
@@ -322,7 +322,7 @@ export default {
 
             });
 
-            $.get("/admin/dashboard/trend-incident-by-day/list", filter, function (data) {
+            $.get("/admin/reports/trend-incident-by-day/list", filter, function (data) {
                 let datasetsz = [];
 
                 let dynamicColorsz = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
@@ -374,7 +374,7 @@ export default {
 
             });
 
-            $.get("/admin/dashboard/donut-report-by-day/list", filter, function (data) {
+            $.get("/admin/reports/donut-report-by-day/list", filter, function (data) {
                 let labels = [];
                 let data_value = [];
                 let incident_report = 0;
@@ -451,7 +451,7 @@ export default {
                 });
             });
 
-            $.get("/admin/dashboard/donut-report-by-day-answer/list", filter, function (data) {
+            $.get("/admin/reports/donut-report-by-day-answer/list", filter, function (data) {
                 let labels_answer = [];
                 let data_value_answer = [];
                 let incident_report_answer = 0;
