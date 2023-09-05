@@ -48,7 +48,7 @@
                             <!-- st1 | replace('cse','computer science') -->
                             <!-- {{ survey_pending.questionnaire_button.replace('.png', '_red.png') }}zz -->
                             {{ survey_pending.questionnaire_button.replace('.png', '_red.png') }}
-                            <img :src="survey_pending.questionnaire_button.replace('.png', '_red.png')" class="responsive">
+                            <!-- <img :src="survey_pending.questionnaire_button.replace('.png', '_red.png')" class="responsive"> -->
                         </div>
 
                         <div>{{ survey_pending.questionnaire_name }}</div>
