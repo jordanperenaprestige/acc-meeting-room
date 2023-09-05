@@ -34,185 +34,193 @@
                 </div>
                 <!-- this.user.roles[0].id -->
                 <div class="grid-container">
-                    <div v-for="(survey_pending, index) in survey_pendings" class="grid-item"
-                        v-if="survey_pending.questionnaire_user_role == user_role">
-                        <div><img v-if="survey_pending.questionnaire_survey_id > 0" :src="check_red_logo"
+                    <!-- <div v-for="(survey_pending, index) in survey_pendings" class="grid-item"
+                        v-if="survey_pending.questionnaire_user_role == user_role"> -->
+                    <div v-for="(survey_pending, index) in survey_pendings" class="grid-item">
+                        <div v-if="survey_pending.questionnaire_user_role == user_role">
+                            <img v-if="survey_pending.questionnaire_survey_id > 0" :src="check_red_logo"
                                 @click="switchImagePending($event)"
                                 :id="'pending_' + survey_pending.questionnaire_answer_id" class="responsive">
-                            <img v-else :src="survey_pending.questionnaire_button" class="responsive">
+                            <!-- <img v-else :src="survey_pending.questionnaire_button" class="responsive"> -->
+                            <img v-else :src="check_green_logo" class="responsive">
+                        </div>
+                        <div v-else>
+                            <!-- st1 | replace('cse','computer science') -->
+                            <!-- {{ survey_pending.questionnaire_button.replace('.png', '_red.png') }}zz -->
+                            <img :src="survey_pending.questionnaire_button.replace('.png', '_red.png')" class="responsive">
                         </div>
 
                         <div>{{ survey_pending.questionnaire_name }}</div>
                     </div>
                 </div>
                 <div v-show="show_submit_pending_button" class="row concern-title  justify-content-center submit_button"">
-                    <div class="col-2">
-                        <img :src="this.resolve_logo" @click="submit_pending()" class="responsive">
-                    </div>
+                                <div class=" col-2">
+                    <img :src="this.resolve_logo" @click="submit_pending()" class="responsive">
                 </div>
             </div>
-            <div v-show="show_success">
-                <div class="row justify-content-center">
-                    <div class="col-6 mr-2">
-                        <img :src="this.success_logo" class="responsive">
-                    </div>
-                </div>
-                <div class="row justify-content-center" style="border: 1cm;">
-                    <div class="col-12 concern-title">
-                        THANK YOU!
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-12 concern-message">
-                        The concern has been successfully submitted.
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-12 concern-message">
-                        This will be attended shortly.
-                    </div>
+        </div>
+        <div v-show="show_success">
+            <div class="row justify-content-center">
+                <div class="col-6 mr-2">
+                    <img :src="this.success_logo" class="responsive">
                 </div>
             </div>
-            <div v-show="show_pending_success">
-                <div class="row justify-content-center" style="border: 1cm;">
-                    <div class="col-12 mr-2">
-                        <img :src="this.success_logo" class="responsive">
-                    </div>
-                    <div class="col-12 concern-title">
-                        THANK YOU!
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-12 concern-message">
-                        The concern has been successfully resolved.
-                    </div>
+            <div class="row justify-content-center" style="border: 1cm;">
+                <div class="col-12 concern-title">
+                    THANK YOU!
                 </div>
             </div>
-            <div v-show="show_switch_room_success">
-                <div class="row justify-content-center">
-                    <div class="col-6">
-                        <img :src="this.success_logo" class="responsive">
-                    </div>
-                </div>
-                <div class="row justify-content-center" style="border: 1cm;">
-                    <div class="col-12 concern-title">
-                        THANK YOU!
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-12 concern-message">
-                        The room has been changed successfully.
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-12 concern-message">
-                        This will be attended shortly.
-                    </div>
+            <div class="row justify-content-center">
+                <div class="col-12 concern-message">
+                    The concern has been successfully submitted.
                 </div>
             </div>
-            <div class="modal fade" id="modal-default">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" style="color: #212529;">ENTER 4-DIGIT PIN TO PROCEED</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+            <div class="row justify-content-center">
+                <div class="col-12 concern-message">
+                    This will be attended shortly.
+                </div>
+            </div>
+        </div>
+        <div v-show="show_pending_success">
+            <div class="row justify-content-center" style="border: 1cm;">
+                <div class="col-12 mr-2">
+                    <img :src="this.success_logo" class="responsive">
+                </div>
+                <div class="col-12 concern-title">
+                    THANK YOU!
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 concern-message">
+                    The concern has been successfully resolved.
+                </div>
+            </div>
+        </div>
+        <div v-show="show_switch_room_success">
+            <div class="row justify-content-center">
+                <div class="col-6">
+                    <img :src="this.success_logo" class="responsive">
+                </div>
+            </div>
+            <div class="row justify-content-center" style="border: 1cm;">
+                <div class="col-12 concern-title">
+                    THANK YOU!
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 concern-message">
+                    The room has been changed successfully.
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 concern-message">
+                    This will be attended shortly.
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-default">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="color: #212529;">ENTER 4-DIGIT PIN TO PROCEED</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="grid-input">
+                            <div><input class="form-control transparent-input" type='text' :maxlength="max"
+                                    v-model="room.input_one"></div>
+                            <div><input class="form-control transparent-input" type='text' :maxlength="max"
+                                    v-model="room.input_two"></div>
+                            <div><input class="form-control transparent-input" type='text' :maxlength="max"
+                                    v-model="room.input_three"></div>
+                            <div><input class="form-control transparent-input" type='text' :maxlength="max"
+                                    v-model="room.input_four"></div>
                         </div>
-                        <div class="modal-body">
-                            <div class="grid-input">
-                                <div><input class="form-control transparent-input" type='text' :maxlength="max"
-                                        v-model="room.input_one"></div>
-                                <div><input class="form-control transparent-input" type='text' :maxlength="max"
-                                        v-model="room.input_two"></div>
-                                <div><input class="form-control transparent-input" type='text' :maxlength="max"
-                                        v-model="room.input_three"></div>
-                                <div><input class="form-control transparent-input" type='text' :maxlength="max"
-                                        v-model="room.input_four"></div>
-                            </div>
 
-                            <div class="col-2 grid-keypad">
-                                <div v-for="(login_button, index) in login_buttons">
-                                    <div><img :src="'assets/images/logos/keypad/' + login_button + '.png'"
-                                            @click="input(login_button)" class="button1"></div>
-                                </div>
+                        <div class="col-2 grid-keypad">
+                            <div v-for="(login_button, index) in login_buttons">
+                                <div><img :src="'assets/images/logos/keypad/' + login_button + '.png'"
+                                        @click="input(login_button)" class="button1"></div>
                             </div>
                         </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button v-show="show_resolve" type="button" @click="loginLocalAdmin"
-                                class="btn btn-warning">Submit</button>
-                        </div>
                     </div>
-                    <!-- /.modal-content -->
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button v-show="show_resolve" type="button" @click="loginLocalAdmin"
+                            class="btn btn-warning">Submit</button>
+                    </div>
                 </div>
-                <!-- /.modal-dialog -->
+                <!-- /.modal-content -->
             </div>
-            <div v-show="show_rooms">
-                <div class="row justify-content-center">
-                    <div class="col-12">
-                        <p class="concern-title" @click="reloadPage">FIRST KIOSK</p>
-                        <p class="concern-title2" @click="reloadPage">First Immediate Response Support Team</p>
-                    </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <div v-show="show_rooms">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <p class="concern-title" @click="reloadPage">FIRST KIOSK</p>
+                    <p class="concern-title2" @click="reloadPage">First Immediate Response Support Team</p>
                 </div>
-                <div class="row justify-content-center" style="margin-top: 2rem;">
-                    <div class="col-12">
-                        <select class="custom-select" v-model="kiosk.site_id" @change="getBuildings($event.target.value)">
-                            <option value="">Select Site</option>
-                            <option v-for="site in sites" :value="site.id"> {{ site.name }}</option>
-                        </select>
-                    </div>
+            </div>
+            <div class="row justify-content-center" style="margin-top: 2rem;">
+                <div class="col-12">
+                    <select class="custom-select" v-model="kiosk.site_id" @change="getBuildings($event.target.value)">
+                        <option value="">Select Site</option>
+                        <option v-for="site in sites" :value="site.id"> {{ site.name }}</option>
+                    </select>
                 </div>
-                <div class="row justify-content-center" style="margin-top: 2rem;">
-                    <div class="col-12">
-                        <select class="custom-select" v-model="kiosk.site_building_id"
-                            @change="getFloorLevels($event.target.value)">
-                            <option value="">Select Building</option>
-                            <option v-for="building in buildings" :value="building.id"> {{ building.name }}
-                            </option>
-                        </select>
-                    </div>
+            </div>
+            <div class="row justify-content-center" style="margin-top: 2rem;">
+                <div class="col-12">
+                    <select class="custom-select" v-model="kiosk.site_building_id"
+                        @change="getFloorLevels($event.target.value)">
+                        <option value="">Select Building</option>
+                        <option v-for="building in buildings" :value="building.id"> {{ building.name }}
+                        </option>
+                    </select>
                 </div>
-                <div class="row justify-content-center" style="margin-top: 2rem;">
-                    <div class="col-12">
-                        <select class="custom-select" v-model="kiosk.site_building_level_id"
-                            @change="getRoom($event.target.value)">
-                            <option value="">Select Floor</option>
-                            <option v-for="floor in floors" :value="floor.id"> {{ floor.name }}</option>
-                        </select>
-                    </div>
+            </div>
+            <div class="row justify-content-center" style="margin-top: 2rem;">
+                <div class="col-12">
+                    <select class="custom-select" v-model="kiosk.site_building_level_id"
+                        @change="getRoom($event.target.value)">
+                        <option value="">Select Floor</option>
+                        <option v-for="floor in floors" :value="floor.id"> {{ floor.name }}</option>
+                    </select>
                 </div>
-                <div class="row justify-content-center" style="margin-top: 2rem;">
-                    <div class="col-12">
-                        <select class="custom-select" v-model="kiosk.site_building_room_id">
-                            <option value="">Select Room</option>
-                            <option v-for="room in roomss" :value="room.id"> {{ room.name }}</option>
-                        </select>
-                    </div>
+            </div>
+            <div class="row justify-content-center" style="margin-top: 2rem;">
+                <div class="col-12">
+                    <select class="custom-select" v-model="kiosk.site_building_room_id">
+                        <option value="">Select Room</option>
+                        <option v-for="room in roomss" :value="room.id"> {{ room.name }}</option>
+                    </select>
                 </div>
-                <div v-show="show_save_button" class="row justify-content-center">
-                    <div class="-2">
-                        <img :src="this.save_logo" @click="switchRoom" class="responsive">
+            </div>
+            <div v-show="show_save_button" class="row justify-content-center">
+                <div class="-2">
+                    <img :src="this.save_logo" @click="switchRoom" class="responsive">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div>
+            <div v-show="show_default_room">
+                <div class="row justify-content-right col-12" style="position: absolute; bottom: 0px;">
+                    <div class="col-5 first-title" data-toggle="modal" data-target="#modal-default"
+                        @click="pincodeModal($event)" :id=0>
+                        FIRST
+                    </div>
+                    <div class="col-6 building-floor-room-title2 passingID" data-toggle="modal" data-target="#modal-default"
+                        @click="pincodeModal($event)" :id=1>
+                        {{ this.room.building_level_room }}
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div>
-                <div v-show="show_default_room">
-                    <div class="row justify-content-right col-12" style="position: absolute; bottom: 0px;">
-                        <div class="col-5 first-title" data-toggle="modal" data-target="#modal-default"
-                            @click="pincodeModal($event)" :id=0>
-                            FIRST
-                        </div>
-                        <div class="col-6 building-floor-room-title2 passingID" data-toggle="modal"
-                            data-target="#modal-default" @click="pincodeModal($event)" :id=1>
-                            {{ this.room.building_level_room }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
     </div>
 </template>
 <script>
@@ -269,6 +277,7 @@ export default {
             view: ['login'],
             check_logo: 'assets/images/logos/check.png',
             check_red_logo: 'assets/images/logos/check_red.png',
+            check_green_logo: 'assets/images/logos/check_green.png',
             submit_logo: 'assets/images/logos/buttons/submit.png',
             resolve_logo: 'assets/images/logos/buttons/resolve.png',
             save_logo: 'assets/images/logos/buttons/save.png',
@@ -310,10 +319,10 @@ export default {
                     this.questionnaires = response.data.data
                 });
         },
-        getDefaultRoom: function () {
+        getDefaultRoom: function () { //alert(this.defaultRoom);
             axios.get('/api/v1/employee/get-default-room/' + this.defaultRoom)
                 .then(response => {
-                    var room = response.data.data;
+                    var room = response.data.data; console.log(room);
                     this.room.id = room.id;
                     this.survey.site_id = room.site_id;
                     this.survey.site_building_id = room.site_building_id;
@@ -368,7 +377,7 @@ export default {
         },
 
         switchImagePending(event) {
-            
+
             var id = event.target.id;
             const index = this.concern_pending.indexOf(id);
             if (index > -1) {
@@ -380,7 +389,7 @@ export default {
                 axios.get('/api/v1/employee/get-answer-details/' + id.replace('pending_', ''))
                     .then(response => {
                         var answer = response.data.data;
-                        $("#" + id).attr('src', answer.button);
+                        $("#" + id).attr('src', this.check_green_logo);
                         this.show_pending_button();
                     });
             }
