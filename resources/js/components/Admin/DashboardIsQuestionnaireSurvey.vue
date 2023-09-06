@@ -84,16 +84,16 @@
                                 <h3 class="card-title justify-content-center">Incident Reports</h3>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="chart-responsive">
                                         <canvas id="pieChartSurvey"
                                             style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <div class="chart-responsive">
                                         <canvas id="pieChartSurveyAnswer"
-                                            style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -205,7 +205,7 @@ export default {
 
                 const currentMonth = moment().month();
                 this.filter.month = (this.filter.month == '') ? currentMonth : this.filter.month;
-                this.filterChartByMonth();
+                this.filterChartByMonth(); 
             } else if (this.filter.by == 2) { //alert(2);
                 //this.clear_filter();
                 this.by_day = false;
@@ -225,8 +225,6 @@ export default {
         },
 
         filterChart: function () {
-
-
             const moment = require('moment');
 
             if (this.filter.by == 0) {//day
@@ -278,7 +276,7 @@ export default {
                         label: value.building_name + '(Report(s): ' + value.reports + ')',
                         backgroundColor: background_color,
                         borderColor: background_color,
-                        pointRadius: false,
+                        pointRadius: false, 
                         pointColor: '#3b8bba',
                         pointStrokeColor: background_color,
                         pointHighlightFill: '#fff',
@@ -536,7 +534,8 @@ export default {
 
         filterChartByMonth: function () {
 
-            var filter = this.filter;
+            var filter = this.filter; console.log('>>>>>>>>'); console.log(filter);
+            console.log('<<<<<<<');
             $.get("admin/reports/trend-report-by-month/list", filter, function (data) {
                 let datasets = [];
 
@@ -654,20 +653,14 @@ export default {
                 let incident_report = 0;
                 if (data.data.length > 0) {
                     $.each(data.data, function (key, value) {
-                        //labels.push(value.questionnaire_answer);
                         labels.push(value.questionnaire);
-                        //data_value.push(1);
-                        // incident_report.push(value.tenant_survey);
                         incident_report += parseInt(value.tenant_survey);
                         data_value.push(value.percentage_share);
-                        //randomBackgroundColor.push(dynamicColors());
                     });
-                    // console.log(labels);
                 }
                 else {
                     labels = ['Empty']
                     data_value = [1];
-                    //randomBackgroundColor = ['#d2d6de'];
                 }
 
                 var donutData = {
@@ -688,13 +681,11 @@ export default {
                 var pieOptions = {
                     maintainAspectRatio: false,
                     responsive: true,
+                    inGraphDataShow: true,
+                    inGraphDataRadiusPosition: 2,
+                    inGraphDataFontColor: 'white'
                 }
 
-                // new Chart(pieChartSurveyCanvas, {
-                //     type: 'pie',
-                //     data: pieData,
-                //     options: pieOptions
-                // })
                 var myChart = new Chart(pieChartSurveyCanvas, {
                     type: 'doughnut',
                     data: pieData,
@@ -710,10 +701,10 @@ export default {
                             ctx.textBaseline = "middle";
 
                             var text = incident_report,
-                                textX = 185,//Math.round((width - ctx.measureText(text).width) / 2),
+                                textX = 170,//Math.round((width - ctx.measureText(text).width) / 2),
                                 textY = height / 2;
 
-                            ctx.fillText(text, 165 + 45, textY);
+                            ctx.fillText(text, 150 + 45, textY);
 
                             ctx.restore();
                             var fontSize = 1;
@@ -744,7 +735,8 @@ export default {
 
                 if (data.data.length > 0) {
                     $.each(data.data, function (key, value) {
-                        labels_answer.push(value.questionnaire_answer);
+                        var jordan = value.questionnaire_answer;
+                        labels_answer.push(jordan);
                         //console.log(value.questionnaire);
                         //labels_answer.push(value.questionnaire);
                         //data_value.push(1);
@@ -782,6 +774,22 @@ export default {
                 var pieOptions_answer = {
                     maintainAspectRatio: false,
                     responsive: true,
+                    plugins: {
+                        labels: [
+                            {
+                                render: 'label',
+                                position: 'outside'
+                            },
+                            {
+                                render: 'percentage'
+                            }
+                        ],
+
+
+                    },
+                    legend: {
+                        display: false,
+                    },
                 }
 
                 new Chart(pieChartSurveyCanvas_answer, {
@@ -947,6 +955,9 @@ export default {
                 var pieOptions = {
                     maintainAspectRatio: false,
                     responsive: true,
+                    inGraphDataShow: true,
+                    inGraphDataRadiusPosition: 2,
+                    inGraphDataFontColor: 'white'
                 }
 
                 // new Chart(pieChartSurveyCanvas, {
@@ -969,10 +980,10 @@ export default {
                             ctx.textBaseline = "middle";
 
                             var text = incident_report,
-                                textX = 185,//Math.round((width - ctx.measureText(text).width) / 2),
+                                textX = 170,//Math.round((width - ctx.measureText(text).width) / 2),
                                 textY = height / 2;
 
-                            ctx.fillText(text, 165 + 45, textY);
+                            ctx.fillText(text, 150 + 45, textY);
 
                             ctx.restore();
                             var fontSize = 1;
@@ -1002,7 +1013,8 @@ export default {
 
                 if (data.data.length > 0) {
                     $.each(data.data, function (key, value) {
-                        labels_answer.push(value.questionnaire_answer);
+                        var jordan = value.questionnaire_answer;
+                        labels_answer.push(jordan);
                         //console.log(value.questionnaire);
                         //labels_answer.push(value.questionnaire);
                         //data_value.push(1);
@@ -1040,6 +1052,22 @@ export default {
                 var pieOptions_answer = {
                     maintainAspectRatio: false,
                     responsive: true,
+                    plugins: {
+                        labels: [
+                            {
+                                render: 'label',
+                                position: 'outside'
+                            },
+                            {
+                                render: 'percentage'
+                            }
+                        ],
+
+
+                    },
+                    legend: {
+                        display: false,
+                    },
                 }
 
                 new Chart(pieChartSurveyCanvas_answer, {

@@ -642,11 +642,8 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            //echo 'xxxxxx'; print_r($request->month); echo 'zzzzzzzzzzzzzzzz';
-            $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-            $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
-            // echo '-----'.$start_date;
-            // echo '=='.$end_date.'----';
+            $start_date  = date("Y-m-d H:i:s", mktime(0, 0, 0, $request->month, 1, 2023));
+            $end_date = date("Y-m-d H:i:s", mktime(23, 59, 59, $request->month, 31, 2023));
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -655,12 +652,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
                 ->get();
-            // echo '-----------------------------';
-            // echo '<pre>';
-            // print_r($logs);
-            // echo '</pre>';
-            // echo '-----------------------------';
-
+            
             $per_month = [];
             foreach ($logs as $index => $log) {
                 //echo '<<'.$log->created_at .'---'.$log->total_survey.'>>';
@@ -696,11 +688,8 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            //echo 'xxxxxx'; print_r($request->month); echo 'zzzzzzzzzzzzzzzz';
-            $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-            $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
-            // echo '-----'.$start_date;
-            // echo '=='.$end_date.'----';
+            $start_date  = date("Y-m-d H:i:s", mktime(0, 0, 0, $request->month, 1, 2023));
+            $end_date = date("Y-m-d H:i:s", mktime(23, 59, 59, $request->month, 31, 2023));
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -708,6 +697,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->whereBetween('created_at', [$start_date, $end_date])
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
+                ->groupBy('jordan')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
                 ->get();
             // echo '-----------------------------';
