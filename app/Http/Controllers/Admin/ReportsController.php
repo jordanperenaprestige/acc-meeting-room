@@ -93,7 +93,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
     {
         $site_id = '';
         $filters = json_decode($request->filters);
-        $room_id = session()->get('room_id');
+
         if ($request->day) {
             $start_date  = date('Y-m-d', strtotime($request->day)) . ' 00:00:00';
             $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
@@ -125,9 +125,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         })
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->whereBetween('created_at', [$start_date, $end_date])
-            ->where('site_building_room_id', $room_id)
             ->groupBy('questionnaire_id')
-            ->groupBy('jordan')
             ->orderBy('questionnaire_id', 'ASC')
             ->get();
 
@@ -152,7 +150,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
     {
         $site_id = '';
         $filters = json_decode($request->filters);
-        $room_id = session()->get('room_id');
+
         if ($request->day) {
             $start_date  = date('Y-m-d', strtotime($request->day)) . ' 00:00:00';
             $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
@@ -184,7 +182,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         })
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->whereBetween('created_at', [$start_date, $end_date])
-            ->where('site_building_room_id', $room_id)
             ->groupBy('questionnaire_id')
             ->groupBy('questionnaire_answer_id')
             ->orderBy('questionnaire_id', 'ASC')
@@ -504,14 +501,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            $room_id = session()->get('room_id');
+
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->day)) . ' 23:59:59')
-                ->where('site_building_room_id', $room_id)
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
                 ->get();
@@ -575,7 +571,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            $room_id = session()->get('room_id');
+
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -583,7 +579,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->day)) . ' 23:59:59')
                 ->where('remarks', 'Done')
-                ->where('site_building_room_id', $room_id)
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
                 ->get();
