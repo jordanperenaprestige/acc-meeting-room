@@ -19,6 +19,8 @@ Route::get('/login', function () {
 
 //Route::get('/{any}', 'Kiosk\MainController@index')->where('any', '.*')->name('kiosk.main');
 //Route::get('/{id}', 'Kiosk\MainController@index')->where('any', '.*')->name('kiosk.main');
+Route::get('/', 'Kiosk\MainController@index')->name('kiosk.main');
 Route::get('/{id}', 'Kiosk\MainController@index')->where('id', '[0-9]+')->name('kiosk.main');
+
 // Route::get('/{id}', 'Kiosk\MainController@setRoom')->where('path', '.+')->name('kiosk.main.set-room');
 

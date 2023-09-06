@@ -48,9 +48,10 @@ use Hash;
 
 class MainController extends AppBaseController
 {
-    public function index($id)
+    public function index($id = 1)
     {
         $room = SiteBuildingRoomViewModel::find($id);
+
     //    // $this->jordan = $this->setId($room->id);
     //     //$this->room_idz = $jordan;
     //     $this->room_idz = 'zzz'; //$room->id;
