@@ -213,6 +213,7 @@ export default {
                 this.by_year = true;
                 this.by_start = false;
                 this.by_end = false;
+                this.filterChartByYear();
             } else {
                 // this.clear_filter();
                 this.by_day = false;
@@ -285,7 +286,7 @@ export default {
                         data: [value.twentyfour, value.one, value.two, value.three, value.four, value.five, value.six, value.seven, value.eight, value.nine, value.ten, value.eleven, value.twelve, value.thirteen, value.forteen, value.fifteen, value.sixteen, value.seventeen, value.eighteen, value.nineteen, value.twenty, value.twentyone, value.twentytwo, value.twentythree]
                     });
                 });
-                
+
                 var areaChartData = {
                     labels: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
                     datasets: datasets
@@ -308,10 +309,10 @@ export default {
                         }]
                     },
                     plugins: {
-                            labels: {
-                                render: 'value'
-                            }
+                        labels: {
+                            render: 'value'
                         }
+                    }
                 }
 
                 new Chart(reportBarChartCanvas, {
@@ -365,10 +366,10 @@ export default {
                         }]
                     },
                     plugins: {
-                            labels: {
-                                render: 'value'
-                            }
+                        labels: {
+                            render: 'value'
                         }
+                    }
                 }
 
                 new Chart(reportBarChartCanvasz, {
@@ -389,7 +390,7 @@ export default {
                         incident_report += parseInt(value.tenant_survey);
                         data_value.push(value.percentage_share);
                     });
-                   // console.log(labels);
+                    // console.log(labels);
                 }
                 else {
                     labels = ['Empty']
@@ -577,6 +578,11 @@ export default {
                         yAxes: [{
                             stacked: true
                         }]
+                    },
+                    plugins: {
+                        labels: {
+                            render: 'value'
+                        }
                     }
                 }
 
@@ -627,6 +633,11 @@ export default {
                         yAxes: [{
                             stacked: true
                         }]
+                    },
+                    plugins: {
+                        labels: {
+                            render: 'value'
+                        }
                     }
                 }
 
@@ -651,7 +662,7 @@ export default {
                         data_value.push(value.percentage_share);
                         //randomBackgroundColor.push(dynamicColors());
                     });
-                   // console.log(labels);
+                    // console.log(labels);
                 }
                 else {
                     labels = ['Empty']
@@ -825,6 +836,11 @@ export default {
                         yAxes: [{
                             stacked: true
                         }]
+                    },
+                    plugins: {
+                        labels: {
+                            render: 'value'
+                        }
                     }
                 }
 
@@ -875,6 +891,11 @@ export default {
                         yAxes: [{
                             stacked: true
                         }]
+                    },
+                    plugins: {
+                        labels: {
+                            render: 'value'
+                        }
                     }
                 }
 
@@ -900,7 +921,7 @@ export default {
                         data_value.push(value.percentage_share);
                         //randomBackgroundColor.push(dynamicColors());
                     });
-                   // console.log(labels);
+                    // console.log(labels);
                 }
                 else {
                     labels = ['Empty']
