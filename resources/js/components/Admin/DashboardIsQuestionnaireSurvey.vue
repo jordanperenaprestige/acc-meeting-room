@@ -534,7 +534,7 @@ export default {
 
         filterChartByMonth: function () {
 
-            var filter = this.filter; console.log('>>>>>>>>'); console.log(filter);
+            var filter = this.filter; 
             console.log('<<<<<<<');
             $.get("admin/reports/trend-report-by-month/list", filter, function (data) {
                 let datasets = [];
