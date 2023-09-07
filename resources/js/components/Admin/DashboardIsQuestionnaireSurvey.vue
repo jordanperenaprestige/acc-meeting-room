@@ -26,6 +26,12 @@
                                             <date-picker v-model="filter.day" placeholder="Day" :config="options_D" id="day"
                                                 autocomplete="off"></date-picker>
                                         </div>
+                                        <div v-show="by_week">
+                                            <!-- v-show="show_concerns" -->
+                                            <label for="week" class="col-form-label">Week</label>
+                                            <date-picker v-model="filter.week" placeholder="Week" :config="options_D" id="week"
+                                                autocomplete="off"></date-picker>
+                                        </div>
                                         <div v-show="by_month">
                                             <!-- v-show="show_concerns" -->
                                             <label for="month" class="col-form-label">Month</label>
@@ -120,6 +126,7 @@ export default {
                 start_date: '',
                 end_date: '',
                 day: '',
+                week: '',
                 month: '',
                 year: '',
                 by: 0,
@@ -153,8 +160,8 @@ export default {
                 format: 'YYYY-MM-DD',
                 useCurrent: false,
             },
-            //filters_by: ['Day', 'Week', 'Month', 'Year', 'Lifetime'],
-            filters_by: ['Day', 'Month', 'Year'],
+            filters_by: ['Day', 'Week', 'Month', 'Year', 'Lifetime'],
+            //filters_by: ['Day', 'Month', 'Year'],
             by_day: false,
             by_month: false,
             by_year: false,
@@ -178,6 +185,7 @@ export default {
             if (this.filter.by == 0) {
                 // this.clear_filter();
                 this.by_day = true;
+                this.by_week = false;
                 this.by_month = false;
                 this.by_year = false;
                 this.by_start = false;
@@ -187,17 +195,23 @@ export default {
                 this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
                 this.filterChartByDay();
             }
-            //else if (this.filter.by == 1) {
-            //     this.clear_filter();
-            //     this.by_day = false;
-            //     this.by_month = false;
-            //     this.by_year = false;
-            //     this.by_start = false;
-            //     this.by_end = false;
-            //} 
-            else if (this.filter.by == 1) {//alert(1);
+            else if (this.filter.by == 1) {
+                this.clear_filter();
+                this.by_day = false;
+                this.by_week = true;
+                this.by_month = false;
+                this.by_year = false;
+                this.by_start = false;
+                this.by_end = false;
+
+                const currentDay = moment(new Date()).format("YYYY-MM-DD");
+                this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
+                this.filterChartByWeek();
+            } 
+            else if (this.filter.by == 2) {//alert(1);
                 //this.clear_filter();
                 this.by_day = false;
+                this.by_week = false;
                 this.by_month = true;
                 this.by_year = false;
                 this.by_start = false;
@@ -206,9 +220,10 @@ export default {
                 const currentMonth = moment().month();
                 this.filter.month = (this.filter.month == '') ? currentMonth : this.filter.month;
                 this.filterChartByMonth(); 
-            } else if (this.filter.by == 2) { //alert(2);
+            } else if (this.filter.by == 3) { //alert(2);
                 //this.clear_filter();
                 this.by_day = false;
+                this.by_week = false;
                 this.by_month = false;
                 this.by_year = true;
                 this.by_start = false;
@@ -217,6 +232,7 @@ export default {
             } else {
                 // this.clear_filter();
                 this.by_day = false;
+                this.by_week = false;
                 this.by_month = false;
                 this.by_year = false;
                 this.by_start = true;
@@ -233,15 +249,17 @@ export default {
                 this.filterChartByDay();
 
             }
-            // else if (this.filter.by == 1) {//Week
-
-            // } 
-            else if (this.filter.by == 1) {//Month
+            else if (this.filter.by == 1) {//Week
+                const currentDay = moment(new Date()).format("YYYY-MM-DD");
+                this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
+                this.filterChartByWeek();
+            } 
+            else if (this.filter.by == 2) {//Month
                 const currentMonth = moment().month();
                 this.filter.month = (this.filter.month == '') ? currentMonth : this.filter.month;
                 this.filterChartByMonth();
 
-            } else if (this.filter.by == 2) {//Year
+            } else if (this.filter.by == 3) {//Year
                 const currentYear = moment().year();
                 this.filter.year = (this.filter.year == '') ? currentYear : this.filter.year;
                 this.filterChartByYear();
@@ -259,6 +277,7 @@ export default {
             this.filter.select_date = '';
             this.filter.start_date = '';
             this.filter.end_date = '';
+            this.filter.week = '';
             this.filter.day = '';
             this.filter.month = '';
             this.filter.year = '';
@@ -344,6 +363,273 @@ export default {
 
                 var areaChartDataz = {
                     labels: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
+                    datasets: datasetsz
+                };
+
+                var barChartDataz = $.extend(true, {}, areaChartDataz);
+
+                var reportBarChartCanvasz = $('#incidentBarChart').get(0).getContext('2d')
+                var reportBarChartDataz = $.extend(true, {}, barChartDataz)
+
+                var reportBarChartOptionsz = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    },
+                    plugins: {
+                        labels: {
+                            render: 'value'
+                        }
+                    }
+                }
+
+                new Chart(reportBarChartCanvasz, {
+                    type: 'bar',
+                    data: reportBarChartDataz,
+                    options: reportBarChartOptionsz
+                })
+
+            });
+
+            $.get("/admin/reports/donut-report-by-day/list", filter, function (data) {
+                let labels = [];
+                let data_value = [];
+                let incident_report = 0;
+                if (data.data.length > 0) {
+                    $.each(data.data, function (key, value) {
+                        labels.push(value.questionnaire);
+                        incident_report += parseInt(value.tenant_survey);
+                        data_value.push(value.percentage_share);
+                    });
+                    // console.log(labels);
+                }
+                else {
+                    labels = ['Empty']
+                    data_value = [1];
+                }
+
+                var donutData = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: data_value,
+                            backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
+                        }
+                    ]
+                }
+                var cleanliness = '#728FCE';
+                var supplies = '#90EE90';
+                var functionality = '#FED8B1';
+
+                var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
+                var pieData = donutData;
+                var pieOptions = {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    inGraphDataShow: true,
+                    inGraphDataRadiusPosition: 2,
+                    inGraphDataFontColor: 'white'
+                }
+
+                var myChart = new Chart(pieChartSurveyCanvas, {
+                    type: 'doughnut',
+                    data: pieData,
+                    plugins: [{
+                        beforeDraw: function (chart) {
+                            var width = chart.chart.width,
+                                height = chart.chart.height,
+                                ctx = chart.chart.ctx;
+
+                            ctx.restore();
+                            var fontSize = 1.5;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
+
+                            var text = incident_report,
+                                textX = 170,
+                                textY = height / 2;
+
+                            ctx.fillText(text, 150 + 45, textY);
+
+                            ctx.restore();
+                            var fontSize = 1;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
+
+                            ctx.fillText("INCIDENTS", textX, textY + 35);
+
+                            ctx.save();
+                        }
+                    }],
+                    options: {
+                        pieOptions,
+                        events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
+                    }
+                });
+            });
+
+            $.get("/admin/reports/donut-report-by-day-answer/list", filter, function (data) {
+                let labels_answer = [];
+                let data_value_answer = [];
+                let incident_report_answer = 0;
+                let randomBackgroundColor = [];
+                var cleanliness = '#728FCE';
+                var supplies = '#90EE90';
+                var functionality = '#FED8B1';
+
+
+                if (data.data.length > 0) {
+                    $.each(data.data, function (key, value) {
+                        var jordan = value.questionnaire_answer;
+                        labels_answer.push(jordan);
+                        //console.log(value.questionnaire);
+                        //labels_answer.push(value.questionnaire);
+                        //data_value.push(1);
+                        // incident_report.push(value.tenant_survey);
+                        incident_report_answer += parseInt(value.tenant_survey);
+                        data_value_answer.push(value.percentage_share);
+                        if (value.questionnaire == 'CLEANLINESS') {
+                            randomBackgroundColor.push(cleanliness);
+                        } else if (value.questionnaire == 'SUPPLIES') {
+                            randomBackgroundColor.push(supplies);
+                        } else {
+                            randomBackgroundColor.push(functionality);
+                        }
+
+                    });
+                }
+                else {
+                    labels_answer = ['Empty']
+                    data_value_answer = [1];
+                    randomBackgroundColor = [cleanliness];
+                }
+                //console.log();
+                var donutData_answer = {
+                    labels: labels_answer,
+                    datasets: [
+                        {
+                            data: data_value_answer,
+                            backgroundColor: randomBackgroundColor,
+                        }
+                    ]
+                }
+
+                var pieChartSurveyCanvas_answer = $('#pieChartSurveyAnswer').get(0).getContext('2d')
+                var pieData_answer = donutData_answer;
+                var pieOptions_answer = {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        labels: [
+                            {
+                                render: 'label',
+                                position: 'outside'
+                            },
+                            {
+                                render: 'percentage'
+                            }
+                        ],
+
+
+                    },
+                    legend: {
+                        display: false,
+                    },
+                }
+
+                new Chart(pieChartSurveyCanvas_answer, {
+                    type: 'pie',
+                    data: pieData_answer,
+                    options: pieOptions_answer
+                })
+            });
+        },
+
+        filterChartByWeek: function () {
+            var filter = this.filter;
+            $.get("/admin/reports/trend-report-by-week/list", filter, function (data) {
+                let datasets = [];
+                let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272'];
+                $.each(data.data, function (key, value) {
+                    let background_color = dynamicColors[key];
+                    datasets.push({
+                        label: value.building_name + '(Report(s): ' + value.reports + ')',
+                        backgroundColor: background_color,
+                        borderColor: background_color,
+                        pointRadius: false, 
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: background_color,
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: background_color,
+                        data: [value.mon, value.tue, value.wed, value.thu, value.fri, value.sat, value.sun]
+                    });
+                });
+
+                var areaChartData = {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri','Sat','Sun'],
+                    datasets: datasets
+                };
+
+                var barChartData = $.extend(true, {}, areaChartData);
+
+                var reportBarChartCanvas = $('#reportBarChart').get(0).getContext('2d')
+                var reportBarChartData = $.extend(true, {}, barChartData)
+
+                var reportBarChartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    },
+                    plugins: {
+                        labels: {
+                            render: 'value'
+                        }
+                    }
+                }
+
+                new Chart(reportBarChartCanvas, {
+                    type: 'bar',
+                    data: reportBarChartData,
+                    options: reportBarChartOptions
+                })
+
+            });
+
+            $.get("/admin/reports/trend-incident-by-week/list", filter, function (data) {
+                let datasetsz = [];
+
+                let dynamicColorsz = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272'];
+
+
+                $.each(data.data, function (key, value) {
+                    let background_colorz = dynamicColorsz[key];
+                    datasetsz.push({
+                        label: value.building_name + '(Incident: ' + value.reports + ')',
+                        backgroundColor: background_colorz,
+                        borderColor: background_colorz,
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: background_colorz,
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: background_colorz,
+                        data: [value.mon, value.tue, value.wed, value.thu, value.fri]
+                    });
+                });
+
+                var areaChartDataz = {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri','Sat','Sun'],
                     datasets: datasetsz
                 };
 

@@ -205,7 +205,7 @@ export default {
 
                 const currentMonth = moment().month();
                 this.filter.month = (this.filter.month == '') ? currentMonth : this.filter.month;
-                this.filterChartByMonth();
+                this.filterChartByWeek();
             } else if (this.filter.by == 2) { //alert(2);
                 //this.clear_filter();
                 this.by_day = false;
@@ -213,7 +213,7 @@ export default {
                 this.by_year = true;
                 this.by_start = false;
                 this.by_end = false;
-                this.filterChartByYear();
+                this.filterChartByY();
             } else {
                 // this.clear_filter();
                 this.by_day = false;
