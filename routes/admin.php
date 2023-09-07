@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "admin" middleware group. Now create something great!
 |
-*/  
+*/
 
 Route::get('/admin/login', 'AdminAuth\AuthController@login')->name('admin.login');
 Route::post('/admin/login', 'AdminAuth\AuthController@adminLogin')->name('admin.admin-login');
@@ -23,28 +23,26 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/dashboad/room/update/{id}', 'Admin\DashboardController@update')->name('admin.room.update');
     Route::get('/admin/dashboad/room/get-survey', 'Admin\DashboardController@getRoomSurvey')->name('admin.room.surveys');
     Route::post('/admin/dashboard/room/store-update', 'Admin\DashboardController@storeUpdate')->name('admin.room.store-update');
-// for report
+    // for report
     Route::get('/admin/dashboard/trend-report-by-day/list', 'Admin\DashboardController@getTrendReportByDay')->where('id', '[0-9]+')->name('admin.dashboard.trend-report-by-day.list');
     Route::get('/admin/dashboard/trend-incident-by-day/list', 'Admin\DashboardController@getTrendIncidentByDay')->where('id', '[0-9]+')->name('admin.dashboard.trend-incident-by-day.list');
     Route::get('/admin/dashboard/donut-report-by-day/list', 'Admin\DashboardController@getDonutReportByDay')->name('admin.dashboard.donut-by-day-answer.list');
     Route::get('/admin/dashboard/donut-report-by-day-answer/list', 'Admin\DashboardController@getDonutReportByDayAnswer')->name('admin.dashboard.donut-by-day.list');
 
-    // Route::get('/admin/reports/trend-report-by-week/list', 'Admin\ReportsController@getTrendReportByWeek')->where('id', '[0-9]+')->name('admin.reports.trend-report-by-week.list');
-    // Route::get('/admin/reports/trend-incident-by-week/list', 'Admin\ReportsController@getTrendIncidentByWeek')->where('id', '[0-9]+')->name('admin.reports.trend-incident-by-week.list');
-    // Route::get('/admin/reports/donut-report-by-week/list', 'Admin\ReportsController@getDonutReportByWeek')->name('admin.reports.donut-by-week-answer.list');
-    // Route::get('/admin/reports/donut-report-by-week-answer/list', 'Admin\ReportsController@getDonutReportByWeekAnswer')->name('admin.reports.donut-by-week.list');
-
+    Route::get('/admin/dashboard/trend-report-by-week/list', 'Admin\DashboardController@getTrendReportByWeek')->where('id', '[0-9]+')->name('admin.dashboard.trend-report-by-week.list');
+    Route::get('/admin/dashboard/trend-incident-by-week/list', 'Admin\DashboardController@getTrendIncidentByWeek')->where('id', '[0-9]+')->name('admin.dashboard.trend-incident-by-week.list');
+    
     Route::get('/admin/dashboard/trend-report-by-month/list', 'Admin\DashboardController@getTrendReportByMonth')->where('id', '[0-9]+')->name('admin.dashboard.trend-report-by-month.list');
     Route::get('/admin/dashboard/trend-incident-by-month/list', 'Admin\DashboardController@getTrendIncidentByMonth')->where('id', '[0-9]+')->name('admin.dashboard.trend-incident-by-month.list');
     Route::get('/admin/dashboard/donut-report-by-month/list', 'Admin\DashboardController@getDonutReportByMonth')->name('admin.dashboard.donut-by-month-answer.list');
     Route::get('/admin/dashboard/donut-report-by-month-answer/list', 'Admin\DashboardController@getDonutReportByMonthAnswer')->name('admin.dashboard.donut-by-month.list');
-    
+
     Route::get('/admin/dashboard/trend-report-by-year/list', 'Admin\DashboardController@getTrendReportByYear')->where('id', '[0-9]+')->name('admin.dashboard.trend-report-by-year.list');
     Route::get('/admin/dashboard/trend-incident-by-year/list', 'Admin\DashboardController@getTrendIncidentByYear')->where('id', '[0-9]+')->name('admin.dashboard.trend-incident-by-year.list');
     // Route::get('/admin/reports/donut-report-by-year/list', 'Admin\ReportsController@getDonutReportByYear')->name('admin.reports.donut-by-year-answer.list');
     // Route::get('/admin/reports/donut-report-by-year-answer/list', 'Admin\ReportsController@getDonutReportByYearAnswer')->name('admin.reports.donut-by-year.list');
 
-    
+
 
     /*
     |--------------------------------------------------------------------------
@@ -160,7 +158,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::put('/admin/company/contract/update', 'Admin\CompaniesController@updateContract')->name('admin.company.contract.update');
     Route::get('/admin/company/contract/delete/{id}', 'Admin\CompaniesController@deleteContract')->where('id', '[0-9]+')->name('admin.company.contract.delete');
     Route::get('/admin/company/contract/duplicate/{id}', 'Admin\CompaniesController@duplicateContract')->where('id', '[0-9]+')->name('admin.company.contract.duplicate');
-    
+
     /*
     |--------------------------------------------------------------------------
     | Company User Workflows Routes
@@ -298,7 +296,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::post('/admin/site/room/update', 'Admin\RoomsController@update')->name('admin.site.room.update');
     Route::get('/admin/site/room/delete/{id}', 'Admin\RoomsController@delete')->where('id', '[0-9]+')->name('admin.site.room.delete');
     Route::get('/admin/site/floors/rooms/{id}', 'Admin\RoomsController@getRooms')->where('id', '[0-9]+')->name('admin.site.floors.rooms');
-    
+
     /*
     |--------------------------------------------------------------------------
     | Sites Screens Routes
@@ -436,8 +434,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
     | Reports Routes
     |--------------------------------------------------------------------------
     */
-   
-    
+
+
     Route::get('/admin/reports/merchant-population', 'Admin\ReportsController@index')->name('admin.reports.merchant-population');
     Route::get('/admin/reports/merchant-population/list', 'Admin\ReportsController@getPopulationReport')->name('admin.reports.merchant-population.list');
     Route::get('/admin/reports/merchant-population-two/list', 'Admin\ReportsController@getPopulationReportTwo')->name('admin.reports.merchant-population-two.list');
@@ -452,9 +450,9 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/reports/merchant-usage/list', 'Admin\ReportsController@getMerchantUsage')->where('id', '[0-9]+')->name('admin.reports.merchant-usage.list');
     Route::get('/admin/reports/merchant-usage/download-csv', 'Admin\ReportsController@downloadCsvmerchantUsage')->where('id', '[0-9]+')->name('admin.reports.merchant-usage.download-csv');
     Route::get('/admin/reports/monthly-usage/list', 'Admin\ReportsController@monthlyUsage')->name('admin.reports.monthly-usage');
-    
-    Route::get('/admin/reports/trend/list', 'Admin\ReportsController@getTrend')->where('id', '[0-9]+')->name('admin.reports.trend.list');//
-    
+
+    Route::get('/admin/reports/trend/list', 'Admin\ReportsController@getTrend')->where('id', '[0-9]+')->name('admin.reports.trend.list'); //
+
     Route::get('/admin/reports/trend-report-by-day/list', 'Admin\ReportsController@getTrendReportByDay')->where('id', '[0-9]+')->name('admin.reports.trend-report-by-day.list');
     Route::get('/admin/reports/trend-incident-by-day/list', 'Admin\ReportsController@getTrendIncidentByDay')->where('id', '[0-9]+')->name('admin.reports.trend-incident-by-day.list');
     Route::get('/admin/reports/donut-report-by-day/list', 'Admin\ReportsController@getDonutReportByDay')->name('admin.reports.donut-by-day-answer.list');
@@ -474,13 +472,13 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/reports/trend-incident-by-month/list', 'Admin\ReportsController@getTrendIncidentByMonth')->where('id', '[0-9]+')->name('admin.reports.trend-incident-by-month.list');
     Route::get('/admin/reports/donut-report-by-month/list', 'Admin\ReportsController@getDonutReportByMonth')->name('admin.reports.donut-by-month-answer.list');
     Route::get('/admin/reports/donut-report-by-month-answer/list', 'Admin\ReportsController@getDonutReportByMonthAnswer')->name('admin.reports.donut-by-month.list');
-    
+
     Route::get('/admin/reports/trend-report-by-year/list', 'Admin\ReportsController@getTrendReportByYear')->where('id', '[0-9]+')->name('admin.reports.trend-report-by-year.list');
     Route::get('/admin/reports/trend-incident-by-year/list', 'Admin\ReportsController@getTrendIncidentByYear')->where('id', '[0-9]+')->name('admin.reports.trend-incident-by-year.list');
     // Route::get('/admin/reports/donut-report-by-year/list', 'Admin\ReportsController@getDonutReportByYear')->name('admin.reports.donut-by-year-answer.list');
     // Route::get('/admin/reports/donut-report-by-year-answer/list', 'Admin\ReportsController@getDonutReportByYearAnswer')->name('admin.reports.donut-by-year.list');
-    
-    
+
+
 
 
 
@@ -489,8 +487,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/reports/yearly-usage/list', 'Admin\ReportsController@getYearlyUsage')->where('id', '[0-9]+')->name('admin.reports.yearly-usage.list');
     Route::get('/admin/reports/yearly-usage/download-csv', 'Admin\ReportsController@downloadCsvYearlyUsage')->where('id', '[0-9]+')->name('admin.reports.yearly-usage.download-csv');
     Route::get('/admin/reports/is-helpful', 'Admin\ReportsController@isHelpful')->name('admin.reports.is-helpful');
-    Route::get('/admin/reports/is-helpful/list', 'Admin\ReportsController@getIsHelpful')->name('admin.reports.is-helpful.list');//
-    Route::get('/admin/reports/questionnaire-survey/list', 'Admin\ReportsController@getQuestionnaireSurvey')->name('admin.reports.questionnaire-survey.list');//
+    Route::get('/admin/reports/is-helpful/list', 'Admin\ReportsController@getIsHelpful')->name('admin.reports.is-helpful.list'); //
+    Route::get('/admin/reports/questionnaire-survey/list', 'Admin\ReportsController@getQuestionnaireSurvey')->name('admin.reports.questionnaire-survey.list'); //
     Route::get('/admin/reports/is-helpful/response', 'Admin\ReportsController@getResponseNo')->name('admin.reports.is-helpful.response');
     Route::get('/admin/reports/is-helpful/other-response', 'Admin\ReportsController@getOtherResponse')->name('admin.reports.is-helpful.other-response');
     Route::get('/admin/reports/is-helpful/download-csv', 'Admin\ReportsController@downloadCsvIsHelpful')->name('admin.reports.is-helpful.download-csv');
@@ -539,7 +537,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/gallery/{id}', 'Admin\GalleryController@details')->where('id', '[0-9]+')->name('admin.gallery.details');
     Route::post('/admin/gallery/update', 'Admin\GalleryController@update')->name('admin.gallery.update');
     Route::post('/admin/gallery/upload', 'Admin\GalleryController@upload')->name('admin.gallery.upload');
-    
+
     /*
     |--------------------------------------------------------------------------
     | Customer Care Inquiry Routes
@@ -600,7 +598,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/users-information', 'Admin\UsersInformationController@index')->name('admin.users.information');
     Route::get('/admin/users-information/details', 'Admin\UsersInformationController@details')->name('admin.users.information.details');
     Route::post('/admin/users-information/update-profile', 'Admin\UsersInformationController@updateProfile')->name('portal.user.information.update-profile');
-    
+
     /*
     |--------------------------------------------------------------------------
     | Admin Users Activity Logs Routes
@@ -616,7 +614,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/transaction/statuses/get-all', 'Admin\TransactionStatusController@getAll')->name('admin.transaction.statuses.get-all');
 
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Pi Products Routes
     |--------------------------------------------------------------------------
@@ -665,14 +663,14 @@ Route::group(['middleware' => 'auth:admin'], function () {
     */
     Route::get('/admin/questionnaire/answers/{id}', 'Admin\AnswersController@index')->name('admin.questionaire.answers');
     Route::get('/admin/questionnaire/answers/list', 'Admin\AnswersController@list')->name('admin.questionaire.answers.list');
-   // Route::post('/admin/site/building/store', 'Admin\BuildingsController@store')->name('admin.site.building.store');
+    // Route::post('/admin/site/building/store', 'Admin\BuildingsController@store')->name('admin.site.building.store');
     // Route::get('/admin/site/building/{id}', 'Admin\BuildingsController@details')->where('id', '[0-9]+')->name('admin.site.building.details');
     // Route::put('/admin/site/building/update', 'Admin\BuildingsController@update')->name('admin.site.building.update');
     // Route::get('/admin/site/building/delete/{id}', 'Admin\BuildingsController@delete')->where('id', '[0-9]+')->name('admin.site.building.delete');
     // Route::get('/admin/site/buildings', 'Admin\BuildingsController@getAll')->where('id', '[0-9]+')->name('admin.site.buildings.all');
     // Route::get('/admin/site/get-buildings/{id}', 'Admin\BuildingsController@getBuildings')->where('id', '[0-9]+')->name('admin.site.buildings.get-buildings');
 
-    
+
 
     /*
     |--------------------------------------------------------------------------

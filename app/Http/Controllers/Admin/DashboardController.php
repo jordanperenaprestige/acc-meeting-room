@@ -13,6 +13,7 @@ use App\Models\ViewModels\QuestionnaireSurveyViewModel;
 use App\Models\QuestionnaireAnswer;
 use App\Models\QuestionnaireSurvey;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends AppBaseController
 {
@@ -63,6 +64,9 @@ class DashboardController extends AppBaseController
                         'site_building_id' => $room->site_building_id,
                         'site_building_level_id' => $room->site_building_level_id,
                         'site_building_room_id' => $room->id,
+                        'site_name' => $room->site_name,
+                        'site_building_name' => $room->building_name,
+                        'site_building_floor_name' => $room->building_floor_name,
                         'site_building_room_name' => $room->name,
                         'survey_id' => $survey['id'],
                         'survey_remarks' => $survey['remarks'],
@@ -209,18 +213,13 @@ class DashboardController extends AppBaseController
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
-                //->where('site_building_room_id', $id)
+                ->where('site_building_room_id', $id)
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->day)) . ' 23:59:59')
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
                 ->get();
-            // echo '-----------------------------';
-            // echo '<pre>';
-            // print_r($logs);
-            // echo '</pre>';
-            // echo '-----------------------------';
-
+            
             $per_hour = [];
             foreach ($logs as $index => $log) {
                 $hour = date("H", strtotime($log->created_at));
@@ -335,6 +334,108 @@ class DashboardController extends AppBaseController
             ], 422);
         }
     }
+
+    public function getTrendReportByWeek(Request $request)
+    {
+        try {
+            $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $date = Carbon::parse($request->week);
+            $current_year = date("Y");
+
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
+                ->where('created_at', '>=', date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59')
+                ->where('site_building_room_id', $id)
+                ->groupBy('site_building_id')
+                ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
+                ->get();
+
+            $per_day = [];
+            foreach ($logs as $index => $log) {
+                $day = date("D", strtotime($log->created_at));
+                $per_day[] = [
+                    'building_name' => $log->building_name,
+                    'mon' => ($day == 'Mon') ? $log->total_survey : 0,
+                    'tue' => ($day == 'Tue') ? $log->total_survey : 0,
+                    'wed' => ($day == 'Wed') ? $log->total_survey : 0,
+                    'thu' => ($day == 'Thu') ? $log->total_survey : 0,
+                    'fri' => ($day == 'Fri') ? $log->total_survey : 0,
+                    'sat' => ($day == 'Sat') ? $log->total_survey : 0,
+                    'sun' => ($day == 'Sun') ? $log->total_survey : 0,
+                    'reports' => $log->total_survey,
+                ];
+            }
+
+            return $this->response($per_day, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
+    public function getTrendIncidentByWeek(Request $request)
+    {
+        try {
+            $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+            $date = Carbon::parse($request->week);
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
+                ->where('created_at', '>=', date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59')
+                ->where('site_building_room_id', $id)
+                ->where('remarks', 'Done')
+                ->groupBy('site_building_id')
+                ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
+                ->get();
+
+            $per_day = [];
+            foreach ($logs as $index => $log) {
+                $day = date("D", strtotime($log->created_at));
+                $per_day[] = [
+                    'building_name' => $log->building_name,
+                    'mon' => ($day == 'Mon') ? $log->total_survey : 0,
+                    'tue' => ($day == 'Tue') ? $log->total_survey : 0,
+                    'wed' => ($day == 'Wed') ? $log->total_survey : 0,
+                    'thu' => ($day == 'Thu') ? $log->total_survey : 0,
+                    'fri' => ($day == 'Fri') ? $log->total_survey : 0,
+                    'sat' => ($day == 'Sat') ? $log->total_survey : 0,
+                    'sun' => ($day == 'Sun') ? $log->total_survey : 0,
+                    'reports' => $log->total_survey,
+                ];
+            }
+
+            return $this->response($per_day, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
     public function getDonutReportByDay(Request $request)
     {
         try {
@@ -374,7 +475,7 @@ class DashboardController extends AppBaseController
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            //echo 'xxxxxx'; print_r($request->month); echo 'zzzzzzzzzzzzzzzz';
+            
             $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
             $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             // echo '-----'.$start_date;
@@ -430,11 +531,8 @@ class DashboardController extends AppBaseController
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            //echo 'xxxxxx'; print_r($request->month); echo 'zzzzzzzzzzzzzzzz';
             $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
             $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
-            // echo '-----'.$start_date;
-            // echo '=='.$end_date.'----';
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -445,17 +543,12 @@ class DashboardController extends AppBaseController
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
                 ->get();
-            // echo '-----------------------------';
-            // echo '<pre>';
-            // print_r($logs);
-            // echo '</pre>';
-            // echo '-----------------------------';
-
+            
             $per_month = [];
             foreach ($logs as $index => $log) {
-                //echo '<<'.$log->created_at .'---'.$log->total_survey.'>>';
+                
                 $day = date("d", strtotime($log->created_at));
-                //echo '<<' . $day . '>>';
+                
                 $per_month[] = [
                     'building_name' => $log->building_name,
                     'week_one' => ($day >= '01' && $day <= '07') ? $log->total_survey : 0,
@@ -487,7 +580,7 @@ class DashboardController extends AppBaseController
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            //    echo 'xxxxxx'; print_r($request->year); echo 'zzzzzzzzzzzzzzzz';
+            
             $start_date  = $request->year . '-01-01 00:00:00';
             $end_date = $request->year . '-12-31 23:59:59';
             // echo '-----'.$start_date;
@@ -614,6 +707,10 @@ class DashboardController extends AppBaseController
         if ($request->day) {
             $start_date  = date('Y-m-d', strtotime($request->day)) . ' 00:00:00';
             $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
+        } else if ($request->week) {
+            $date = Carbon::parse($request->week);
+            $start_date  = date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00';
+            $end_date = date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59';
         } else if ($request->month) {
             $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
             $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
@@ -627,7 +724,6 @@ class DashboardController extends AppBaseController
             $start_date = date("Y-m-d", strtotime("-1 months"));
             $end_date = date("Y-m-d");
         }
-
         //->where('created_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
         //->where('created_at', '<=', date('Y-m-d', s   trtotime($request->day)) . ' 23:59:59')
         if ($filters)
@@ -673,6 +769,10 @@ class DashboardController extends AppBaseController
         if ($request->day) {
             $start_date  = date('Y-m-d', strtotime($request->day)) . ' 00:00:00';
             $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
+        } else if ($request->week) {
+            $date = Carbon::parse($request->week);
+            $start_date  = date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00';
+            $end_date = date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59';
         } else if ($request->month) {
             $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
             $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';

@@ -111,7 +111,7 @@
     </section>
 </template>
 <script>
-import moment from 'moment'
+import moment from 'moment';
 // Import date picker js
 import datePicker from 'vue-bootstrap-datetimepicker';
 // Import date picker css
@@ -161,7 +161,6 @@ export default {
                 useCurrent: false,
             },
             filters_by: ['Day', 'Week', 'Month', 'Year', 'Lifetime'],
-            //filters_by: ['Day', 'Month', 'Year'],
             by_day: false,
             by_month: false,
             by_year: false,
