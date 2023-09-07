@@ -37,7 +37,6 @@ class DashboardController extends AppBaseController
     {
         $id = session()->get('room_id');
         $room = SiteBuildingRoomViewModel::find($id);
-
         $question_answers = QuestionnaireAnswer::orderBy('questionnaire_id', 'asc')->get();
 
         $data = array();
@@ -86,6 +85,9 @@ class DashboardController extends AppBaseController
                     'site_building_id' => $room->site_building_id,
                     'site_building_level_id' => $room->site_building_level_id,
                     'site_building_room_id' => $room->id,
+                    'site_name' => $room->site_name,
+                    'site_building_name' => $room->building_name,
+                    'site_building_floor_name' => $room->building_floor_name,
                     'site_building_room_name' => $room->name,
                     'survey_id' => 0,
                     'pending' => 'btn-outline-danger',
@@ -156,7 +158,8 @@ class DashboardController extends AppBaseController
                         ->limit(1)
                         ->get();
 
-                    if (count($questionnaire_surveyz) != 0) { echo 'meron';
+                    if (count($questionnaire_surveyz) != 0) {
+                        echo 'meron';
                         // $data = [
                         //     'Remarks' => 'Done',
                         // ];
@@ -185,9 +188,10 @@ class DashboardController extends AppBaseController
 
                         );
 
-                       // echo 'zzzzzzzzzzzzzzzzzzzzzzzzzzzz';
+                        // echo 'zzzzzzzzzzzzzzzzzzzzzzzzzzzz';
                         //return $this->response('', 'Successfully Modified!', 200);
-                    }echo 'zzzzzzzzzzzzzzzzzzzzzzzzzzzz';
+                    }
+                    echo 'zzzzzzzzzzzzzzzzzzzzzzzzzzzz';
                     return $this->response('', 'Successfully Modified!', 200);
                 }
             }
@@ -219,7 +223,7 @@ class DashboardController extends AppBaseController
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
                 ->get();
-            
+
             $per_hour = [];
             foreach ($logs as $index => $log) {
                 $hour = date("H", strtotime($log->created_at));
@@ -475,7 +479,7 @@ class DashboardController extends AppBaseController
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            
+
             $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
             $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             // echo '-----'.$start_date;
@@ -543,12 +547,12 @@ class DashboardController extends AppBaseController
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
                 ->get();
-            
+
             $per_month = [];
             foreach ($logs as $index => $log) {
-                
+
                 $day = date("d", strtotime($log->created_at));
-                
+
                 $per_month[] = [
                     'building_name' => $log->building_name,
                     'week_one' => ($day >= '01' && $day <= '07') ? $log->total_survey : 0,
@@ -580,7 +584,7 @@ class DashboardController extends AppBaseController
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            
+
             $start_date  = $request->year . '-01-01 00:00:00';
             $end_date = $request->year . '-12-31 23:59:59';
             // echo '-----'.$start_date;

@@ -8,7 +8,7 @@
                             <!-- <div class="card-tools"> -->
                             <form class="col-sm-12">
                                 <div class="form-group row">
-                                    <h3 class="card-title   justify-content-center">Trends</h3>
+                                    <h3 class="card-title justify-content-center">Trends</h3>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-2">
@@ -440,32 +440,32 @@ export default {
                     type: 'doughnut',
                     data: pieData,
                     plugins: [{
-                        beforeDraw: function (chart) {
-                            var width = chart.chart.width,
-                                height = chart.chart.height,
-                                ctx = chart.chart.ctx;
+						beforeDraw: function (chart) {
+							var width = chart.chart.width,
+								height = chart.chart.height,
+								ctx = chart.chart.ctx;
 
-                            ctx.restore();
-                            var fontSize = 1.5;
-                            ctx.font = fontSize + "em sans-serif";
-                            ctx.textBaseline = "middle";
+							ctx.restore();
+							var fontSize = 1.5;
+							ctx.font = fontSize + "em sans-serif";
+							ctx.textBaseline = "middle";
 
-                            var text = incident_report,
-                                textX = 170,
-                                textY = height / 2;
+							var text = incident_report,
+								textX = Math.round((width - ctx.measureText(text).width) / 2),
+								textY = height / 2;
 
-                            ctx.fillText(text, 150 + 45, textY);
+							ctx.fillText(text, textX, textY);
 
-                            ctx.restore();
-                            var fontSize = 1;
-                            ctx.font = fontSize + "em sans-serif";
-                            ctx.textBaseline = "middle";
+							ctx.restore();
+							var fontSize = 1;
+							ctx.font = fontSize + "em sans-serif";
+							ctx.textBaseline = "middle";
 
-                            ctx.fillText("INCIDENTS", textX, textY + 35);
+							ctx.fillText("INCIDENTS", (textX -30 ), textY + 35);
 
-                            ctx.save();
-                        }
-                    }],
+							ctx.save();
+						}
+					}],
                     options: {
                         pieOptions,
                         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
@@ -707,32 +707,32 @@ export default {
                     type: 'doughnut',
                     data: pieData,
                     plugins: [{
-                        beforeDraw: function (chart) {
-                            var width = chart.chart.width,
-                                height = chart.chart.height,
-                                ctx = chart.chart.ctx;
+						beforeDraw: function (chart) {
+							var width = chart.chart.width,
+								height = chart.chart.height,
+								ctx = chart.chart.ctx;
 
-                            ctx.restore();
-                            var fontSize = 1.5;
-                            ctx.font = fontSize + "em sans-serif";
-                            ctx.textBaseline = "middle";
+							ctx.restore();
+							var fontSize = 1.5;
+							ctx.font = fontSize + "em sans-serif";
+							ctx.textBaseline = "middle";
 
-                            var text = incident_report,
-                                textX = 170,
-                                textY = height / 2;
+							var text = incident_report,
+								textX = Math.round((width - ctx.measureText(text).width) / 2),
+								textY = height / 2;
 
-                            ctx.fillText(text, 150 + 45, textY);
+							ctx.fillText(text, textX, textY);
 
-                            ctx.restore();
-                            var fontSize = 1;
-                            ctx.font = fontSize + "em sans-serif";
-                            ctx.textBaseline = "middle";
+							ctx.restore();
+							var fontSize = 1;
+							ctx.font = fontSize + "em sans-serif";
+							ctx.textBaseline = "middle";
 
-                            ctx.fillText("INCIDENTS", textX, textY + 35);
+							ctx.fillText("INCIDENTS", (textX -30 ), textY + 35);
 
-                            ctx.save();
-                        }
-                    }],
+							ctx.save();
+						}
+					}],
                     options: {
                         pieOptions,
                         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
@@ -820,7 +820,7 @@ export default {
         filterChartByMonth: function () {
 
             var filter = this.filter; 
-            console.log('<<<<<<<');
+            
             $.get("admin/reports/trend-report-by-month/list", filter, function (data) {
                 let datasets = [];
 
@@ -974,33 +974,33 @@ export default {
                 var myChart = new Chart(pieChartSurveyCanvas, {
                     type: 'doughnut',
                     data: pieData,
-                    plugins: [{ //plugin added for this chart
-                        beforeDraw: function (chart) {
-                            var width = chart.chart.width,
-                                height = chart.chart.height,
-                                ctx = chart.chart.ctx;
+                    plugins: [{
+						beforeDraw: function (chart) {
+							var width = chart.chart.width,
+								height = chart.chart.height,
+								ctx = chart.chart.ctx;
 
-                            ctx.restore();
-                            var fontSize = 1.5;
-                            ctx.font = fontSize + "em sans-serif";
-                            ctx.textBaseline = "middle";
+							ctx.restore();
+							var fontSize = 1.5;
+							ctx.font = fontSize + "em sans-serif";
+							ctx.textBaseline = "middle";
 
-                            var text = incident_report,
-                                textX = 170,//Math.round((width - ctx.measureText(text).width) / 2),
-                                textY = height / 2;
+							var text = incident_report,
+								textX = Math.round((width - ctx.measureText(text).width) / 2),
+								textY = height / 2;
 
-                            ctx.fillText(text, 150 + 45, textY);
+							ctx.fillText(text, textX, textY);
 
-                            ctx.restore();
-                            var fontSize = 1;
-                            ctx.font = fontSize + "em sans-serif";
-                            ctx.textBaseline = "middle";
+							ctx.restore();
+							var fontSize = 1;
+							ctx.font = fontSize + "em sans-serif";
+							ctx.textBaseline = "middle";
 
-                            ctx.fillText("INCIDENTS", textX, textY + 35);
+							ctx.fillText("INCIDENTS", (textX -30 ), textY + 35);
 
-                            ctx.save();
-                        }
-                    }],
+							ctx.save();
+						}
+					}],
                     options: {
                         pieOptions,
                         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
@@ -1253,33 +1253,33 @@ export default {
                 var myChart = new Chart(pieChartSurveyCanvas, {
                     type: 'doughnut',
                     data: pieData,
-                    plugins: [{ //plugin added for this chart
-                        beforeDraw: function (chart) {
-                            var width = chart.chart.width,
-                                height = chart.chart.height,
-                                ctx = chart.chart.ctx;
+                    plugins: [{
+						beforeDraw: function (chart) {
+							var width = chart.chart.width,
+								height = chart.chart.height,
+								ctx = chart.chart.ctx;
 
-                            ctx.restore();
-                            var fontSize = 1.5;
-                            ctx.font = fontSize + "em sans-serif";
-                            ctx.textBaseline = "middle";
+							ctx.restore();
+							var fontSize = 1.5;
+							ctx.font = fontSize + "em sans-serif";
+							ctx.textBaseline = "middle";
 
-                            var text = incident_report,
-                                textX = 170,//Math.round((width - ctx.measureText(text).width) / 2),
-                                textY = height / 2;
+							var text = incident_report,
+								textX = Math.round((width - ctx.measureText(text).width) / 2),
+								textY = height / 2;
 
-                            ctx.fillText(text, 150 + 45, textY);
+							ctx.fillText(text, textX, textY);
 
-                            ctx.restore();
-                            var fontSize = 1;
-                            ctx.font = fontSize + "em sans-serif";
-                            ctx.textBaseline = "middle";
+							ctx.restore();
+							var fontSize = 1;
+							ctx.font = fontSize + "em sans-serif";
+							ctx.textBaseline = "middle";
 
-                            ctx.fillText("INCIDENTS", textX, textY + 35);
+							ctx.fillText("INCIDENTS", (textX -30 ), textY + 35);
 
-                            ctx.save();
-                        }
-                    }],
+							ctx.save();
+						}
+					}],
                     options: {
                         pieOptions,
                         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
