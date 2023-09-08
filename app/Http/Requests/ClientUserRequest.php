@@ -26,7 +26,7 @@ class ClientUserRequest extends FormRequest
         return [
             "first_name" => "required|string",
             "last_name" => "required|string",
-            "email" => "required|email|unique:admins",
+            "email" => "required|email|unique:users",
             "roles" => "required|array",
             "password" => [
                 'required',
@@ -39,7 +39,7 @@ class ClientUserRequest extends FormRequest
             ],
             "company" => "required",
             "mobile" =>  "required|regex:/^([0-9\s\-\+\(\)]*)$/|min:11",
-            "pass_int" => "required|regex:/^([0-9\s\-\+\(\)]*)$/|min:4",
+            "pass_int" => "required|unique:users|regex:/^([0-9\s\-\+\(\)]*)$/|min:4",
         ];
     }
 }

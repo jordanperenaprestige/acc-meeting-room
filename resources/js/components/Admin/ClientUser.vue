@@ -59,7 +59,7 @@
 											</div>
 										</div>
 										<div class="form-group row mb-0">
-											<label for="firstName" class="col-sm-4">Rolesa </label>
+											<label for="firstName" class="col-sm-4">Roles </label>
 											<div class="col-sm-8">
 												<span v-for="(data, index) in user.roles"
 													class="badge badge-info mr-1">{{ data.name }}</span>
@@ -331,7 +331,7 @@
 							<label for="inputPassword3" class="col-sm-4 col-form-label">Roles <span
 									class="font-italic text-danger"> *</span></label>
 							<div class="col-sm-8">
-								<multiselect v-model="user.roles" :options="role_list" :multiple="true"
+								<multiselect v-model="user.roles" :options="role_list" :multiple="false"
 									:close-on-select="true" placeholder="Select Roles" label="name" track-by="name">
 								</multiselect>
 							</div>
@@ -736,20 +736,20 @@ export default {
 
 		editUser: function (id) {
 			axios.get('/admin/client/users/' + id)
-				.then(response => {
+				.then(response => { 
 					this.user.roles = [];
 					this.user.brands = [];
 					this.user.sites = [];
 					this.user.screens = [];
 
-					var user = response.data.data;
+					var user = response.data.data; 
 					this.user.id = id;
 					this.user.company = user.company;
 					this.user.email = user.email;
 					this.user.first_name = user.details.first_name;
 					this.user.last_name = user.details.last_name;
-					this.user.mobile = user.details.mobile;
-					this.user.pass_int = user.details.pass_int;
+					this.user.mobile = user.mobile;
+					this.user.pass_int = user.pass_int;
 
 					this.user.roles = user.roles;
 					this.user.isActive = user.active;

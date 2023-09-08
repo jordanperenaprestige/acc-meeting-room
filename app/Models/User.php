@@ -36,7 +36,6 @@ class User extends Authenticatable
         'updated_by',
         'remember_token',
         'mobile',
-        'pass_int',
     ];
 
     /**

@@ -26,7 +26,7 @@ class EditClientUserRequest extends FormRequest
         return [
             "first_name" => "required|string",
             "last_name" => "required|string",
-            "email" => "required|email|unique:admins",
+            "email" => "required|",
             "roles" => "required|array",
             "password" => [
                 'nullable',
@@ -42,7 +42,7 @@ class EditClientUserRequest extends FormRequest
             //"sites" => "required|array",
             //"screens" => "required|array",
             "mobile" =>  "required|regex:/^([0-9\s\-\+\(\)]*)$/|min:11|max:11",
-            "pass_int" => "required|regex:/^([0-9\s\-\+\(\)]*)$/|min:4|max:4",
+            "pass_int" => "required|unique:users|regex:/^([0-9\s\-\+\(\)]*)$/|min:4|max:4",
         ];;
     }
 }
