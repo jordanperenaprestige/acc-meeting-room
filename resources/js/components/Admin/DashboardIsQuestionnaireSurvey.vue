@@ -29,8 +29,8 @@
                                         <div v-show="by_week">
                                             <!-- v-show="show_concerns" -->
                                             <label for="week" class="col-form-label">Week</label>
-                                            <date-picker v-model="filter.week" placeholder="Week" :config="options_D" id="week"
-                                                autocomplete="off"></date-picker>
+                                            <date-picker v-model="filter.week" placeholder="Week" :config="options_D"
+                                                id="week" autocomplete="off"></date-picker>
                                         </div>
                                         <div v-show="by_month">
                                             <!-- v-show="show_concerns" -->
@@ -181,8 +181,9 @@ export default {
                 .then(response => this.sites = response.data.data);
         },
         filterBy: function () {
+            console.log(this.filter);
             if (this.filter.by == 0) {
-                // this.clear_filter();
+                this.clear_filter();
                 this.by_day = true;
                 this.by_week = false;
                 this.by_month = false;
@@ -206,7 +207,7 @@ export default {
                 const currentDay = moment(new Date()).format("YYYY-MM-DD");
                 this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
                 this.filterChartByWeek();
-            } 
+            }
             else if (this.filter.by == 2) {//alert(1);
                 //this.clear_filter();
                 this.by_day = false;
@@ -218,7 +219,7 @@ export default {
 
                 const currentMonth = moment().month();
                 this.filter.month = (this.filter.month == '') ? currentMonth : this.filter.month;
-                this.filterChartByMonth(); 
+                this.filterChartByMonth();
             } else if (this.filter.by == 3) { //alert(2);
                 //this.clear_filter();
                 this.by_day = false;
@@ -252,7 +253,7 @@ export default {
                 const currentDay = moment(new Date()).format("YYYY-MM-DD");
                 this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
                 this.filterChartByWeek();
-            } 
+            }
             else if (this.filter.by == 2) {//Month
                 const currentMonth = moment().month();
                 this.filter.month = (this.filter.month == '') ? currentMonth : this.filter.month;
@@ -294,7 +295,7 @@ export default {
                         label: value.building_name + '(Report(s): ' + value.reports + ')',
                         backgroundColor: background_color,
                         borderColor: background_color,
-                        pointRadius: false, 
+                        pointRadius: false,
                         pointColor: '#3b8bba',
                         pointStrokeColor: background_color,
                         pointHighlightFill: '#fff',
@@ -406,7 +407,6 @@ export default {
                         incident_report += parseInt(value.tenant_survey);
                         data_value.push(value.percentage_share);
                     });
-                    // console.log(labels);
                 }
                 else {
                     labels = ['Empty']
@@ -440,32 +440,32 @@ export default {
                     type: 'doughnut',
                     data: pieData,
                     plugins: [{
-						beforeDraw: function (chart) {
-							var width = chart.chart.width,
-								height = chart.chart.height,
-								ctx = chart.chart.ctx;
+                        beforeDraw: function (chart) {
+                            var width = chart.chart.width,
+                                height = chart.chart.height,
+                                ctx = chart.chart.ctx;
 
-							ctx.restore();
-							var fontSize = 1.5;
-							ctx.font = fontSize + "em sans-serif";
-							ctx.textBaseline = "middle";
+                            ctx.restore();
+                            var fontSize = 1.5;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
 
-							var text = incident_report,
-								textX = Math.round((width - ctx.measureText(text).width) / 2),
-								textY = height / 2;
+                            var text = incident_report,
+                                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                                textY = height / 2;
 
-							ctx.fillText(text, textX, textY);
+                            ctx.fillText(text, textX, textY);
 
-							ctx.restore();
-							var fontSize = 1;
-							ctx.font = fontSize + "em sans-serif";
-							ctx.textBaseline = "middle";
+                            ctx.restore();
+                            var fontSize = 1;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX -30 ), textY + 35);
+                            ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
-							ctx.save();
-						}
-					}],
+                            ctx.save();
+                        }
+                    }],
                     options: {
                         pieOptions,
                         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
@@ -487,10 +487,6 @@ export default {
                     $.each(data.data, function (key, value) {
                         var jordan = value.questionnaire_answer;
                         labels_answer.push(jordan);
-                        //console.log(value.questionnaire);
-                        //labels_answer.push(value.questionnaire);
-                        //data_value.push(1);
-                        // incident_report.push(value.tenant_survey);
                         incident_report_answer += parseInt(value.tenant_survey);
                         data_value_answer.push(value.percentage_share);
                         if (value.questionnaire == 'CLEANLINESS') {
@@ -508,7 +504,7 @@ export default {
                     data_value_answer = [1];
                     randomBackgroundColor = [cleanliness];
                 }
-                //console.log();
+
                 var donutData_answer = {
                     labels: labels_answer,
                     datasets: [
@@ -561,7 +557,7 @@ export default {
                         label: value.building_name + '(Report(s): ' + value.reports + ')',
                         backgroundColor: background_color,
                         borderColor: background_color,
-                        pointRadius: false, 
+                        pointRadius: false,
                         pointColor: '#3b8bba',
                         pointStrokeColor: background_color,
                         pointHighlightFill: '#fff',
@@ -571,7 +567,7 @@ export default {
                 });
 
                 var areaChartData = {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri','Sat','Sun'],
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                     datasets: datasets
                 };
 
@@ -628,7 +624,7 @@ export default {
                 });
 
                 var areaChartDataz = {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri','Sat','Sun'],
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                     datasets: datasetsz
                 };
 
@@ -673,7 +669,6 @@ export default {
                         incident_report += parseInt(value.tenant_survey);
                         data_value.push(value.percentage_share);
                     });
-                    // console.log(labels);
                 }
                 else {
                     labels = ['Empty']
@@ -707,32 +702,32 @@ export default {
                     type: 'doughnut',
                     data: pieData,
                     plugins: [{
-						beforeDraw: function (chart) {
-							var width = chart.chart.width,
-								height = chart.chart.height,
-								ctx = chart.chart.ctx;
+                        beforeDraw: function (chart) {
+                            var width = chart.chart.width,
+                                height = chart.chart.height,
+                                ctx = chart.chart.ctx;
 
-							ctx.restore();
-							var fontSize = 1.5;
-							ctx.font = fontSize + "em sans-serif";
-							ctx.textBaseline = "middle";
+                            ctx.restore();
+                            var fontSize = 1.5;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
 
-							var text = incident_report,
-								textX = Math.round((width - ctx.measureText(text).width) / 2),
-								textY = height / 2;
+                            var text = incident_report,
+                                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                                textY = height / 2;
 
-							ctx.fillText(text, textX, textY);
+                            ctx.fillText(text, textX, textY);
 
-							ctx.restore();
-							var fontSize = 1;
-							ctx.font = fontSize + "em sans-serif";
-							ctx.textBaseline = "middle";
+                            ctx.restore();
+                            var fontSize = 1;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX -30 ), textY + 35);
+                            ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
-							ctx.save();
-						}
-					}],
+                            ctx.save();
+                        }
+                    }],
                     options: {
                         pieOptions,
                         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
@@ -754,10 +749,6 @@ export default {
                     $.each(data.data, function (key, value) {
                         var jordan = value.questionnaire_answer;
                         labels_answer.push(jordan);
-                        //console.log(value.questionnaire);
-                        //labels_answer.push(value.questionnaire);
-                        //data_value.push(1);
-                        // incident_report.push(value.tenant_survey);
                         incident_report_answer += parseInt(value.tenant_survey);
                         data_value_answer.push(value.percentage_share);
                         if (value.questionnaire == 'CLEANLINESS') {
@@ -819,8 +810,8 @@ export default {
 
         filterChartByMonth: function () {
 
-            var filter = this.filter; 
-            
+            var filter = this.filter;
+
             $.get("admin/reports/trend-report-by-month/list", filter, function (data) {
                 let datasets = [];
 
@@ -975,32 +966,32 @@ export default {
                     type: 'doughnut',
                     data: pieData,
                     plugins: [{
-						beforeDraw: function (chart) {
-							var width = chart.chart.width,
-								height = chart.chart.height,
-								ctx = chart.chart.ctx;
+                        beforeDraw: function (chart) {
+                            var width = chart.chart.width,
+                                height = chart.chart.height,
+                                ctx = chart.chart.ctx;
 
-							ctx.restore();
-							var fontSize = 1.5;
-							ctx.font = fontSize + "em sans-serif";
-							ctx.textBaseline = "middle";
+                            ctx.restore();
+                            var fontSize = 1.5;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
 
-							var text = incident_report,
-								textX = Math.round((width - ctx.measureText(text).width) / 2),
-								textY = height / 2;
+                            var text = incident_report,
+                                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                                textY = height / 2;
 
-							ctx.fillText(text, textX, textY);
+                            ctx.fillText(text, textX, textY);
 
-							ctx.restore();
-							var fontSize = 1;
-							ctx.font = fontSize + "em sans-serif";
-							ctx.textBaseline = "middle";
+                            ctx.restore();
+                            var fontSize = 1;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX -30 ), textY + 35);
+                            ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
-							ctx.save();
-						}
-					}],
+                            ctx.save();
+                        }
+                    }],
                     options: {
                         pieOptions,
                         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
@@ -1022,10 +1013,6 @@ export default {
                     $.each(data.data, function (key, value) {
                         var jordan = value.questionnaire_answer;
                         labels_answer.push(jordan);
-                        //console.log(value.questionnaire);
-                        //labels_answer.push(value.questionnaire);
-                        //data_value.push(1);
-                        // incident_report.push(value.tenant_survey);
                         incident_report_answer += parseInt(value.tenant_survey);
                         data_value_answer.push(value.percentage_share);
                         if (value.questionnaire == 'CLEANLINESS') {
@@ -1043,7 +1030,7 @@ export default {
                     data_value_answer = [1];
                     randomBackgroundColor = [cleanliness];
                 }
-                //console.log();
+
                 var donutData_answer = {
                     labels: labels_answer,
                     datasets: [
@@ -1206,20 +1193,15 @@ export default {
                 let incident_report = 0;
                 if (data.data.length > 0) {
                     $.each(data.data, function (key, value) {
-                        //labels.push(value.questionnaire_answer);
+
                         labels.push(value.questionnaire);
-                        //data_value.push(1);
-                        // incident_report.push(value.tenant_survey);
                         incident_report += parseInt(value.tenant_survey);
                         data_value.push(value.percentage_share);
-                        //randomBackgroundColor.push(dynamicColors());
                     });
-                    // console.log(labels);
                 }
                 else {
                     labels = ['Empty']
                     data_value = [1];
-                    //randomBackgroundColor = ['#d2d6de'];
                 }
 
                 var donutData = {
@@ -1254,32 +1236,32 @@ export default {
                     type: 'doughnut',
                     data: pieData,
                     plugins: [{
-						beforeDraw: function (chart) {
-							var width = chart.chart.width,
-								height = chart.chart.height,
-								ctx = chart.chart.ctx;
+                        beforeDraw: function (chart) {
+                            var width = chart.chart.width,
+                                height = chart.chart.height,
+                                ctx = chart.chart.ctx;
 
-							ctx.restore();
-							var fontSize = 1.5;
-							ctx.font = fontSize + "em sans-serif";
-							ctx.textBaseline = "middle";
+                            ctx.restore();
+                            var fontSize = 1.5;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
 
-							var text = incident_report,
-								textX = Math.round((width - ctx.measureText(text).width) / 2),
-								textY = height / 2;
+                            var text = incident_report,
+                                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                                textY = height / 2;
 
-							ctx.fillText(text, textX, textY);
+                            ctx.fillText(text, textX, textY);
 
-							ctx.restore();
-							var fontSize = 1;
-							ctx.font = fontSize + "em sans-serif";
-							ctx.textBaseline = "middle";
+                            ctx.restore();
+                            var fontSize = 1;
+                            ctx.font = fontSize + "em sans-serif";
+                            ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX -30 ), textY + 35);
+                            ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
-							ctx.save();
-						}
-					}],
+                            ctx.save();
+                        }
+                    }],
                     options: {
                         pieOptions,
                         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
@@ -1300,10 +1282,6 @@ export default {
                     $.each(data.data, function (key, value) {
                         var jordan = value.questionnaire_answer;
                         labels_answer.push(jordan);
-                        //console.log(value.questionnaire);
-                        //labels_answer.push(value.questionnaire);
-                        //data_value.push(1);
-                        // incident_report.push(value.tenant_survey);
                         incident_report_answer += parseInt(value.tenant_survey);
                         data_value_answer.push(value.percentage_share);
                         if (value.questionnaire == 'CLEANLINESS') {
@@ -1321,7 +1299,7 @@ export default {
                     data_value_answer = [1];
                     randomBackgroundColor = [cleanliness];
                 }
-                //console.log();
+                
                 var donutData_answer = {
                     labels: labels_answer,
                     datasets: [
@@ -1364,33 +1342,22 @@ export default {
 
         },
         filterChartByLifetime: function () {
-            //console.log(this.filter);
-            //alert('yearz');
-
-            //alert(this.filter.lifetime);
             var filter = this.filter;
             $.get("admin/reports/donut-report-by-day/list", filter, function (data) {
                 let labels = [];
                 let data_value = [];
                 let incident_report = 0;
 
-                //alert('sss');
-
                 if (data.data.length > 0) {
                     $.each(data.data, function (key, value) {
-                        //labels.push(value.questionnaire_answer);
                         labels.push(value.questionnaire);
-                        //data_value.push(1);
-                        // incident_report.push(value.tenant_survey);
                         incident_report += parseInt(value.tenant_survey);
                         data_value.push(value.percentage_share);
-                        //randomBackgroundColor.push(dynamicColors());
                     });
                 }
                 else {
                     labels = ['Empty']
                     data_value = [1];
-                    //randomBackgroundColor = ['#d2d6de'];
                 }
 
                 var donutData = {

@@ -34,14 +34,14 @@
                 </div>
                 <div class="grid-container">
                     <div v-for="(survey_pending, index) in survey_pendings" class="grid-item">
-                        <div v-if="survey_pending.questionnaire_user_role == user_role">
-                            <img v-if="survey_pending.questionnaire_survey_id > 0" :src="check_red_logo"
+                        <div v-if="survey_pending.questionnaire_user_role == user_role" > 
+                            <img v-if="survey_pending.questionnaire_survey_id > 0" :src="survey_pending.questionnaire_button.replace('.png', '_red.png')"
                                 @click="switchImagePending($event)"
-                                :id="'pending_' + survey_pending.questionnaire_answer_id" class="responsive">
+                                :id="'pending_' + survey_pending.questionnaire_answer_id" class="responsive" :alt="survey_pending.questionnaire_button.replace('.png', '_red.png')">
                             <img v-else :src="check_green_logo" class="responsive">
                         </div>
                         <div v-else>
-                            <img :src="survey_pending.questionnaire_button.replace('.png', '_red.png')" class="responsive">
+                            <img :src="survey_pending.questionnaire_button.replace('.png', '_gray.png')" class="responsive">
                         </div>
 <!-- test -->
                         <div>{{ survey_pending.questionnaire_name }}</div>
@@ -372,11 +372,12 @@ export default {
 
         switchImagePending(event) {
 
-            var id = event.target.id;
+            var id = event.target.id; 
             const index = this.concern_pending.indexOf(id);
             if (index > -1) {
                 this.concern_pending.splice(index, 1); // 2nd parameter means remove one item only
-                $("#" + id).attr('src', this.check_red_logo);
+                var src = new URL(event.target.src); 
+                $("#" + id).attr('src', event.target.alt); 
                 this.show_pending_button();
             } else {
                 this.concern_pending.push(id);
@@ -387,7 +388,7 @@ export default {
                         this.show_pending_button();
                     });
             }
-            //console.log(this.concern_pending);
+            console.log(this.concern_pending);
         },
 
         submit: function () {
