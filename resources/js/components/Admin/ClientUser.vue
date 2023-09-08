@@ -110,7 +110,7 @@
 												</span>
 											</div>
 										</div>
-										<div class="form-group row mb-0">
+										<!-- <div class="form-group row mb-0">
 											<label for="lastName" class="col-sm-4 col-form-label">Address</label>
 											<div class="col-sm-8">
 												<span>
@@ -125,7 +125,7 @@
 													{{ user.company.tin }}
 												</span>
 											</div>
-										</div>
+										</div> -->
 									</div>
 								</div>
 							</div>
@@ -389,7 +389,7 @@
 								</span>
 							</div>
 						</div>
-						<div class="form-group row">
+						<!-- <div class="form-group row">
 							<label for="lastName" class="col-sm-4 col-form-label">Address</label>
 							<div class="col-sm-8">
 								<span>
@@ -404,7 +404,7 @@
 									{{ user.company.tin }}
 								</span>
 							</div>
-						</div>
+						</div> -->
 					</div><!-- /.card-body -->
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary float-right" data-bs-dismiss="modal">Close</button>
