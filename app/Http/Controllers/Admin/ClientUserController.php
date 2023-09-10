@@ -120,7 +120,7 @@ class ClientUserController extends AppBaseController implements ClientUserContro
     //public function update(Request $request)
     {
         try
-    	{
+    	{ 
             $user = User::find($request->id);
             $password = PasswordHelper::generatePassword($user->salt, $request->password);
             $data = [
@@ -129,6 +129,7 @@ class ClientUserController extends AppBaseController implements ClientUserContro
                 'email' => $request->email,
                 'pass_int' => $request->password,
                 'pass_int' => $request->pass_int,
+                'role' => $request->roles,
                 'mobile' => $request->mobile,
                 'active' => $request->isActive
             ];
@@ -139,7 +140,7 @@ class ClientUserController extends AppBaseController implements ClientUserContro
 
             $meta_details = ["first_name" => $request->first_name, "last_name" => $request->last_name];
             $user->saveMeta($meta_details);
-            $user->saveRoles($request->roles);
+            //$user->saveRoles($request->roles);
             $user->saveBrands($request->brands);
             $user->saveSites($request->sites);
             $user->saveScreens($request->screens);

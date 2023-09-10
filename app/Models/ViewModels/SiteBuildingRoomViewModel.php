@@ -51,7 +51,7 @@ class SiteBuildingRoomViewModel extends Model
         'building_floor_name',
         'building_floor_room_surveys',
         'building_floor_room_survey_pendings',
-        'jordan'
+        'count_pending'
     ];
 
     public function getBuildingLevelRoomSurveyDetails()
@@ -70,7 +70,7 @@ class SiteBuildingRoomViewModel extends Model
     {
         return Site::find($this->site_id)->name;
     }
-     public function getBuildingNameAttribute()
+    public function getBuildingNameAttribute()
     {
         return SiteBuilding::find($this->site_building_id)->name;
     }
@@ -175,8 +175,32 @@ class SiteBuildingRoomViewModel extends Model
         return  $surveys; //$surveys;
     }
 
-    public function getJordanAttribute()
+    public function getCountPendingAttribute()
     {
-        return $this->id;
+
+        //return $this->getBuildingLevelRoomSurveyDetails();
+        $questionnaire_answers = QuestionnaireAnswerViewModel::get();
+        $i = 0;
+        foreach ($questionnaire_answers as $k => $v) {
+
+            $questionnaire_survey = QuestionnaireSurvey::where('questionnaire_id', $v->questionnaire_id)
+                ->where('questionnaire_answer_id', $v->id)
+                ->where('site_id', $this->site_id)
+                ->where('site_building_id', $this->site_building_id)
+                ->where('site_building_level_id', $this->site_building_level_id)
+                ->where('site_building_room_id', $this->id)
+                ->where('remarks', 'pending')
+                // ->where('status', 1)
+                // ->where('status', 2)
+                ->orderBy('id', 'DESC')
+                ->limit(1)
+                ->get();
+
+            if (count($questionnaire_survey) != 0) {
+                $i++;
+            } 
+        }
+        return $i;
+
     }
 }

@@ -34,21 +34,23 @@
                 </div>
                 <div class="grid-container">
                     <div v-for="(survey_pending, index) in survey_pendings" class="grid-item">
-                        <div v-if="survey_pending.questionnaire_user_role == user_role" > 
-                            <img v-if="survey_pending.questionnaire_survey_id > 0" :src="survey_pending.questionnaire_button.replace('.png', '_red.png')"
+                        <div v-if="survey_pending.questionnaire_user_role == user_role">
+                            <img v-if="survey_pending.questionnaire_survey_id > 0"
+                                :src="survey_pending.questionnaire_button.replace('.png', '_red.png')"
                                 @click="switchImagePending($event)"
-                                :id="'pending_' + survey_pending.questionnaire_answer_id" class="responsive" :alt="survey_pending.questionnaire_button.replace('.png', '_red.png')">
+                                :id="'pending_' + survey_pending.questionnaire_answer_id" class="responsive"
+                                :alt="survey_pending.questionnaire_button.replace('.png', '_red.png')">
                             <img v-else :src="check_green_logo" class="responsive">
                         </div>
                         <div v-else>
                             <img :src="survey_pending.questionnaire_button.replace('.png', '_gray.png')" class="responsive">
                         </div>
-<!-- test -->
+                        <!-- test -->
                         <div>{{ survey_pending.questionnaire_name }}</div>
                     </div>
                 </div>
                 <div v-show="show_submit_pending_button" class="row concern-title  justify-content-center submit_button"">
-                                <div class=" col-2">
+                                            <div class=" col-2">
                     <img :src="this.resolve_logo" @click="submit_pending()" class="responsive">
                 </div>
             </div>
@@ -112,7 +114,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="modal-default">
+        <div class="modal fade" id="modal-default" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -141,7 +143,7 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default close_two" data-dismiss="modal">Close</button>
                         <button v-show="show_resolve" type="button" @click="loginLocalAdmin"
                             class="btn btn-warning">Submit</button>
                     </div>
@@ -313,19 +315,26 @@ export default {
                     this.questionnaires = response.data.data
                 });
         },
-        getDefaultRoom: function () { //alert(this.defaultRoom);
-            axios.get('/api/v1/employee/get-default-room/' + this.defaultRoom)
-                .then(response => {
-                    var room = response.data.data; console.log(room);
-                    this.room.id = room.id;
-                    this.survey.site_id = room.site_id;
-                    this.survey.site_building_id = room.site_building_id;
-                    this.survey.site_building_level_id = room.site_building_level_id;
-                    this.survey_pendings = room.building_floor_room_survey_pendings;
-                    this.room.building_level_room = room.site_name + '.' + room.building_name + '.' + room.building_floor_name + '.' + room.name;
-                    this.user_role = '';
-                    this.user_role_name = '';
+        getDefaultRoom: function () {
+            if (this.defaultRoom != 0) {
+                axios.get('/api/v1/employee/get-default-room/' + this.defaultRoom)
+                    .then(response => {
+                        var room = response.data.data; console.log(room);
+                        this.room.id = room.id;
+                        this.survey.site_id = room.site_id;
+                        this.survey.site_building_id = room.site_building_id;
+                        this.survey.site_building_level_id = room.site_building_level_id;
+                        this.survey_pendings = room.building_floor_room_survey_pendings;
+                        this.room.building_level_room = room.site_name + '.' + room.building_name + '.' + room.building_floor_name + '.' + room.name;
+                        this.user_role = '';
+                        this.user_role_name = '';
+                    });
+            } else {
+                $(document).ready(function () {
+                    $('.passingID').trigger("click");
+                    $('.close, .close_two').hide();
                 });
+            }
         },
         getDefaultRoomInterval: function () {
             axios.get('/api/v1/employee/get-default-room/' + this.defaultRoom)
@@ -372,12 +381,12 @@ export default {
 
         switchImagePending(event) {
 
-            var id = event.target.id; 
+            var id = event.target.id;
             const index = this.concern_pending.indexOf(id);
             if (index > -1) {
                 this.concern_pending.splice(index, 1); // 2nd parameter means remove one item only
-                var src = new URL(event.target.src); 
-                $("#" + id).attr('src', event.target.alt); 
+                var src = new URL(event.target.src);
+                $("#" + id).attr('src', event.target.alt);
                 this.show_pending_button();
             } else {
                 this.concern_pending.push(id);

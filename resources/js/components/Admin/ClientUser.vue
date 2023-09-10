@@ -110,7 +110,7 @@
 												</span>
 											</div>
 										</div>
-										<!-- <div class="form-group row mb-0">
+										<div class="form-group row mb-0">
 											<label for="lastName" class="col-sm-4 col-form-label">Address</label>
 											<div class="col-sm-8">
 												<span>
@@ -125,7 +125,7 @@
 													{{ user.company.tin }}
 												</span>
 											</div>
-										</div> -->
+										</div>
 									</div>
 								</div>
 							</div>
@@ -331,9 +331,13 @@
 							<label for="inputPassword3" class="col-sm-4 col-form-label">Roles <span
 									class="font-italic text-danger"> *</span></label>
 							<div class="col-sm-8">
-								<multiselect v-model="user.roles" :options="role_list" :multiple="false"
+								<multiselect v-model="user.roles" :options="role_list" :multiple="true"
 									:close-on-select="true" placeholder="Select Roles" label="name" track-by="name">
 								</multiselect>
+								<!-- <select class="custom-select" v-model="user.roles">
+									    <option value="">Select Building</option>
+									    <option v-for="building in buildings" :value="building.id"> {{ building.name }}</option>
+								    </select> -->
 							</div>
 						</div>
 						<div class="form-group row" v-show="edit_record">
@@ -389,7 +393,7 @@
 								</span>
 							</div>
 						</div>
-						<!-- <div class="form-group row">
+						<div class="form-group row">
 							<label for="lastName" class="col-sm-4 col-form-label">Address</label>
 							<div class="col-sm-8">
 								<span>
@@ -404,7 +408,7 @@
 									{{ user.company.tin }}
 								</span>
 							</div>
-						</div> -->
+						</div>
 					</div><!-- /.card-body -->
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary float-right" data-bs-dismiss="modal">Close</button>

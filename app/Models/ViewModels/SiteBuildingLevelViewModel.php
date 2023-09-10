@@ -52,6 +52,8 @@ class SiteBuildingLevelViewModel extends Model
         'building_floor_name',
         'building_level_rooms',
         'rest_room_pendings',
+        'jordan',
+        'test_level_room'
     ];
 
     public function getBuildingLevelRoomDetails()
@@ -113,4 +115,42 @@ class SiteBuildingLevelViewModel extends Model
        // print_r($data );
         return $survey;
     }
+    public function getJordanAttribute(){
+        $answers = $this->getQuestionnaireAnswer();
+        $survey = array();
+        $data = array();
+        foreach ($answers as $v) {
+            // echo  $v->id;
+            // echo $v->questionnaire_id; 
+            $survey[] =  QuestionnaireSurvey::where('questionnaire_id', $v->questionnaire_id)
+                ->where('questionnaire_answer_id', $v->id)
+                ->where('site_id', $this->site_id)
+                ->where('site_building_id', $this->site_building_id)
+                ->where('site_building_level_id', $this->id)
+                ->where('remarks', 'Pending')
+                ->orderBy('id', 'DESC')
+                ->limit(1)
+                ->get()->count();
+            // $data[] =  [
+            //     'questionnaire_id' => $v->questionnaire_id,
+            //     'questionnaire_answer_id' => $v->id,
+            //     'site_id' => $this->site_id,
+            //     'site_building_id' => $this->site_building_id,
+            //     'site_building_level_id' => $this->id,
+            // ];
+        }
+      //echo '------------';  echo '<pre>'; print_r(array_sum($survey) ); echo '<pre>';
+        return $survey;
+    }
+
+    public function getTestLevelRoomAttribute(){
+        $survey =  QuestionnaireSurvey::where('site_building_level_id', $this->id)
+                ->where('remarks', 'Pending')
+                ->groupBy('site_building_room_id')
+                ->groupBy('questionnaire_answer_id')
+                ->orderBy('id', 'DESC')
+                ->get()->count();
+
+        return $survey;        
+    }    
 }

@@ -48,7 +48,7 @@ use Hash;
 
 class MainController extends AppBaseController
 {
-    public function index($id = 1)
+    public function index($id = 0)
     {
         $room = SiteBuildingRoomViewModel::find($id);
 

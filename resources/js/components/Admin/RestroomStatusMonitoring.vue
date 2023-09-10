@@ -50,10 +50,21 @@
                                 <td><i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
                                   {{ building_level.name }}</td>
                                 <td>ALL RESTROOMS</td>
-                                <td></td>
+                                <td>{{ building_level.test_level_room }}
+
+                                  <!-- <ul v-if="index % 2 === 0" class="columns">
+                                    <li>
+                                      {{ arr[index] }}
+                                    </li>
+                                    <li v-if="!!arr[index + 1]">
+                                      {{ arr[index + 1] }}
+                                    </li>
+                                  </ul> -->
+
+                                </td>
                                 <td v-for="(rest_room_pending, index) in   building_level.rest_room_pendings">
 
-                                  <button v-if="(rest_room_pending.length > 0)" class="button_red_round"> </button>
+                                  <button v-if="(rest_room_pending.length > 0)" class="button_red_round"></button>
                                   <button v-else class="button_green_round"></button>
                                 </td>
                               </tr>
@@ -66,21 +77,21 @@
                               <table style="width:100%; table-layout: fixed">
                                 <tr v-for="(  building_level_room, index  ) in   building_level.building_level_rooms  ">
                                   <td>&nbsp;</td>
-                                  <td @click="roomStatus($event)" :id="building_level_room.id ">{{
+                                  <td @click="roomStatus($event)" :id="building_level_room.id">{{
                                     building_level_room.name
-                                    }}</td>
-                                  <td></td>
+                                  }}</td>
+                                  <td>{{ building_level_room.count_pending }}</td>
                                   <td
-                                    v-for="(  building_floor_room_survey, index  ) in   building_level_room.building_floor_room_surveys  ">
+                                    v-for="(  building_floor_room_survey, index  ) in   building_level_room.building_floor_room_surveys  "> 
                                     <button
-                                      v-if=" (building_floor_room_survey.questionnaire_survey_id > 0) && (building_floor_room_survey.questionnaire_survey_status === 1) "
+                                      v-if="(building_floor_room_survey.questionnaire_survey_id > 0) && (building_floor_room_survey.questionnaire_survey_status === 1)"
                                       @click="modalStatus($event)"
-                                      :id=" building_floor_room_survey.questionnaire_survey_id " class="button_red_round">
+                                      :id="building_floor_room_survey.questionnaire_survey_id" class="button_red_round">
                                     </button>
                                     <button
-                                      v-else-if=" (building_floor_room_survey.questionnaire_survey_id > 0) && (building_floor_room_survey.questionnaire_survey_status === 2) "
+                                      v-else-if="(building_floor_room_survey.questionnaire_survey_id > 0) && (building_floor_room_survey.questionnaire_survey_status === 2)"
                                       @click="modalStatus($event)"
-                                      :id=" building_floor_room_survey.questionnaire_survey_id "
+                                      :id="building_floor_room_survey.questionnaire_survey_id"
                                       class="button_green_round"></button>
                                     <button v-else class="button_green_round">{{
                                       building_floor_room_survey.status }}</button>
@@ -133,18 +144,19 @@
                 <div class="col-sm-4"><button type="button" :class="[`btn btn-block`, `${done}`]"
                     @click="getStatus($event)" :id="2">Done</button>
                 </div> -->
-                <div class="col-sm-4"><button type="button" :class=" [`btn btn-block`, `${pending}`] "
-                    @click="getStatus($event)" :id=" 1 ">Pending</button>
+                <div class="col-sm-4"><button type="button" :class="[`btn btn-block`, `${pending}`]"
+                    @click="getStatus($event)" :id="1">Pending</button>
                 </div>
-                <div class="col-sm-4"><button type="button" :class=" [`btn btn-block`, `${done}`] "
-                    @click="getStatus($event)" :id=" 2 ">Done</button>
+                <div class="col-sm-4"><button type="button" :class="[`btn btn-block`, `${done}`]"
+                    @click="getStatus($event)" :id="2">Done</button>
                 </div>
               </div>
 
             </div>
             <div class="modal-footer justify-content-between">
-              <button type="button" :class=" [`btn btn-secondary`] " data-bs-dismiss="modal">Close</button>
-              <button type="button" :class=" [`btn btn-primary`] " data-bs-dismiss="modal" @click=" updateSurvey ">Save changes</button>
+              <button type="button" :class="[`btn btn-secondary`]" data-bs-dismiss="modal">Close</button>
+              <button type="button" :class="[`btn btn-primary`]" data-bs-dismiss="modal" @click="updateSurvey">Save
+                changes</button>
             </div>
           </div>
         </div>
@@ -200,13 +212,13 @@
 
 
                 </div>
-                <div class="col-sm-3"><button type="button" :class=" [`btn btn-block`, room_survey.pending] "
+                <div class="col-sm-3"><button type="button" :class="[`btn btn-block`, room_survey.pending]"
                     @click="getRoomAnswerStatus($event);"
-                    :id=" `pending_${room_survey.survey_id}_${room_survey.site_building_room_id}` ">Pending</button>
+                    :id="`pending_${room_survey.survey_id}_${room_survey.site_building_room_id}`">Pending</button>
                 </div>
-                <div class="col-sm-3"><button type="button" :class=" [`btn btn-block`, room_survey.done] "
+                <div class="col-sm-3"><button type="button" :class="[`btn btn-block`, room_survey.done]"
                     @click="getRoomAnswerStatus($event)"
-                    :id=" `done_${room_survey.survey_id}_${room_survey.site_building_room_id}` ">Done</button>
+                    :id="`done_${room_survey.survey_id}_${room_survey.site_building_room_id}`">Done</button>
                 </div>
                 <!-- </div> -->
 
@@ -295,7 +307,7 @@ export default {
     },
 
     roomStatus: function (event) {
-      var id = event.target.id; 
+      var id = event.target.id;
       window.location.href = '/admin/dashboad/room/update/' + id;
       // axios.get('/api/v1/employee/get-room-survey/' + id)
       //   .then(response => {
@@ -335,7 +347,7 @@ export default {
           },
         })
           .then(response => {
-            toastr.success(response.data.message); 
+            toastr.success(response.data.message);
             $('.close').click();
             //location.reload();
 
