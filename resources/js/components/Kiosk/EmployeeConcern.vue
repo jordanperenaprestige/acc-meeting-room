@@ -9,7 +9,7 @@
                 </div>
                 <div class="grid-container">
                     <div v-for="(questionnaire, index) in questionnaires" class="grid-item">
-                        <div><img :src="questionnaire.button" @click="switchImage($event)" :id="questionnaire.id"
+                        <div><img stye="width: 900px; height: 900px;" :src="questionnaire.button" @click="switchImage($event)" :id="questionnaire.id"
                                 class="responsive"></div>
                         <div>{{ questionnaire.answer }}</div>
                     </div>
