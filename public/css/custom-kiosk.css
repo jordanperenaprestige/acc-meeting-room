@@ -1799,13 +1799,18 @@ span {
 
 }
 .first-title {
-    font-family: Henry Sans Regular;
-    /* color: #; */
+    /* font-family: Henry Sans Regular;
     font-size: 30px;
     font-weight: 500;
     text-align: left;
-    -webkit-text-stroke: 2px #ffdb00;
+    -webkit-text-stroke: 2px #ffdb00; */
     /* margin-top: 21rem; */
+    font-family: Henry Sans Regular;
+    /* color: #FFFFFF; */
+    -webkit-text-stroke: 2px #ffdb00;
+    font-size: 25px;
+    text-align: left;
+    padding: 0.5em;
 
 }
 .concern-title2 {
@@ -1826,6 +1831,22 @@ span {
     font-size: 16px;
     text-align: center;
     padding: 0.5em;
+}
+
+.first-title {
+    /* font-family: Henry Sans Regular;
+    font-size: 30px;
+    font-weight: 500;
+    text-align: left;
+    -webkit-text-stroke: 2px #ffdb00; */
+    /* margin-top: 21rem; */
+    font-family: Henry Sans Regular;
+    color: #ffdb00;
+    /* -webkit-text-stroke: 2px #ffdb00; */
+    font-size: 25px;
+    text-align: left;
+    padding: 0.5em;
+
 }
 
 .building-floor-room-title2 {
