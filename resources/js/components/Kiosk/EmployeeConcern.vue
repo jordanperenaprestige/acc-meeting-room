@@ -9,8 +9,8 @@
                 </div>
                 <div class="grid-container">
                     <div v-for="(questionnaire, index) in questionnaires" class="grid-item">
-                        <div><img stye="width: 900px; height: 900px;" :src="questionnaire.button" @click="switchImage($event)" :id="questionnaire.id"
-                                class="responsive"></div>
+                        <div><img stye="width: 900px; height: 900px;" :src="questionnaire.button"
+                                @click="switchImage($event)" :id="questionnaire.id" class="responsive"></div>
                         <div>{{ questionnaire.answer }}</div>
                     </div>
                 </div>
@@ -33,9 +33,11 @@
                     </div>
                 </div>
                 <div class="grid-container">
-                    <div v-for="(survey_pending, index) in survey_pendings" class="grid-item">
+                    <div v-for="(survey_pending, index) in survey_pendings">
                         <div v-if="survey_pending.questionnaire_user_role == user_role">
-                            <img v-if="survey_pending.questionnaire_survey_id > 0"
+                            <img style="display: block;
+  margin-left: auto;
+  margin-right: auto;" v-if="survey_pending.questionnaire_survey_id > 0"
                                 :src="survey_pending.questionnaire_button.replace('.png', '_red.png')"
                                 @click="switchImagePending($event)"
                                 :id="'pending_' + survey_pending.questionnaire_answer_id" class="responsive"
@@ -43,14 +45,25 @@
                             <img v-else :src="check_green_logo" class="responsive">
                         </div>
                         <div v-else>
-                            <img :src="survey_pending.questionnaire_button.replace('.png', '_gray.png')" class="responsive">
+                            <img style="display: block;
+  margin-left: auto;
+  margin-right: auto;" :src="survey_pending.questionnaire_button.replace('.png', '_gray.png')" class="responsive">
                         </div>
                         <!-- test -->
-                        <div>{{ survey_pending.questionnaire_name }}</div>
+                        <div v-if="survey_pending.questionnaire_user_role == user_role" style="font-family: Henry Sans Regular;
+    color: #FFFFFF;
+    font-size: 16px;
+    text-align: center;
+    padding: 0.em;">{{ survey_pending.questionnaire_name }}</div>
+                        <div v-else style="font-family: Henry Sans Regular;
+    color: #D3D3D3
+    font-size: 16px;
+    text-align: center;
+    padding: 0.em;">{{ survey_pending.questionnaire_name }}</div>
                     </div>
                 </div>
                 <div v-show="show_submit_pending_button" class="row concern-title  justify-content-center submit_button"">
-                                            <div class=" col-2">
+                                                <div class=" col-2">
                     <img :src="this.resolve_logo" @click="submit_pending()" class="responsive">
                 </div>
             </div>
@@ -207,7 +220,7 @@
                 <div class="row justify-content-right col-12" style="position: absolute; bottom: 0px;">
                     <div class="col-4 first-title" data-toggle="modal" data-target="#modal-default"
                         @click="pincodeModal($event)" :id=0>First</div>
-                    <div class="col-7 building-floor-room-title2 passingID"  data-toggle="modal" data-target="#modal-default"
+                    <div class="col-7 building-floor-room-title2 passingID" data-toggle="modal" data-target="#modal-default"
                         @click="pincodeModal($event)" :id=1>{{ this.room.building_level_room }}</div>
                     <!-- <div class="col-4 first-title" data-toggle="modal" data-target="#modal-default"
                         @click="pincodeModal($event)" :id=0>

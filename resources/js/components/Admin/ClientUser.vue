@@ -848,7 +848,7 @@ export default {
 			this.updateUser();
 		},
 
-		deleteModal: function (action, index) {
+		deleteModal: function (action, index) { alert('sssss');
 			this.delete_action = action;
 			this.delete_index = index;
 			$('#delete-record').modal('show');
@@ -867,6 +867,7 @@ export default {
 			this.delete_action = '';
 			this.delete_index = '';
 			$('#delete-record').modal('hide');
+			toastr.success('Successfully Deleted!');
 		},
 
 		downloadCsv: function () {

@@ -231,14 +231,14 @@ export default {
 	methods: {
 		getRoom: function () {
 			axios.get('/admin/dashboad/room/get-survey')
-				.then(response => { 
+				.then(response => {
 					var room_survey = response.data.data;
 					var site = room_survey[0].site_name;
 					var building = room_survey[0].site_building_name;
 					var level = room_survey[0].site_building_floor_name;
 					var room = room_survey[0].site_building_room_name;
 					this.room_surveys = room_survey;
-					this.room_name = site +'/ '+ building +'/ '+ level +'/ '+ room;
+					this.room_name = site + '/ ' + building + '/ ' + level + '/ ' + room;
 				});
 		},
 
@@ -298,6 +298,8 @@ export default {
 					}
 
 				})
+			this.filterChart();
+			this.filterBy();
 		},
 		//////////for reports
 		getSites: function () {
@@ -944,7 +946,7 @@ export default {
 		filterChartByMonth: function () {
 
 			var filter = this.filter;
-			
+
 			$.get("admin/dashboard/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
 
@@ -1574,10 +1576,12 @@ export default {
 			});
 
 		},
-
-
-
+		dateSelected(e) {
+			console.log(filter.day);
+			//this.$nextTick(() => console.log(filter.day))
+		},
 	},
+
 
 	components: {
 		datePicker

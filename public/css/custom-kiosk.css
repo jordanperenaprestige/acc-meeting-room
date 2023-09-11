@@ -1774,7 +1774,15 @@ span {
     color: #FFFFFF;
     font-size: 16px;
     text-align: center;
-    padding: 0.1em;
+    padding: 0.em;
+
+}
+.grid-item-grey {
+    font-family: Henry Sans Regular;
+    color: #D3D3D3;
+    font-size: 16px;
+    text-align: center;
+    /* padding: 0.1em; */
 
 }
 

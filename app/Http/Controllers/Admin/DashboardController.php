@@ -283,8 +283,8 @@ class DashboardController extends AppBaseController
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
-                ->where('created_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
-                ->where('created_at', '<=', date('Y-m-d', strtotime($request->day)) . ' 23:59:59')
+                ->where('updated_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
+                ->where('updated_at', '<=', date('Y-m-d', strtotime($request->day)) . ' 23:59:59')
                 ->where('site_building_room_id', $id)
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
