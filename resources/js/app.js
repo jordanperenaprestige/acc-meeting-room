@@ -73,6 +73,8 @@ Vue.component('admin-dashboard_questionnaire_survey', require('./components/Admi
 Vue.component('admin-dashboard_questionnaire_survey_two', require('./components/Admin/DashboardIsQuestionnaireSurveyTwo.vue').default);
 Vue.component('admin-dashboard_room', require('./components/Admin/DashboardRoom.vue').default);
 
+
+
 Vue.component('admin-client_user', require('./components/Admin/ClientUser.vue').default);
 Vue.component('admin-faqs', require('./components/Admin/FAQs.vue').default);
 Vue.component('admin-customer-care', require('./components/Admin/CustomerCare.vue').default);

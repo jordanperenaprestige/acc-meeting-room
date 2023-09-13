@@ -24,6 +24,11 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/dashboad/room/get-survey', 'Admin\DashboardController@getRoomSurvey')->name('admin.room.surveys');
     Route::post('/admin/dashboard/room/store-update', 'Admin\DashboardController@storeUpdate')->name('admin.room.store-update');
     // for report
+    Route::get('/admin/dashboard/trend-report-by-daily/list', 'Admin\DashboardController@getTrendReportByDaily')->where('id', '[0-9]+')->name('admin.dashboard.trend-report-by-daily.list');
+    Route::get('/admin/dashboard/trend-incident-by-daily/list', 'Admin\DashboardController@getTrendIncidentByDaily')->where('id', '[0-9]+')->name('admin.dashboard.trend-incident-by-daily.list');
+    Route::get('/admin/dashboard/donut-report-by-daily/list', 'Admin\DashboardController@getDonutReportByDaily')->name('admin.dashboard.donut-by-daily.list');
+    Route::get('/admin/dashboard/donut-report-by-daily-answer/list', 'Admin\DashboardController@getDonutReportByDailyAnswer')->name('admin.dashboard.donut-by-daily-answer.list');
+
     Route::get('/admin/dashboard/trend-report-by-day/list', 'Admin\DashboardController@getTrendReportByDay')->where('id', '[0-9]+')->name('admin.dashboard.trend-report-by-day.list');
     Route::get('/admin/dashboard/trend-incident-by-day/list', 'Admin\DashboardController@getTrendIncidentByDay')->where('id', '[0-9]+')->name('admin.dashboard.trend-incident-by-day.list');
     Route::get('/admin/dashboard/donut-report-by-day/list', 'Admin\DashboardController@getDonutReportByDay')->name('admin.dashboard.donut-by-day-answer.list');
@@ -41,7 +46,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/dashboard/trend-incident-by-year/list', 'Admin\DashboardController@getTrendIncidentByYear')->where('id', '[0-9]+')->name('admin.dashboard.trend-incident-by-year.list');
     // Route::get('/admin/reports/donut-report-by-year/list', 'Admin\ReportsController@getDonutReportByYear')->name('admin.reports.donut-by-year-answer.list');
     // Route::get('/admin/reports/donut-report-by-year-answer/list', 'Admin\ReportsController@getDonutReportByYearAnswer')->name('admin.reports.donut-by-year.list');
-
+    Route::get('/admin/dashboard/filter-survey-first-last', 'Admin\DashboardController@getSurveyFirstLast')->where('id', '[0-9]+')->name('admin.dashboard.survey-first-last');
+    
 
 
     /*
@@ -452,6 +458,13 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/reports/monthly-usage/list', 'Admin\ReportsController@monthlyUsage')->name('admin.reports.monthly-usage');
 
     Route::get('/admin/reports/trend/list', 'Admin\ReportsController@getTrend')->where('id', '[0-9]+')->name('admin.reports.trend.list'); //
+
+    Route::get('/admin/reports/trend-report-by-daily/list', 'Admin\ReportsController@getTrendReportByDaily')->where('id', '[0-9]+')->name('admin.dashboard.trend-report-by-daily.list');
+    Route::get('/admin/reports/trend-incident-by-daily/list', 'Admin\ReportsController@getTrendIncidentByDaily')->where('id', '[0-9]+')->name('admin.dashboard.trend-incident-by-daily.list');
+    Route::get('/admin/reports/donut-report-by-daily/list', 'Admin\ReportsController@getDonutReportByDaily')->name('admin.dashboard.donut-by-daily.list');
+    Route::get('/admin/reports/donut-report-by-daily-answer/list', 'Admin\ReportsController@getDonutReportByDailyAnswer')->name('admin.dashboard.donut-by-daily-answer.list');
+
+
 
     Route::get('/admin/reports/trend-report-by-day/list', 'Admin\ReportsController@getTrendReportByDay')->where('id', '[0-9]+')->name('admin.reports.trend-report-by-day.list');
     Route::get('/admin/reports/trend-incident-by-day/list', 'Admin\ReportsController@getTrendIncidentByDay')->where('id', '[0-9]+')->name('admin.reports.trend-incident-by-day.list');

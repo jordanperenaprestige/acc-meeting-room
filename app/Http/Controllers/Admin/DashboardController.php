@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AppBaseController;
+use DateTime;
 use App\Models\SitePoint;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -13,6 +14,8 @@ use App\Models\ViewModels\QuestionnaireSurveyViewModel;
 use App\Models\QuestionnaireAnswer;
 use App\Models\QuestionnaireSurvey;
 use Illuminate\Support\Facades\DB;
+
+
 use Carbon\Carbon;
 
 class DashboardController extends AppBaseController
@@ -229,35 +232,121 @@ class DashboardController extends AppBaseController
                 $hour = date("H", strtotime($log->created_at));
                 $per_hour[] = [
                     'building_name' => $log->building_name,
-                    'twentyfour' => ($hour == '00') ? $log->total_survey : 0,
-                    'one' => ($hour == '01') ? $log->total_survey : 0,
-                    'two' => ($hour == '02') ? $log->total_survey : 0,
-                    'three' => ($hour == '03') ? $log->total_survey : 0,
-                    'four' => ($hour == '04') ? $log->total_survey : 0,
-                    'five' => ($hour == '05') ? $log->total_survey : 0,
-                    'six' => ($hour == '06') ? $log->total_survey : 0,
-                    'seven' => ($hour == '07') ? $log->total_survey : 0,
-                    'eight' => ($hour == '08') ? $log->total_survey : 0,
-                    'nine' => ($hour == '09') ? $log->total_survey : 0,
-                    'ten' => ($hour == '10') ? $log->total_survey : 0,
-                    'eleven' => ($hour == '11') ? $log->total_survey : 0,
-                    'twelve' => ($hour == '12') ? $log->total_survey : 0,
-                    'thirteen' => ($hour == '13') ? $log->total_survey : 0,
-                    'forteen' => ($hour == '14') ? $log->total_survey : 0,
-                    'fifteen' => ($hour == '15') ? $log->total_survey : 0,
-                    'sixteen' => ($hour == '16') ? $log->total_survey : 0,
-                    'seventeen' => ($hour == '17') ? $log->total_survey : 0,
-                    'eighteen' => ($hour == '18') ? $log->total_survey : 0,
-                    'nineteen' => ($hour == '19') ? $log->total_survey : 0,
-                    'twenty' => ($hour == '20') ? $log->total_survey : 0,
-                    'twentyone' => ($hour == '21') ? $log->total_survey : 0,
-                    'twentytwo' => ($hour == '22') ? $log->total_survey : 0,
-                    'twentythree' => ($hour == '23') ? $log->total_survey : 0,
+                    'twentyfour' => ($hour == '00') ? $log->total_survey : '',
+                    'one' => ($hour == '01') ? $log->total_survey : '',
+                    'two' => ($hour == '02') ? $log->total_survey : '',
+                    'three' => ($hour == '03') ? $log->total_survey : '',
+                    'four' => ($hour == '04') ? $log->total_survey : '',
+                    'five' => ($hour == '05') ? $log->total_survey : '',
+                    'six' => ($hour == '06') ? $log->total_survey : '',
+                    'seven' => ($hour == '07') ? $log->total_survey : '',
+                    'eight' => ($hour == '08') ? $log->total_survey : '',
+                    'nine' => ($hour == '09') ? $log->total_survey : '',
+                    'ten' => ($hour == '10') ? $log->total_survey : '',
+                    'eleven' => ($hour == '11') ? $log->total_survey : '',
+                    'twelve' => ($hour == '12') ? $log->total_survey : '',
+                    'thirteen' => ($hour == '13') ? $log->total_survey : '',
+                    'forteen' => ($hour == '14') ? $log->total_survey : '',
+                    'fifteen' => ($hour == '15') ? $log->total_survey : '',
+                    'sixteen' => ($hour == '16') ? $log->total_survey : '',
+                    'seventeen' => ($hour == '17') ? $log->total_survey : '',
+                    'eighteen' => ($hour == '18') ? $log->total_survey : '',
+                    'nineteen' => ($hour == '19') ? $log->total_survey : '',
+                    'twenty' => ($hour == '20') ? $log->total_survey : '',
+                    'twentyone' => ($hour == '21') ? $log->total_survey : '',
+                    'twentytwo' => ($hour == '22') ? $log->total_survey : '',
+                    'twentythree' => ($hour == '23') ? $log->total_survey : '',
                     'reports' => $log->total_survey,
                 ];
             }
 
             return $this->response($per_hour, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+    public function getTrendReportByDaily(Request $request)
+    {
+        try {
+            $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
+                ->where('site_building_room_id', $id)
+                ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->groupBy('site_building_id')
+
+                ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
+                ->get();
+            $created_at = [];
+            $per_day = [];
+            foreach ($logs as $index => $log) {
+                $day = date("m/d", strtotime($log->created_at));
+                $per_day[] = [
+                    'day' => $day,
+                    'total_survey' => $log->total_survey,
+                    'reports' => $log->total_survey,
+                ];
+            }
+            return $this->response($per_day, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+    public function getTrendIncidentByDaily(Request $request)
+    {
+        try {
+            $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
+                ->where('site_building_room_id', $id)
+                ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->where('Remarks', 'Done')
+                ->groupBy('site_building_id')
+                ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
+                ->get();
+            $created_at = [];
+            $per_day = [];
+            foreach ($logs as $index => $log) {
+                $day = date("m/d", strtotime($log->created_at));
+                $per_day[] = [
+                    'day' => $day,
+                    'total_survey' => $log->total_survey,
+                    'reports' => $log->total_survey,
+                ];
+            }
+            return $this->response($per_day, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
@@ -301,30 +390,30 @@ class DashboardController extends AppBaseController
                 $hour = date("H", strtotime($log->created_at));
                 $per_hour[] = [
                     'building_name' => $log->building_name,
-                    'twentyfour' => ($hour == '00') ? $log->total_survey : 0,
-                    'one' => ($hour == '01') ? $log->total_survey : 0,
-                    'two' => ($hour == '02') ? $log->total_survey : 0,
-                    'three' => ($hour == '03') ? $log->total_survey : 0,
-                    'four' => ($hour == '04') ? $log->total_survey : 0,
-                    'five' => ($hour == '05') ? $log->total_survey : 0,
-                    'six' => ($hour == '06') ? $log->total_survey : 0,
-                    'seven' => ($hour == '07') ? $log->total_survey : 0,
-                    'eight' => ($hour == '08') ? $log->total_survey : 0,
-                    'nine' => ($hour == '09') ? $log->total_survey : 0,
-                    'ten' => ($hour == '10') ? $log->total_survey : 0,
-                    'eleven' => ($hour == '11') ? $log->total_survey : 0,
-                    'twelve' => ($hour == '12') ? $log->total_survey : 0,
-                    'thirteen' => ($hour == '13') ? $log->total_survey : 0,
-                    'forteen' => ($hour == '14') ? $log->total_survey : 0,
-                    'fifteen' => ($hour == '15') ? $log->total_survey : 0,
-                    'sixteen' => ($hour == '16') ? $log->total_survey : 0,
-                    'seventeen' => ($hour == '17') ? $log->total_survey : 0,
-                    'eighteen' => ($hour == '18') ? $log->total_survey : 0,
-                    'nineteen' => ($hour == '19') ? $log->total_survey : 0,
-                    'twenty' => ($hour == '20') ? $log->total_survey : 0,
-                    'twentyone' => ($hour == '21') ? $log->total_survey : 0,
-                    'twentytwo' => ($hour == '22') ? $log->total_survey : 0,
-                    'twentythree' => ($hour == '23') ? $log->total_survey : 0,
+                    'twentyfour' => ($hour == '00') ? $log->total_survey : '',
+                    'one' => ($hour == '01') ? $log->total_survey : '',
+                    'two' => ($hour == '02') ? $log->total_survey : '',
+                    'three' => ($hour == '03') ? $log->total_survey : '',
+                    'four' => ($hour == '04') ? $log->total_survey : '',
+                    'five' => ($hour == '05') ? $log->total_survey : '',
+                    'six' => ($hour == '06') ? $log->total_survey : '',
+                    'seven' => ($hour == '07') ? $log->total_survey : '',
+                    'eight' => ($hour == '08') ? $log->total_survey : '',
+                    'nine' => ($hour == '09') ? $log->total_survey : '',
+                    'ten' => ($hour == '10') ? $log->total_survey : '',
+                    'eleven' => ($hour == '11') ? $log->total_survey : '',
+                    'twelve' => ($hour == '12') ? $log->total_survey : '',
+                    'thirteen' => ($hour == '13') ? $log->total_survey : '',
+                    'forteen' => ($hour == '14') ? $log->total_survey : '',
+                    'fifteen' => ($hour == '15') ? $log->total_survey : '',
+                    'sixteen' => ($hour == '16') ? $log->total_survey : '',
+                    'seventeen' => ($hour == '17') ? $log->total_survey : '',
+                    'eighteen' => ($hour == '18') ? $log->total_survey : '',
+                    'nineteen' => ($hour == '19') ? $log->total_survey : '',
+                    'twenty' => ($hour == '20') ? $log->total_survey : '',
+                    'twentyone' => ($hour == '21') ? $log->total_survey : '',
+                    'twentytwo' => ($hour == '22') ? $log->total_survey : '',
+                    'twentythree' => ($hour == '23') ? $log->total_survey : '',
                     'reports' => $log->total_survey,
                 ];
             }
@@ -369,13 +458,13 @@ class DashboardController extends AppBaseController
                 $day = date("D", strtotime($log->created_at));
                 $per_day[] = [
                     'building_name' => $log->building_name,
-                    'mon' => ($day == 'Mon') ? $log->total_survey : 0,
-                    'tue' => ($day == 'Tue') ? $log->total_survey : 0,
-                    'wed' => ($day == 'Wed') ? $log->total_survey : 0,
-                    'thu' => ($day == 'Thu') ? $log->total_survey : 0,
-                    'fri' => ($day == 'Fri') ? $log->total_survey : 0,
-                    'sat' => ($day == 'Sat') ? $log->total_survey : 0,
-                    'sun' => ($day == 'Sun') ? $log->total_survey : 0,
+                    'mon' => ($day == 'Mon') ? $log->total_survey : '',
+                    'tue' => ($day == 'Tue') ? $log->total_survey : '',
+                    'wed' => ($day == 'Wed') ? $log->total_survey : '',
+                    'thu' => ($day == 'Thu') ? $log->total_survey : '',
+                    'fri' => ($day == 'Fri') ? $log->total_survey : '',
+                    'sat' => ($day == 'Sat') ? $log->total_survey : '',
+                    'sun' => ($day == 'Sun') ? $log->total_survey : '',
                     'reports' => $log->total_survey,
                 ];
             }
@@ -420,13 +509,13 @@ class DashboardController extends AppBaseController
                 $day = date("D", strtotime($log->created_at));
                 $per_day[] = [
                     'building_name' => $log->building_name,
-                    'mon' => ($day == 'Mon') ? $log->total_survey : 0,
-                    'tue' => ($day == 'Tue') ? $log->total_survey : 0,
-                    'wed' => ($day == 'Wed') ? $log->total_survey : 0,
-                    'thu' => ($day == 'Thu') ? $log->total_survey : 0,
-                    'fri' => ($day == 'Fri') ? $log->total_survey : 0,
-                    'sat' => ($day == 'Sat') ? $log->total_survey : 0,
-                    'sun' => ($day == 'Sun') ? $log->total_survey : 0,
+                    'mon' => ($day == 'Mon') ? $log->total_survey : '',
+                    'tue' => ($day == 'Tue') ? $log->total_survey : '',
+                    'wed' => ($day == 'Wed') ? $log->total_survey : '',
+                    'thu' => ($day == 'Thu') ? $log->total_survey : '',
+                    'fri' => ($day == 'Fri') ? $log->total_survey : '',
+                    'sat' => ($day == 'Sat') ? $log->total_survey : '',
+                    'sun' => ($day == 'Sun') ? $log->total_survey : '',
                     'reports' => $log->total_survey,
                 ];
             }
@@ -467,6 +556,102 @@ class DashboardController extends AppBaseController
             ], 422);
         }
     }
+
+    public function getDonutReportByDaily(Request $request)
+    {
+        try {
+            $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
+                ->where('site_building_room_id', $id)
+                ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->groupBy('questionnaire_id')
+                ->orderBy('questionnaire_id', 'ASC')
+                ->get();
+
+            $total = $logs->sum('tenant_survey');
+
+            $percentage = [];
+            foreach ($logs as $index => $log) {
+                $percentage[] = [
+                    'questionnaire' => $log->questionnaire,
+                    'questionnaire_answer' => $log->questionnaire_answer,
+                    'tenant_survey' => $log->tenant_survey,
+                    //'percentage_share' => round(($log->tenant_survey / $total) * 100, 2) . '%'
+                    'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
+                ];
+            }
+
+            //return $percentage;
+            return $this->response($percentage, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
+    public function getDonutReportByDailyAnswer(Request $request)
+    {
+        try {
+            $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
+                ->where('site_building_room_id', $id)
+                ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->groupBy('questionnaire_id')
+                ->groupBy('questionnaire_answer_id')
+                ->orderBy('questionnaire_id', 'ASC')
+                ->get();
+
+            $total = $logs->sum('tenant_survey');
+
+            $percentage = [];
+            foreach ($logs as $index => $log) {
+                $percentage[] = [
+                    'questionnaire' => $log->questionnaire,
+                    'questionnaire_answer' => $log->questionnaire_answer,
+                    'tenant_survey' => $log->tenant_survey,
+                    //'percentage_share' => round(($log->tenant_survey / $total) * 100, 2) . '%'
+                    'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
+                ];
+            }
+
+            //return $percentage;
+            return $this->response($percentage, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
+
+
     public function getTrendReportByMonth(Request $request)
     {
         try {
@@ -482,8 +667,8 @@ class DashboardController extends AppBaseController
 
             $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
             $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
-            // echo '-----'.$start_date;
-            // echo '=='.$end_date.'----';
+            // echo '-----' . $start_date;
+            // echo '==' . $end_date . '----';
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -506,10 +691,10 @@ class DashboardController extends AppBaseController
                 //echo '<<' . $day . '>>';
                 $per_month[] = [
                     'building_name' => $log->building_name,
-                    'week_one' => ($day >= '01' && $day <= '07') ? $log->total_survey : 0,
-                    'week_two' => ($day >= '08' && $day <= '15') ? $log->total_survey : 0,
-                    'week_three' => ($day >= '16' && $day <= '22') ? $log->total_survey : 0,
-                    'week_four' => ($day >= '23' && $day <= '31') ? $log->total_survey : 0,
+                    'week_one' => ($day >= '01' && $day <= '07') ? $log->total_survey : '',
+                    'week_two' => ($day >= '08' && $day <= '15') ? $log->total_survey : '',
+                    'week_three' => ($day >= '16' && $day <= '22') ? $log->total_survey : '',
+                    'week_four' => ($day >= '23' && $day <= '31') ? $log->total_survey : '',
                     'reports' => $log->total_survey,
                 ];
             }
@@ -555,10 +740,10 @@ class DashboardController extends AppBaseController
 
                 $per_month[] = [
                     'building_name' => $log->building_name,
-                    'week_one' => ($day >= '01' && $day <= '07') ? $log->total_survey : 0,
-                    'week_two' => ($day >= '08' && $day <= '15') ? $log->total_survey : 0,
-                    'week_three' => ($day >= '16' && $day <= '22') ? $log->total_survey : 0,
-                    'week_four' => ($day >= '23' && $day <= '31') ? $log->total_survey : 0,
+                    'week_one' => ($day >= '01' && $day <= '07') ? $log->total_survey : '',
+                    'week_two' => ($day >= '08' && $day <= '15') ? $log->total_survey : '',
+                    'week_three' => ($day >= '16' && $day <= '22') ? $log->total_survey : '',
+                    'week_four' => ($day >= '23' && $day <= '31') ? $log->total_survey : '',
                     'reports' => $log->total_survey,
                 ];
             }
@@ -611,18 +796,18 @@ class DashboardController extends AppBaseController
                 //echo '<<' . $month . '>>';
                 $per_month[] = [
                     'building_name' => $log->building_name,
-                    'jan' => ($month == '01') ? $log->total_survey : 0,
-                    'feb' => ($month == '02') ? $log->total_survey : 0,
-                    'mar' => ($month == '03') ? $log->total_survey : 0,
-                    'apr' => ($month == '04') ? $log->total_survey : 0,
-                    'may' => ($month == '05') ? $log->total_survey : 0,
-                    'jun' => ($month == '06') ? $log->total_survey : 0,
-                    'jul' => ($month == '07') ? $log->total_survey : 0,
-                    'aug' => ($month == '08') ? $log->total_survey : 0,
-                    'sep' => ($month == '09') ? $log->total_survey : 0,
-                    'oct' => ($month == '10') ? $log->total_survey : 0,
-                    'nov' => ($month == '11') ? $log->total_survey : 0,
-                    'dec' => ($month == '12') ? $log->total_survey : 0,
+                    'jan' => ($month == '01') ? $log->total_survey : '',
+                    'feb' => ($month == '02') ? $log->total_survey : '',
+                    'mar' => ($month == '03') ? $log->total_survey : '',
+                    'apr' => ($month == '04') ? $log->total_survey : '',
+                    'may' => ($month == '05') ? $log->total_survey : '',
+                    'jun' => ($month == '06') ? $log->total_survey : '',
+                    'jul' => ($month == '07') ? $log->total_survey : '',
+                    'aug' => ($month == '08') ? $log->total_survey : '',
+                    'sep' => ($month == '09') ? $log->total_survey : '',
+                    'oct' => ($month == '10') ? $log->total_survey : '',
+                    'nov' => ($month == '11') ? $log->total_survey : '',
+                    'dec' => ($month == '12') ? $log->total_survey : '',
                     'reports' => $log->total_survey,
                 ];
             }
@@ -676,18 +861,18 @@ class DashboardController extends AppBaseController
                 //echo '<<' . $month . '>>';
                 $per_month[] = [
                     'building_name' => $log->building_name,
-                    'jan' => ($month == '01') ? $log->total_survey : 0,
-                    'feb' => ($month == '02') ? $log->total_survey : 0,
-                    'mar' => ($month == '03') ? $log->total_survey : 0,
-                    'apr' => ($month == '04') ? $log->total_survey : 0,
-                    'may' => ($month == '05') ? $log->total_survey : 0,
-                    'jun' => ($month == '06') ? $log->total_survey : 0,
-                    'jul' => ($month == '07') ? $log->total_survey : 0,
-                    'aug' => ($month == '08') ? $log->total_survey : 0,
-                    'sep' => ($month == '09') ? $log->total_survey : 0,
-                    'oct' => ($month == '10') ? $log->total_survey : 0,
-                    'nov' => ($month == '11') ? $log->total_survey : 0,
-                    'dec' => ($month == '12') ? $log->total_survey : 0,
+                    'jan' => ($month == '01') ? $log->total_survey : '',
+                    'feb' => ($month == '02') ? $log->total_survey : '',
+                    'mar' => ($month == '03') ? $log->total_survey : '',
+                    'apr' => ($month == '04') ? $log->total_survey : '',
+                    'may' => ($month == '05') ? $log->total_survey : '',
+                    'jun' => ($month == '06') ? $log->total_survey : '',
+                    'jul' => ($month == '07') ? $log->total_survey : '',
+                    'aug' => ($month == '08') ? $log->total_survey : '',
+                    'sep' => ($month == '09') ? $log->total_survey : '',
+                    'oct' => ($month == '10') ? $log->total_survey : '',
+                    'nov' => ($month == '11') ? $log->total_survey : '',
+                    'dec' => ($month == '12') ? $log->total_survey : '',
                     'reports' => $log->total_survey,
                 ];
             }
@@ -826,5 +1011,40 @@ class DashboardController extends AppBaseController
         }
 
         return $percentage;
+    }
+
+    public function getSurveyFirstLast()
+    {
+
+
+        try {
+            $id = session()->get('room_id');
+            $currentDateTime = new DateTime('now');
+            $currentDate = $currentDateTime->format('Y-m-d');
+            $start_date  = date('Y-m-d', strtotime($currentDate)) . ' 00:00:00';
+            $end_date = date('Y-m-d', strtotime($currentDate)) . ' 23:59:59';
+            // $logs = QuestionnaireSurveyViewModel::where('site_building_room_id', $id)->get();
+            // $created_at = array();
+            // foreach ($logs as $k => $v) {
+            //     $created_at[] = $v->created_at;
+            // }
+            // $origin = new DateTime(current($created_at));
+            // $target = new DateTime(end($created_at));
+            // $interval = $origin->diff($target);
+            // $interval->format('%a'); // Output: +12 dayF
+            $logs = QuestionnaireSurvey::where('site_building_room_id', $id)
+                ->whereBetween('updated_at', [$start_date, $end_date])
+                ->get()->count();
+                // echo '<pre>';
+                // print_r($logs);
+                // echo '</pre>';
+            return $this->response($logs, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
     }
 }

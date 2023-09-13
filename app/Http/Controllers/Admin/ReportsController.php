@@ -278,6 +278,99 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         }
     }
 
+    public function getDonutReportByDaily(Request $request)
+    {
+        try {
+            // $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
+                // ->where('site_building_room_id', $id)
+                ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->groupBy('questionnaire_id')
+                ->orderBy('questionnaire_id', 'ASC')
+                ->get();
+
+            $total = $logs->sum('tenant_survey');
+
+            $percentage = [];
+            foreach ($logs as $index => $log) {
+                $percentage[] = [
+                    'questionnaire' => $log->questionnaire,
+                    'questionnaire_answer' => $log->questionnaire_answer,
+                    'tenant_survey' => $log->tenant_survey,
+                    //'percentage_share' => round(($log->tenant_survey / $total) * 100, 2) . '%'
+                    'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
+                ];
+            }
+
+            //return $percentage;
+            return $this->response($percentage, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
+    public function getDonutReportByDailyAnswer(Request $request)
+    {
+        try {
+            // $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
+                //   ->where('site_building_room_id', $id)
+                ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->groupBy('questionnaire_id')
+                ->groupBy('questionnaire_answer_id')
+                ->orderBy('questionnaire_id', 'ASC')
+                ->get();
+
+            $total = $logs->sum('tenant_survey');
+
+            $percentage = [];
+            foreach ($logs as $index => $log) {
+                $percentage[] = [
+                    'questionnaire' => $log->questionnaire,
+                    'questionnaire_answer' => $log->questionnaire_answer,
+                    'tenant_survey' => $log->tenant_survey,
+                    //'percentage_share' => round(($log->tenant_survey / $total) * 100, 2) . '%'
+                    'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
+                ];
+            }
+
+            //return $percentage;
+            return $this->response($percentage, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
     public function getPopulationReportTwo(Request $request)
     {
         try {
@@ -489,6 +582,90 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->get();
 
             return $this->response($logs, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+    public function getTrendReportByDaily(Request $request)
+    {
+        try {
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+            //echo '>>'.$site_id;
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
+                ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->groupBy('site_building_id')
+
+                ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
+                ->get();
+            $created_at = [];
+            $per_day = [];
+            foreach ($logs as $index => $log) {
+                $day = date("m/d", strtotime($log->created_at));
+                $per_day[] = [
+                    'day' => $day,
+                    'total_survey' => $log->total_survey,
+                    'reports' => $log->total_survey,
+                ];
+            }
+            return $this->response($per_day, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+    public function getTrendIncidentByDaily(Request $request)
+    {
+        try {
+            // $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
+                //->where('site_building_room_id', $id)
+                ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->where('Remarks', 'Done')
+                ->groupBy('site_building_id')
+                ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
+                ->get();
+            $created_at = [];
+            $per_day = [];
+            foreach ($logs as $index => $log) {
+                $day = date("m/d", strtotime($log->created_at));
+                $per_day[] = [
+                    'day' => $day,
+                    'total_survey' => $log->total_survey,
+                    'reports' => $log->total_survey,
+                ];
+            }
+            return $this->response($per_day, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
