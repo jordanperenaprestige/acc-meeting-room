@@ -306,7 +306,7 @@
 												class="fas fa-sync-alt"></i></button>
 									</div>
 								</div>
-							</div>
+								</div>
 							<div class="col-sm-2">
 								<button type="button" class="btn btn-block btn-outline-secondary btn-sm"
 									v-show="displayPassword" @click="cancelPassword"
@@ -320,13 +320,36 @@
 								<input type="text" class="form-control" v-model="user.mobile" placeholder="Mobile Number">
 							</div>
 						</div>
-						<div class="form-group row">
+						<!-- <div class="form-group row">
 							<label for="pin" class="col-sm-4 col-form-label">Pin Code: <span
 									class="font-italic text-danger"> *</span></label>
 							<div class="col-sm-8">
 								<input type="text" class="form-control" v-model="user.pass_int" placeholder="Pin Code">
 							</div>
+						</div> -->
+						<div class="form-group row">
+							<label for="inputPassword3" class="col-sm-4 col-form-label">PIN Code: <span
+									class="font-italic text-danger"> *</span></label>
+							<div class="col-sm-6">
+								<button type="button" class="btn btn-block btn-outline-info btn-sm" v-show="displayButtonPinCode"
+									@click="showPinCode">Show Pin Code</button>
+
+								<div class="input-group mb-3" v-show="displayPinCode">
+									<input type="text" class="form-control" v-model="user.pass_int"
+										aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+									<div class="input-group-append">
+										<button class="btn btn-outline-secondary" type="button" @click="showPinCode"><i
+												class="fas fa-sync-alt"></i></button>
+									</div>
+								</div>
+								</div>
+							<div class="col-sm-2">
+								<button type="button" class="btn btn-block btn-outline-secondary btn-sm"
+									v-show="displayPinCode" @click="cancelPinCode"
+									style="margin-top: 4px;">Cancel</button>
+							</div>
 						</div>
+
 						<div class="form-group row">
 							<label for="inputPassword3" class="col-sm-4 col-form-label">Roles <span
 									class="font-italic text-danger"> *</span></label>
@@ -549,7 +572,9 @@ export default {
 			add_record: true,
 			edit_record: false,
 			displayPassword: false,
+			displayPinCode: false,
 			displayButton: true,
+			displayButtonPinCode: true,
 			role_list: [],
 			companies: [],
 			sites: [],
@@ -727,6 +752,17 @@ export default {
 		cancelPassword: function () {
 			this.displayPassword = false;
 			this.displayButton = true;
+		},
+
+		showPinCode: function () {
+			this.user.pass_int = generatePassword(4);
+			this.displayPinCode = true;
+			this.displayButtonPinCode = false;
+		},
+
+		cancelPinCode: function () {
+			this.displayPinCode = false;
+			this.displayButtonPinCode = true;
 		},
 
 		storeUser: function () {
