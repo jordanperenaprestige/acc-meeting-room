@@ -66,7 +66,7 @@
 									<img v-if="site_logo" :src="site_logo" class="img-thumbnail" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label for="firstName" class="col-sm-4 col-form-label">Banner Image</label>
 								<div class="col-sm-5">
 									<input type="file" accept="image/*" ref="site_banner" @change="siteBannerChange">
@@ -86,7 +86,7 @@
 								<div class="col-sm-3 text-center">
 									<img v-if="site_background" :src="site_background" class="img-thumbnail" />
 								</div>
-							</div>
+							</div> -->
 							<div class="form-group row">
 								<label for="lastName" class="col-sm-4 col-form-label">Client Company</label>
 								<div class="col-sm-8">
@@ -114,7 +114,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label for="isActive" class="col-sm-4 col-form-label">Is Premiere</label>
 								<div class="col-sm-8">
 									<div class="custom-control custom-switch">
@@ -123,8 +123,8 @@
 										<label class="custom-control-label" for="is_premiere"></label>
 									</div>
 								</div>
-							</div>
-							<div class="form-group row">
+							</div> -->
+							<!-- <div class="form-group row">
 								<label for="isActive" class="col-sm-4 col-form-label">Multilanguage</label>
 								<div class="col-sm-8">
 									<div class="custom-control custom-switch">
@@ -133,9 +133,9 @@
 										<label class="custom-control-label" for="multilanguage"></label>
 									</div>
 								</div>
-							</div>
+							</div> -->
 							<hr />
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label for="firstName" class="col-sm-12 col-form-label"><strong>Social
 										Media:</strong></label>
 							</div>
@@ -159,9 +159,9 @@
 									<input type="text" class="form-control" v-model="site.twitter"
 										placeholder="Twitter link">
 								</div>
-							</div>
+							</div> -->
 							<hr />
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label for="firstName" class="col-sm-12 col-form-label"><strong>Mall
 										Information:</strong></label>
 							</div>
@@ -183,7 +183,7 @@
 								<div class="col-sm-8">
 									<input type="text" class="form-control" v-model="site.website" placeholder="Website">
 								</div>
-							</div>
+							</div> -->
 						</div>
 						<!-- /.card-body -->
 					</div>
@@ -237,24 +237,24 @@ export default {
 				name: '',
 				descriptions: '',
 				site_logo: '',
-				site_banner: '',
-				site_background: '',
+				//site_banner: '',
+				//site_background: '',
 				company_id: null,
-				facebook: '',
-				instagram: '',
-				twitter: '',
-				time_from: '',
-				time_to: '',
-				website: '',
+				//facebook: '',
+				//instagram: '',
+				//twitter: '',
+				//time_from: '',
+				//time_to: '',
+				//	website: '',
 				active: false,
 				is_default: false,
-				is_premiere: false,
-				multilanguage: false,
+				//is_premiere: false,
+				//multilanguage: false,
 				site_code: '',
 			},
 			site_logo: '/images/no-image-available.png',
-			site_banner: '/images/no-image-available.png',
-			site_background: '/images/no-image-available.png',
+			//site_banner: '/images/no-image-available.png',
+			//site_background: '/images/no-image-available.png',
 			add_record: true,
 			edit_record: false,
 			is_default: '',
@@ -297,14 +297,14 @@ export default {
 						1: '<span class="badge badge-info">Yes</span>'
 					}
 				},
-				multilanguage: {
-					name: "Multilanguage",
-					type: "Boolean",
-					status: {
-						0: '<span class="badge badge-danger">No</span>',
-						1: '<span class="badge badge-info">Yes</span>'
-					}
-				},
+				// multilanguage: {
+				// 	name: "Multilanguage",
+				// 	type: "Boolean",
+				// 	status: {
+				// 		0: '<span class="badge badge-danger">No</span>',
+				// 		1: '<span class="badge badge-info">Yes</span>'
+				// 	}
+				// },
 				updated_at: "Last Updated"
 			},
 			primaryKey: "id",
@@ -374,17 +374,17 @@ export default {
 			this.site.site_logo = file;
 		},
 
-		siteBannerChange: function (e) {
-			const file = e.target.files[0];
-			this.site_banner = URL.createObjectURL(file);
-			this.site.site_banner = file;
-		},
+		// siteBannerChange: function (e) {
+		// 	const file = e.target.files[0];
+		// 	this.site_banner = URL.createObjectURL(file);
+		// 	this.site.site_banner = file;
+		// },
 
-		siteBackgroundChange: function (e) {
-			const file = e.target.files[0];
-			this.site_background = URL.createObjectURL(file);
-			this.site.site_background = file;
-		},
+		// siteBackgroundChange: function (e) {
+		// 	const file = e.target.files[0];
+		// 	this.site_background = URL.createObjectURL(file);
+		// 	this.site.site_background = file;
+		// },
 
 		getCompany: function () {
 			axios.get('/admin/company/get-all')
@@ -400,22 +400,22 @@ export default {
 			this.site.company_id = null;
 			this.site.active = false;
 			this.site.is_default = false;
-			this.site.is_premiere = false;
-			this.site.multilanguage = false;
-			this.site.facebook = '';
-			this.site.instagram = '';
-			this.site.twitter = '';
-			this.site.time_from = '';
-			this.site.time_to = '';
-			this.site.website = '';
+			//this.site.is_premiere = false;
+			//this.site.multilanguage = false;
+			//this.site.facebook = '';
+			//this.site.instagram = '';
+			//this.site.twitter = '';
+			//this.site.time_from = '';
+			//this.site.time_to = '';
+			//this.site.website = '';
 			this.$refs.site_logo.value = null;
-			this.$refs.site_banner.value = null;
+			//this.$refs.site_banner.value = null;
 			this.site.site_logo = '/images/no-image-available.png';
-			this.site.site_banner = '/images/no-image-available.png';
-			this.site.site_background = '/images/no-image-available.png';
+			//this.site.site_banner = '/images/no-image-available.png';
+			//this.site.site_background = '/images/no-image-available.png';
 			this.site_logo = '/images/no-image-available.png';
-			this.site_banner = '/images/no-image-available.png';
-			this.site_background = '/images/no-image-available.png';
+			//this.site_banner = '/images/no-image-available.png';
+			//this.site_background = '/images/no-image-available.png';
 
 			$('#site-form').modal('show');
 		},
@@ -425,18 +425,18 @@ export default {
 			formData.append("name", this.site.name);
 			formData.append("descriptions", this.site.descriptions);
 			formData.append("site_logo", this.site.site_logo);
-			formData.append("site_banner", this.site.site_banner);
-			formData.append("site_background", this.site.site_background);
+			//formData.append("site_banner", this.site.site_banner);
+			//formData.append("site_background", this.site.site_background);
 			formData.append("company_id", this.site.company_id);			
-			formData.append("facebook", this.site.facebook);
-			formData.append("instagram", this.site.instagram);
-			formData.append("twitter", this.site.twitter);
-			formData.append("time_from", this.site.time_from);
-			formData.append("time_to", this.site.time_to);
-			formData.append("website", this.site.website);
+			//formData.append("facebook", this.site.facebook);
+			//formData.append("instagram", this.site.instagram);
+			//formData.append("twitter", this.site.twitter);
+			//formData.append("time_from", this.site.time_from);
+			//formData.append("time_to", this.site.time_to);
+			//formData.append("website", this.site.website);
 			formData.append("is_default", this.site.is_default);
-			formData.append("is_premiere", this.site.is_premiere);
-			formData.append("multilanguage", this.site.multilanguage);
+			//formData.append("is_premiere", this.site.is_premiere);
+			//formData.append("multilanguage", this.site.multilanguage);
 			formData.append("site_code", this.site.site_code);
 			axios.post('/admin/site/store', formData, {
 				headers: {
@@ -459,19 +459,19 @@ export default {
 					this.site.name = site.name;
 					this.site.descriptions = site.descriptions;
 					this.site.site_logo = site.site_logo;
-					this.site.site_banner = site.site_banner;
-					this.site.site_background = site.site_background;
+					//this.site.site_banner = site.site_banner;
+					//this.site.site_background = site.site_background;
 					this.site.company_id = (site.details.company_id == 'null') ? '' : site.details.company_id;
-					this.site.facebook = (site.details.facebook == 'null') ? '' : site.details.facebook;
-					this.site.instagram = (site.details.instagram == 'null') ? '' : site.details.instagram;
-					this.site.twitter = (site.details.twitter == 'null') ? '' : site.details.twitter;
-					this.site.time_from = (site.details.time_from == 'null') ? '' : site.details.time_from;
-					this.site.time_to = (site.details.time_to == 'null') ? '' : site.details.time_to;
-					this.site.website = (site.details.website == 'null') ? '' : site.details.website;
+					//this.site.facebook = (site.details.facebook == 'null') ? '' : site.details.facebook;
+					//this.site.instagram = (site.details.instagram == 'null') ? '' : site.details.instagram;
+					//this.site.twitter = (site.details.twitter == 'null') ? '' : site.details.twitter;
+					//this.site.time_from = (site.details.time_from == 'null') ? '' : site.details.time_from;
+					//this.site.time_to = (site.details.time_to == 'null') ? '' : site.details.time_to;
+					//this.site.website = (site.details.website == 'null') ? '' : site.details.website;
 					this.site.active = site.active;
 					this.site.is_default = (site.is_default ==  1) ? true : false;
-					this.site.is_premiere = parseInt(site.details.premiere);
-					this.site.multilanguage = parseInt(site.details.multilanguage);
+					//this.site.is_premiere = parseInt(site.details.premiere);
+					//this.site.multilanguage = parseInt(site.details.multilanguage);
 					this.site.site_code = site.details.site_code;
 					this.add_record = false;
 					this.edit_record = true;
@@ -479,23 +479,23 @@ export default {
 					if (site.site_logo) {
 						this.site_logo = site.site_logo_path;
 					}
-					else {
-						this.site_logo = this.site.site_logo;
-					}
+					// else {
+					// 	this.site_logo = this.site.site_logo;
+					// }
 
-					if (site.site_banner) {
-						this.site_banner = site.site_banner_path;
-					}
-					else {
-						this.site_banner = this.site.site_banner;
-					}
+					// if (site.site_banner) {
+					// 	this.site_banner = site.site_banner_path;
+					// }
+					// else {
+					// 	this.site_banner = this.site.site_banner;
+					// }
 
-					if (site.site_background) {
-						this.site_background = site.site_background_path;
-					}
-					else {
-						this.site_background = this.site.site_background;
-					}
+					// if (site.site_background) {
+					// 	this.site_background = site.site_background_path;
+					// }
+					// else {
+					// 	this.site_background = this.site.site_background;
+					// }
 
 					this.$refs.site_logo.value = null;
 					this.$refs.site_logo.value = null;
@@ -510,19 +510,19 @@ export default {
 			formData.append("name", this.site.name);
 			formData.append("descriptions", this.site.descriptions);
 			formData.append("site_logo", this.site.site_logo);
-			formData.append("site_banner", this.site.site_banner);
-			formData.append("site_background", this.site.site_background);
+			//formData.append("site_banner", this.site.site_banner);
+			//formData.append("site_background", this.site.site_background);
 			formData.append("company_id", this.site.company_id);			
-			formData.append("facebook", this.site.facebook);
-			formData.append("instagram", this.site.instagram);
-			formData.append("twitter", this.site.twitter);
-			formData.append("time_from", this.site.time_from);
-			formData.append("time_to", this.site.time_to);
-			formData.append("website", this.site.website);
+			///formData.append("facebook", this.site.facebook);
+			//formData.append("instagram", this.site.instagram);
+			//formData.append("twitter", this.site.twitter);
+			//formData.append("time_from", this.site.time_from);
+			//formData.append("time_to", this.site.time_to);
+			//formData.append("website", this.site.website);
 			formData.append("active", this.site.active);
 			formData.append("is_default", this.site.is_default);
-			formData.append("is_premiere", this.site.is_premiere);
-			formData.append("multilanguage", this.site.multilanguage);
+			//formData.append("is_premiere", this.site.is_premiere);
+			//formData.append("multilanguage", this.site.multilanguage);
 			formData.append("site_code", this.site.site_code);
 
 			axios.post('/admin/site/update', formData, {

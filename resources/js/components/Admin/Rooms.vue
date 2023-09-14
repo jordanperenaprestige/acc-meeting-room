@@ -42,14 +42,15 @@
 								<label for="firstName" class="col-sm-4 col-form-label">Building <span
 										class="font-italic text-danger"> *</span></label>
 								<div class="col-sm-8">
-									<select class="custom-select" v-model="room.site_building_id" @change="getFloorLevel($event.target.value)">
+									<select class="custom-select" v-model="room.site_building_id"
+										@change="getFloorLevel($event.target.value)">
 										<option value="">Select Building</option>
 										<option v-for="building in buildings" :value="building.id"> {{ building.name }}
 										</option>
 									</select>
 								</div>
 							</div>
-							
+
 							<div class="form-group row">
 								<label for="firstName" class="col-sm-4 col-form-label">Floor <span
 										class="font-italic text-danger"> *</span></label>
@@ -194,7 +195,7 @@ export default {
 		// 	axios.get('/admin/site/levels')
 		// 		.then(response => this.levels = response.data.data);
 		// },
-		getFloorLevel: function (id) { 
+		getFloorLevel: function (id) {
 			axios.get('/admin/site/floors/' + id)
 				.then(response => this.floors = response.data.data);
 		},
@@ -204,7 +205,8 @@ export default {
 			this.add_record = true;
 			this.edit_record = false;
 			this.room.site_building_id = '';
-			this.room.name = '';
+			this.room.site_building_level_id = '',
+				this.room.name = '';
 			this.room.active = true;
 			$('#room-form').modal('show');
 		},
@@ -226,6 +228,7 @@ export default {
 					this.getFloorLevel(room.site_building_id);
 					this.room.id = room.id;
 					this.room.site_building_id = room.site_building_id;
+					this.room.site_building_level_id = room.site_building_level_id;
 					this.room.name = room.name;
 					this.room.active = room.active;
 					this.add_record = false;
@@ -244,11 +247,11 @@ export default {
 		},
 
 		DeleteRoom: function (data) {
-			this.id_to_deleted = data.id; 
+			this.id_to_deleted = data.id;
 			$('#roomDeleteModal').modal('show');
 		},
 
-		removeRoom: function () { 
+		removeRoom: function () {
 			axios.get('/admin/site/room/delete/' + this.id_to_deleted)
 				.then(response => {
 					this.$refs.roomsDataTable.fetchData();
