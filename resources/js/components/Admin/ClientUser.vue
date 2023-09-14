@@ -75,8 +75,8 @@
 										<div class="form-group row mb-0">
 											<label for="firstName" class="col-sm-4">Roles </label>
 											<div class="col-sm-8">
-												<span v-for="(data, index) in user.roles"
-													class="badge badge-info mr-1">{{ data.name }}</span>
+												<span v-for="(data, index) in user.roles" class="badge badge-info mr-1">{{
+													data.name }}</span>
 											</div>
 										</div>
 										<div class="form-group row mb-0">
@@ -86,7 +86,7 @@
 												<span v-else class="badge badge-danger">Deactivated</span>
 											</div>
 										</div>
-										
+
 										<!-- <div class="form-group row mb-0">
 											<label for="lastName" class="col-sm-4 col-form-label">Classification</label>
 											<div class="col-sm-8">
@@ -307,7 +307,7 @@
 												class="fas fa-sync-alt"></i></button>
 									</div>
 								</div>
-								</div>
+							</div>
 							<div class="col-sm-2">
 								<button type="button" class="btn btn-block btn-outline-secondary btn-sm"
 									v-show="displayPassword" @click="cancelPassword"
@@ -332,8 +332,8 @@
 							<label for="inputPassword3" class="col-sm-4 col-form-label">PIN Code: <span
 									class="font-italic text-danger"> *</span></label>
 							<div class="col-sm-6">
-								<button type="button" class="btn btn-block btn-outline-info btn-sm" v-show="displayButtonPinCode"
-									@click="showPinCode">Show Pin Code</button>
+								<button type="button" class="btn btn-block btn-outline-info btn-sm"
+									v-show="displayButtonPinCode" @click="showPinCode">Show Pin Code</button>
 
 								<div class="input-group mb-3" v-show="displayPinCode">
 									<input type="text" class="form-control" v-model="user.pass_int"
@@ -343,11 +343,10 @@
 												class="fas fa-sync-alt"></i></button>
 									</div>
 								</div>
-								</div>
+							</div>
 							<div class="col-sm-2">
 								<button type="button" class="btn btn-block btn-outline-secondary btn-sm"
-									v-show="displayPinCode" @click="cancelPinCode"
-									style="margin-top: 4px;">Cancel</button>
+									v-show="displayPinCode" @click="cancelPinCode" style="margin-top: 4px;">Cancel</button>
 							</div>
 						</div>
 
@@ -756,7 +755,7 @@ export default {
 		},
 
 		showPinCode: function () {
-			this.user.pass_int = generatePassword(4);
+			this.user.pass_int = this.generatePinCode();
 			this.displayPinCode = true;
 			this.displayButtonPinCode = false;
 		},
@@ -777,13 +776,13 @@ export default {
 
 		editUser: function (id) {
 			axios.get('/admin/client/users/' + id)
-				.then(response => { 
+				.then(response => {
 					this.user.roles = [];
 					this.user.brands = [];
 					this.user.sites = [];
 					this.user.screens = [];
 
-					var user = response.data.data; 
+					var user = response.data.data;
 					this.user.id = id;
 					this.user.company = user.company;
 					this.user.email = user.email;
@@ -804,7 +803,8 @@ export default {
 				});
 		},
 
-		updateUser: function () { console.log(this.user);
+		updateUser: function () {
+			console.log(this.user);
 			axios.put('/admin/client/users/update', this.user)
 				.then(response => {
 					toastr.success(response.data.message);
@@ -885,7 +885,8 @@ export default {
 			this.updateUser();
 		},
 
-		deleteModal: function (action, index) { alert('sssss');
+		deleteModal: function (action, index) {
+			alert('sssss');
 			this.delete_action = action;
 			this.delete_index = index;
 			$('#delete-record').modal('show');
@@ -917,7 +918,39 @@ export default {
 					link.click();
 				})
 		},
+		getPinCode: function () {
+			let pin = '';
+			let str = '1234567890';
 
+			for (let i = 1; i <= 4; i++) {
+				let char = Math.floor(Math.random()
+					* str.length + 1);
+
+				pin += str.charAt(char)
+			}
+			if (pin.length == 3) {
+				return pin + '0';
+			} else if (pin.length == 2) {
+				return pin + '09';
+			} else if (pin.length == 1) {
+				return pin + '090';
+			}  
+			else {
+				return pin;
+			}
+		},
+		generatePinCode: function () {
+			 return this.getPinCode();
+				// axios.get('/admin/client/users/pin-code/'+ )
+				// .then(response => {
+				// 	// const link = document.createElement('a');
+				// 	// link.href = response.data.data.filepath;
+				// 	// link.setAttribute('download', response.data.data.filename); //or any other extension
+				// 	// document.body.appendChild(link);
+				// 	// link.click();
+				// })	
+
+		}
 	},
 
 	components: {
