@@ -47,6 +47,20 @@
 											</div>
 										</div>
 										<div class="form-group row mb-0">
+											<label for="lastName" class="col-sm-4 col-form-label">Company</label>
+											<div class="col-sm-8">
+												<span>
+													{{ user.company.name }}
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="coll-md-1">
+										<button type="button" class="btn btn-outline-secondary btn-sm" @click="modalAdd"><i
+												class="fas fa-pen"></i></button>
+									</div>
+									<div class="col-md-6 offset-md-1">
+										<div class="form-group row mb-0">
 											<label for="firstName" class="col-sm-4">Mobile Number</label>
 											<div class="col-sm-8">
 												{{ user.mobile }}
@@ -72,21 +86,8 @@
 												<span v-else class="badge badge-danger">Deactivated</span>
 											</div>
 										</div>
-									</div>
-									<div class="coll-md-1">
-										<button type="button" class="btn btn-outline-secondary btn-sm" @click="modalAdd"><i
-												class="fas fa-pen"></i></button>
-									</div>
-									<div class="col-md-6 offset-md-1">
-										<div class="form-group row mb-0">
-											<label for="lastName" class="col-sm-4 col-form-label">Company</label>
-											<div class="col-sm-8">
-												<span>
-													{{ user.company.name }}
-												</span>
-											</div>
-										</div>
-										<div class="form-group row mb-0">
+										
+										<!-- <div class="form-group row mb-0">
 											<label for="lastName" class="col-sm-4 col-form-label">Classification</label>
 											<div class="col-sm-8">
 												<span>
@@ -125,7 +126,7 @@
 													{{ user.company.tin }}
 												</span>
 											</div>
-										</div>
+										</div> -->
 									</div>
 								</div>
 							</div>
@@ -392,7 +393,7 @@
 								</span>
 							</div>
 						</div>
-						<div class="form-group row">
+						<!-- <div class="form-group row">
 							<label for="lastName" class="col-sm-4 col-form-label">Classification</label>
 							<div class="col-sm-8">
 								<span>
@@ -431,7 +432,7 @@
 									{{ user.company.tin }}
 								</span>
 							</div>
-						</div>
+						</div> -->
 					</div><!-- /.card-body -->
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary float-right" data-bs-dismiss="modal">Close</button>
