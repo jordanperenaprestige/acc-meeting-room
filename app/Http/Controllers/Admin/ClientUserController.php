@@ -68,6 +68,7 @@ class ClientUserController extends AppBaseController implements ClientUserContro
             $password = PasswordHelper::generatePassword($salt, $request->password);
             $data = [
                 'company_id' => $request->company['id'],
+                'supervisor_id' => $request->supervisor['id'],
                 'full_name' => $request->last_name.', '.$request->first_name,
                 'email' => $request->email,
                 'salt' => $salt,
@@ -77,12 +78,18 @@ class ClientUserController extends AppBaseController implements ClientUserContro
                 'pin_int' => $request->pin_int,
                 'active' => 1
             ];
-
+// echo '<pre>'; print_r($request->all()); echo '</pre>'; 
             $user = User::create($data);
 
             $meta_details = ["first_name" => $request->first_name, "last_name" => $request->last_name];
             $user->saveMeta($meta_details);
             $user->saveRoles($request->roles);
+
+            $user->saveSites($request->sites);
+            $user->saveBuildings($request->site_buildings);
+            $user->saveLevels($request->site_building_levels);
+            $user->saveRooms($request->site_building_level_rooms);
+            
             $user->saveBrands($request->brands);
             $user->saveSites($request->sites);
             $user->saveScreens($request->screens);
@@ -125,6 +132,7 @@ class ClientUserController extends AppBaseController implements ClientUserContro
             $password = PasswordHelper::generatePassword($user->salt, $request->password);
             $data = [
                 'company_id' => $request->company['id'],
+                'supervisor_id' => $request->supervisor['id'],
                 'full_name' => $request->last_name.', '.$request->first_name,
                 'email' => $request->email,
                 'pass_int' => $request->password,
@@ -140,10 +148,14 @@ class ClientUserController extends AppBaseController implements ClientUserContro
 
             $meta_details = ["first_name" => $request->first_name, "last_name" => $request->last_name];
             $user->saveMeta($meta_details);
-            //$user->saveRoles($request->roles);
-            $user->saveBrands($request->brands);
-            $user->saveSites($request->sites);
-            $user->saveScreens($request->screens);
+            $user->saveRoles($request->roles);
+            $user->saveSites($request->sites); 
+            $user->saveBuildings($request->site_buildings); 
+            $user->saveLevels($request->site_building_levels); echo '>>>'; echo '<pre>';print_r($request->site_building_level_rooms); echo '</pre>';
+            $user->saveRooms($request->site_building_level_rooms);
+            // $user->saveBrands($request->brands);
+            // $user->saveSites($request->sites);
+            // $user->saveScreens($request->screens);
 
             return $this->response($user, 'Successfully Modified!', 200);
         }

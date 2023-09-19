@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div v-show="show_submit_pending_button" class="row concern-title  justify-content-center submit_button"">
-                                                <div class=" col-2">
+                                                    <div class=" col-2">
                     <img :src="this.resolve_logo" @click="submit_pending()" class="responsive">
                 </div>
             </div>
@@ -248,6 +248,12 @@ export default {
     name: "Questionnaires",
     data() {
         return {
+            filter: {
+                local_admin_id: '',
+                building_id: '',
+                level_id: '',
+                room_id: '',
+            },
             room: {
                 id: '',
                 input_one: '',
@@ -370,7 +376,7 @@ export default {
                 });
         },
         getRooms: function () {
-            axios.get('/api/v1/employee/get-rooms')
+            axios.get('/api/v1/employee/get-rooms', { params: { filters: this.filter } })
                 .then(response => this.rooms = response.data.data);
         },
         switchImage(event) {
@@ -550,6 +556,7 @@ export default {
             })
                 .then(response => {
                     if (response.data.data) {
+                        this.filter.local_admin_id = response.data.data;
                         this.input_digit = [];
                         this.room.input_one = '';
                         this.room.input_two = '';
@@ -566,6 +573,7 @@ export default {
                             this.show_admin_button = false;
                             this.show_default_room = false;
                             this.getRooms();
+                            this.getSites();
                         }
                         this.user = response.data.data;
                         this.user_role = this.user.roles[0].id;
@@ -601,21 +609,29 @@ export default {
         },
 
         getSites: function () {
-            axios.get('/api/v1/employee/site/get-all')
+            //alert(this.filter.local_admin_id.id + ' site');alert('dddd');
+           // console.log(this.filter);
+            axios.get('/api/v1/employee/site/get-all', { params: { filters: this.filter.local_admin_id.id} })
                 .then(response => this.sites = response.data.data);
         },
 
         getBuildings: function (id) {
-            axios.get('/api/v1/employee/site/get-buildings/' + id)
+           // alert(this.filter.local_admin_id.id + ' building');
+
+            axios.get('/api/v1/employee/site/get-buildings', { params: { local_admin_id: this.filter.local_admin_id.id, site_id: id } })
                 .then(response => this.buildings = response.data.data);
         },
 
         getFloorLevels: function (id) {
-            axios.get('/api/v1/employee/site/floors/' + id)
+           // alert(this.filter.local_admin_id.id + ' level');
+            //this.filter.level_id = id;
+            axios.get('/api/v1/employee/site/floors', { params: { local_admin_id: this.filter.local_admin_id.id, building_id: id} })
                 .then(response => this.floors = response.data.data);
         },
         getRoom: function (id) {
-            axios.get('/api/v1/employee/site/floors/rooms/' + id)
+           // alert(this.filter.local_admin_id.id + ' room');
+            this.filter.room_id = id;
+            axios.get('/api/v1/employee/site/floors/rooms', { params: { local_admin_id: this.filter.local_admin_id.id, level_id: id } })
                 .then(
                     response => {
                         this.roomss = response.data.data;

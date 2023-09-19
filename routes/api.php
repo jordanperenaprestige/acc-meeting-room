@@ -100,9 +100,11 @@ Route::group(['prefix' => 'v1'], function ()
     //Route::get('/get-update-meeting-room', 'Api\GetUpdateController@updateContent')->name('api.get-update');
 
     Route::get('/employee/site/get-all', 'Kiosk\MainController@getAll')->where('id', '[0-9]+')->name('employee.site.get-all');
-    Route::get('/employee/site/get-buildings/{id}', 'Kiosk\MainController@getBuildingss')->where('id', '[0-9]+')->name('employee.site.buildings.get-buildings');
-    Route::get('/employee/site/floors/{id}', 'Kiosk\MainController@getFloors')->where('id', '[0-9]+')->name('employee.site.floors');
-    Route::get('/employee/site/floors/rooms/{id}', 'Kiosk\MainController@getRoomss')->where('id', '[0-9]+')->name('employee.site.floors.roomss');
+    
+    
+    Route::get('/employee/site/get-buildings', 'Kiosk\MainController@getBuildingss')->where('id', '[0-9]+')->name('employee.site.buildings.get-buildings');
+    Route::get('/employee/site/floors', 'Kiosk\MainController@getFloors')->where('id', '[0-9]+')->name('employee.site.floors');
+    Route::get('/employee/site/floors/rooms', 'Kiosk\MainController@getRoomss')->where('id', '[0-9]+')->name('employee.site.floors.roomss');
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

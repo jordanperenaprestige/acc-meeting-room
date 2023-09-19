@@ -21,11 +21,11 @@ use Storage;
 class UsersController extends AppBaseController implements UsersControllerInterface
 {
     /************************************
-    * 			USERS MANAGEMENT		*
-    ************************************/
+     * 			USERS MANAGEMENT		*
+     ************************************/
     public function __construct()
     {
-        $this->module_id = 11; 
+        $this->module_id = 11;
         $this->module_name = 'User';
     }
 
@@ -36,21 +36,18 @@ class UsersController extends AppBaseController implements UsersControllerInterf
 
     public function list(Request $request)
     {
-        try
-        {
+        try {
             $this->permissions = AdminViewModel::find(Auth::user()->id)->getPermissions()->where('modules.id', $this->module_id)->first();
 
-            $user = AdminViewModel::when(request('search'), function($query){
+            $user = AdminViewModel::when(request('search'), function ($query) {
                 return $query->where('full_name', 'LIKE', '%' . request('search') . '%')
-                             ->orWhere('email', 'LIKE', '%' . request('search') . '%');
+                    ->orWhere('email', 'LIKE', '%' . request('search') . '%');
             })
-            ->where('full_name', '<>', 'Administrator')
-            ->latest()
-            ->paginate(request('perPage'));
+                ->where('full_name', '<>', 'Administrator')
+                ->latest()
+                ->paginate(request('perPage'));
             return $this->responsePaginate($user, 'Successfully Retreived!', 200);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
                 'status' => false,
@@ -61,13 +58,10 @@ class UsersController extends AppBaseController implements UsersControllerInterf
 
     public function details($id)
     {
-        try
-        {
+        try {
             $user = AdminViewModel::find($id);
             return $this->response($user, 'Successfully Retreived!', 200);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
                 'status' => false,
@@ -78,15 +72,15 @@ class UsersController extends AppBaseController implements UsersControllerInterf
 
     public function store(RegistrationRequest $request)
     {
-        try
-    	{
+        try {
             $salt = PasswordHelper::generateSalt();
             $password = PasswordHelper::generatePassword($salt, $request->password);
             $data = [
-                'full_name' => $request->last_name.', '.$request->first_name,
+                'full_name' => $request->last_name . ', ' . $request->first_name,
                 'email' => $request->email,
                 'salt' => $salt,
                 'password' => $password,
+                'mobile' => $request->mobile,
                 'active' => 1
             ];
 
@@ -97,9 +91,7 @@ class UsersController extends AppBaseController implements UsersControllerInterf
             $admin_user->saveRoles($request->roles);
 
             return $this->response($admin_user, 'Successfully Created!', 200);
-        }
-        catch (\Exception $e) 
-        {
+        } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
                 'status' => false,
@@ -110,17 +102,17 @@ class UsersController extends AppBaseController implements UsersControllerInterf
 
     public function update(EditRegistrationeRequest $request)
     {
-        try
-    	{
+        try {
             $user = Admin::find($request->id);
             $password = PasswordHelper::generatePassword($user->salt, $request->password);
             $data = [
-                'full_name' => $request->last_name.', '.$request->first_name,
+                'full_name' => $request->last_name . ', ' . $request->first_name,
                 'email' => $request->email,
-                'active' => $request->isActive
+                'active' => $request->isActive,
+                'mobile' => $request->mobile
             ];
 
-            if($request->password)
+            if ($request->password)
                 $data['password'] = $password;
 
             $user->update($data);
@@ -130,9 +122,7 @@ class UsersController extends AppBaseController implements UsersControllerInterf
             $user->saveRoles($request->roles);
 
             return $this->response($user, 'Successfully Modified!', 200);
-        }
-        catch (\Exception $e) 
-        {
+        } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
                 'status' => false,
@@ -143,14 +133,11 @@ class UsersController extends AppBaseController implements UsersControllerInterf
 
     public function delete($id)
     {
-        try
-    	{
+        try {
             $user = Admin::find($id);
             $user->delete();
             return $this->response($user, 'Successfully Deleted!', 200);
-        }
-        catch (\Exception $e) 
-        {
+        } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
                 'status' => false,
@@ -201,5 +188,27 @@ class UsersController extends AppBaseController implements UsersControllerInterf
             ], 422);
         }
     }
+    public function listSupervisor(Request $request)
+    {
+        try {
+            $this->permissions = AdminViewModel::find(Auth::user()->id)->getPermissions()->where('modules.id', $this->module_id)->first();
 
+            $user = AdminViewModel::when(request('search'), function ($query) {
+                return $query->where('full_name', 'LIKE', '%' . request('search') . '%')
+                    ->orWhere('email', 'LIKE', '%' . request('search') . '%');
+            })
+                ->where('full_name', '<>', 'Administrator')
+                ->leftJoin('admin_roles', 'admins.id', '=', 'admin_roles.admin_id')
+                ->where('admin_roles.role_id', 11)
+                ->latest()
+                ->paginate(request('perPage'));
+            return $this->responsePaginate($user, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
 }

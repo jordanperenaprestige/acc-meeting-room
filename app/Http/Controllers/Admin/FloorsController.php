@@ -156,4 +156,22 @@ class FloorsController extends AppBaseController implements FloorsControllerInte
         }
     }
 
+    public function getBuildingLevelByIds(Request $request)
+    {
+        try 
+    	{  
+            $filters = json_decode($request->filters);
+            $levels = SiteBuildingLevel::whereIn('site_building_id', $filters->site_building_level_ids)->get();
+            return $this->response($levels, 'Successfully Deleted!', 200);
+        }
+        catch (\Exception $e) 
+        {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
 }

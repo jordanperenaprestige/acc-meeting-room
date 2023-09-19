@@ -62,6 +62,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::put('/admin/users/update', 'Admin\UsersController@update')->name('admin.users.update');
     Route::get('/admin/users/delete/{id}', 'Admin\UsersController@delete')->where('id', '[0-9]+')->name('admin.user.delete');
     Route::get('/admin/users/download-csv', 'Admin\UsersController@downloadCsv')->name('admin.user.download-csv');
+    Route::get('/admin/users/list-supervisor', 'Admin\UsersController@listSupervisor')->name('admin.users.list-supervisor');
 
     /*
     |--------------------------------------------------------------------------
@@ -278,6 +279,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/site/building/delete/{id}', 'Admin\BuildingsController@delete')->where('id', '[0-9]+')->name('admin.site.building.delete');
     Route::get('/admin/site/buildings', 'Admin\BuildingsController@getAll')->where('id', '[0-9]+')->name('admin.site.buildings.all');
     Route::get('/admin/site/get-buildings/{id}', 'Admin\BuildingsController@getBuildings')->where('id', '[0-9]+')->name('admin.site.buildings.get-buildings');
+    Route::get('/admin/site/get-building-by-id', 'Admin\BuildingsController@getBuildingByIds')->where('id', '[0-9]+')->name('admin.site.buildings.get-building-by-id');
 
     /*
     |--------------------------------------------------------------------------
@@ -290,6 +292,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::post('/admin/site/floor/update', 'Admin\FloorsController@update')->name('admin.site.floor.update');
     Route::get('/admin/site/floor/delete/{id}', 'Admin\FloorsController@delete')->where('id', '[0-9]+')->name('admin.site.floor.delete');
     Route::get('/admin/site/floors/{id}', 'Admin\FloorsController@getFloors')->where('id', '[0-9]+')->name('admin.site.floors');
+    Route::get('/admin/site/get-building-level-by-id', 'Admin\FloorsController@getBuildingLevelByIds')->where('id', '[0-9]+')->name('admin.site.buildings.get-building-level-by-id');
 
     /*
     |--------------------------------------------------------------------------
@@ -302,6 +305,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::post('/admin/site/room/update', 'Admin\RoomsController@update')->name('admin.site.room.update');
     Route::get('/admin/site/room/delete/{id}', 'Admin\RoomsController@delete')->where('id', '[0-9]+')->name('admin.site.room.delete');
     Route::get('/admin/site/floors/rooms/{id}', 'Admin\RoomsController@getRooms')->where('id', '[0-9]+')->name('admin.site.floors.rooms');
+    Route::get('/admin/site/get-building-level-room-by-id', 'Admin\RoomsController@getBuildingLevelRoomByIds')->where('id', '[0-9]+')->name('admin.site.buildings.get-building-level-room-by-id');
 
     /*
     |--------------------------------------------------------------------------

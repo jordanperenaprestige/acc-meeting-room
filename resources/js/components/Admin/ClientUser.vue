@@ -54,6 +54,14 @@
 												</span>
 											</div>
 										</div>
+										<div class="form-group row mb-0">
+											<label for="lastName" class="col-sm-4 col-form-label">Supervisor</label>
+											<div class="col-sm-8">
+												<span>
+													{{ user.supervisor.full_name }}
+												</span>
+											</div>
+										</div>
 									</div>
 									<div class="coll-md-1">
 										<button type="button" class="btn btn-outline-secondary btn-sm" @click="modalAdd"><i
@@ -357,10 +365,6 @@
 								<multiselect v-model="user.roles" :options="role_list" :multiple="true"
 									:close-on-select="true" placeholder="Select Roles" label="name" track-by="name">
 								</multiselect>
-								<!-- <select class="custom-select" v-model="user.roles">
-									    <option value="">Select Building</option>
-									    <option v-for="building in buildings" :value="building.id"> {{ building.name }}</option>
-								    </select> -->
 							</div>
 						</div>
 						<div class="form-group row" v-show="edit_record">
@@ -381,6 +385,56 @@
 								<multiselect v-model="user.company" :options="companies" :multiple="false"
 									:close-on-select="true" placeholder="Select Company" label="name" track-by="name"
 									@input="companyDetail">
+								</multiselect>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="lastName" class="col-sm-4 col-form-label">Supervisor <span
+									class="font-italic text-danger"> *</span></label>
+							<div class="col-sm-8">
+								<multiselect v-model="user.supervisor" :options="supervisors" :multiple="false"
+									:close-on-select="true" placeholder="Select Supervisor" label="full_name"
+									track-by="full_name">
+								</multiselect>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="inputPassword3" class="col-sm-4 col-form-label">Site<span
+									class="font-italic text-danger"> *</span></label>
+							<div class="col-sm-8">
+								<multiselect v-model="user.sites" :options="site_list" :multiple="true"
+									:close-on-select="true" placeholder="Select Sites" label="name" track-by="name"
+									@input="getSiteBuildings">
+								</multiselect>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="inputPassword3" class="col-sm-4 col-form-label">Building<span
+									class="font-italic text-danger"> *</span></label>
+							<div class="col-sm-8">
+								<multiselect v-model="user.site_buildings" :options="site_building_list" :multiple="true"
+									:close-on-select="true" placeholder="Select Sites" label="name" track-by="name"
+									@input="getSiteBuildingLevels">
+								</multiselect>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="inputPassword3" class="col-sm-4 col-form-label">Floor<span
+									class="font-italic text-danger"> *</span></label>
+							<div class="col-sm-8">
+								<multiselect v-model="user.site_building_levels" :options="site_building_level_list"
+									:multiple="true" :close-on-select="true" placeholder="Select Sites" label="name"
+									track-by="name" @input="getSiteBuildingLevelRooms">
+								</multiselect>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="inputPassword3" class="col-sm-4 col-form-label">Room<span
+									class="font-italic text-danger"> *</span></label>
+							<div class="col-sm-8">
+								<multiselect v-model="user.site_building_level_rooms"
+									:options="site_building_level_room_list" :multiple="true" :close-on-select="true"
+									placeholder="Select Sites" label="name" track-by="name">
 								</multiselect>
 							</div>
 						</div>
@@ -468,7 +522,7 @@
 			</div>
 		</div>
 
-		<div class="modal fade" id="site-list" tabindex="-1" aria-labelledby="site-list" aria-hidden="true">
+		<!-- <div class="modal fade" id="site-list" tabindex="-1" aria-labelledby="site-list" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -484,13 +538,13 @@
 								ref="sitesDataTable">
 							</Table>
 						</div>
-					</div><!-- /.card-body -->
+					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary float-right" data-bs-dismiss="modal">Close</button>
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 		<div class="modal fade" id="screen-list" tabindex="-1" aria-labelledby="screen-list" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered modal-lg">
@@ -547,6 +601,9 @@ export default {
 			filter: {
 				company_id: '',
 				site_ids: [],
+				site_building_ids: [],
+				site_building_level_ids: [],
+				site_building_level_room_ids: [],
 				brand_ids: [],
 			},
 			user: {
@@ -557,9 +614,14 @@ export default {
 				password: '',
 				password_confirmation: '',
 				roles: [],
+				sites: [],
+				site_buildings: [],
+				site_building_levels: [],
+				site_building_level_rooms: [],
 				isActive: false,
 				emailNotification: '',
 				company: '',
+				supervisor: '',
 				brands: [],
 				sites: [],
 				screens: [],
@@ -576,7 +638,12 @@ export default {
 			displayButton: true,
 			displayButtonPinCode: true,
 			role_list: [],
+			site_list: [],
+			site_building_list: [],
+			site_building_level_list: [],
+			site_building_level_room_list: [],
 			companies: [],
+			supervisors: [],
 			sites: [],
 			screens: [],
 			dataFields: {
@@ -713,8 +780,20 @@ export default {
 		axios.get('/admin/roles/get-portal')
 			.then(response => this.role_list = response.data.data);
 
+		axios.get('/admin/site/get-all')
+			.then(response => {
+				this.site_list = response.data.data;
+			});
+
 		axios.get('/admin/company/get-all')
 			.then(response => this.companies = response.data.data);
+
+		axios.get('/admin/users/list-supervisor')
+			.then(response => this.supervisors = response.data.data);
+			// this.getSiteBuildings();
+			// this.getSiteBuildingLevels();
+			// this.getSiteBuildingLevelRooms();
+
 	},
 
 	methods: {
@@ -735,9 +814,13 @@ export default {
 			this.user.roles = [];
 			this.user.brands = [];
 			this.user.sites = [];
+			this.user.site_buildings = [];
+			this.user.site_building_levels = [];
+			this.user.site_building_level_rooms = [];
 			this.user.screens = [];
 			this.user.isActive = false;
 			this.user.company = '';
+			this.user.supervisor = '';
 			this.data_list = false;
 			this.data_form = true;
 		},
@@ -774,37 +857,52 @@ export default {
 				})
 		},
 
+
 		editUser: function (id) {
 			axios.get('/admin/client/users/' + id)
 				.then(response => {
 					this.user.roles = [];
 					this.user.brands = [];
 					this.user.sites = [];
+					this.user.buildings = [];
+					this.user.levels = [];
+					this.user.rooms = [];
 					this.user.screens = [];
 
-					var user = response.data.data;
+					var user = response.data.data; 
 					this.user.id = id;
 					this.user.company = user.company;
+					this.user.supervisor = user.supervisor;
 					this.user.email = user.email;
 					this.user.first_name = user.details.first_name;
 					this.user.last_name = user.details.last_name;
 					this.user.mobile = user.mobile;
 					this.user.pass_int = user.pass_int;
-
+					// console.log();
 					this.user.roles = user.roles;
 					this.user.isActive = user.active;
 					this.user.brands = user.brands;
 					this.user.sites = user.sites;
+					this.user.site_buildings = user.buildings;
+					this.user.site_building_levels = user.levels;
+					this.user.site_building_level_rooms = user.rooms;
 					this.user.screens = user.screens;
 					this.add_record = false;
 					this.edit_record = true;
 					this.data_list = false;
 					this.data_form = true;
+					console.log('BBBBB');console.log(this.user.buildings);console.log('BBBB');
+					console.log('LLLLL');console.log(this.user.levels);console.log('LLLL');
+					console.log('RRRRR');console.log(this.user.rooms);console.log('RRRR');
+					
 				});
+			// this.getSiteBuildings();
+			// this.getSiteBuildingLevels();
+			// this.getSiteBuildingLevelRooms();
 		},
 
 		updateUser: function () {
-			console.log(this.user);
+			//console.log(this.user);
 			axios.put('/admin/client/users/update', this.user)
 				.then(response => {
 					toastr.success(response.data.message);
@@ -820,6 +918,50 @@ export default {
 
 		companyDetail: function (company) {
 			this.filter.company_id = company.id;
+		},
+
+		getSiteBuildings: function (buildings) {
+			var buildings;//console.log(buildings);
+			var building_ids = [];
+			for (var i = 0; i < buildings.length; i++) {
+
+				building_ids.push(buildings[i].id);
+			}
+			this.filter.site_building_ids = building_ids;
+			axios.get('/admin/site/get-building-by-id', { params: { filters: this.filter } })
+				.then(response => {
+					//console.log(response.data.data);
+					this.site_building_list = response.data.data;
+
+				});
+		},
+		getSiteBuildingLevels: function (levels) {
+			var levels;
+			var level_ids = [];
+			for (var i = 0; i < levels.length; i++) {
+
+				level_ids.push(levels[i].id);
+			}
+			this.filter.site_building_level_ids = level_ids;
+			axios.get('/admin/site/get-building-level-by-id', { params: { filters: this.filter } })
+				.then(response => {
+					this.site_building_level_list = response.data.data;
+
+				});
+		},
+		getSiteBuildingLevelRooms: function (rooms) {
+			var rooms;
+			var room_ids = [];
+			for (var i = 0; i < rooms.length; i++) {
+
+				room_ids.push(rooms[i].id);
+			}
+			this.filter.site_building_level_room_ids = room_ids;
+			axios.get('/admin/site/get-building-level-room-by-id', { params: { filters: this.filter } })
+				.then(response => {
+					this.site_building_level_room_list = response.data.data;
+
+				});
 		},
 
 		modalBrands: function () {
@@ -848,32 +990,32 @@ export default {
 			$('#site-list').modal('show');
 		},
 
-		selectedSite: function (data) {
-			this.user.sites.push(data);
-			this.updateUser();
-		},
+		// selectedSite: function (data) {
+		// 	this.user.sites.push(data);
+		// 	this.updateUser();
+		// },
 
-		removeSite: function (index) {
-			this.user.sites.splice(index, 1);
-			this.updateUser();
-		},
+		// removeSite: function (index) {
+		// 	this.user.sites.splice(index, 1);
+		// 	this.updateUser();
+		// },
 
-		modalScreens: function () {
-			if (this.user.sites.length > 0) {
-				this.filter.site_ids = [];
-				for (var i = 0; i < this.user.sites.length; i++) {
-					let site = this.user.sites[i];
-					this.filter.site_ids.push(site.id);
-				}
-				this.$refs.screensDataTable.filters = this.filter;
-				this.$refs.screensDataTable.fetchData();
+		// modalScreens: function () {
+		// 	if (this.user.sites.length > 0) {
+		// 		this.filter.site_ids = [];
+		// 		for (var i = 0; i < this.user.sites.length; i++) {
+		// 			let site = this.user.sites[i];
+		// 			this.filter.site_ids.push(site.id);
+		// 		}
+		// 		this.$refs.screensDataTable.filters = this.filter;
+		// 		this.$refs.screensDataTable.fetchData();
 
-				$('#screen-list').modal('show');
-			}
-			else {
-				toastr.error('Please select site first before adding screens.');
-			}
-		},
+		// 		$('#screen-list').modal('show');
+		// 	}
+		// 	else {
+		// 		toastr.error('Please select site first before adding screens.');
+		// 	}
+		// },
 
 		selectedScreen: function (data) {
 			this.user.screens.push(data);
@@ -886,7 +1028,6 @@ export default {
 		},
 
 		deleteModal: function (action, index) {
-			alert('sssss');
 			this.delete_action = action;
 			this.delete_index = index;
 			$('#delete-record').modal('show');
@@ -934,21 +1075,22 @@ export default {
 				return pin + '09';
 			} else if (pin.length == 1) {
 				return pin + '090';
-			}  
+			}
 			else {
 				return pin;
 			}
 		},
 		generatePinCode: function () {
-			 return this.getPinCode();
-				// axios.get('/admin/client/users/pin-code/'+ )
-				// .then(response => {
-				// 	// const link = document.createElement('a');
-				// 	// link.href = response.data.data.filepath;
-				// 	// link.setAttribute('download', response.data.data.filename); //or any other extension
-				// 	// document.body.appendChild(link);
-				// 	// link.click();
-				// })	
+
+			return this.getPinCode();
+			// axios.get('/admin/client/users/pin-code/'+ )
+			// .then(response => {
+			// 	// const link = document.createElement('a');
+			// 	// link.href = response.data.data.filepath;
+			// 	// link.setAttribute('download', response.data.data.filename); //or any other extension
+			// 	// document.body.appendChild(link);
+			// 	// link.click();
+			// })	
 
 		}
 	},

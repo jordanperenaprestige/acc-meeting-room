@@ -21,6 +21,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'company_id',
+        'supervisor_id',
         'full_name',
         'email',
         'email_verified_at',
@@ -114,6 +115,63 @@ class User extends Authenticatable
         }
     }
 
+    public function saveSites($sites)
+    {
+        UserSite::where('user_id', $this->id)->delete();
+        foreach ($sites as $key => $site) {
+            UserSite::updateOrCreate(
+                [
+                   'user_id' => $this->id,
+                   'site_id' => $site['id']
+                ]
+            );
+        }
+    }
+
+    public function saveBuildings($buildings)
+    {
+        UserBuilding::where('user_id', $this->id)->delete();
+        foreach ($buildings as $key => $building) {
+            UserBuilding::updateOrCreate(
+                [
+                   'user_id' => $this->id,
+                   'site_id' => $building['site_id'],
+                   'building_id' => $building['id']
+                ]
+            );
+        }
+    }
+
+    public function saveLevels($levels)
+    {
+        UserLevel::where('user_id', $this->id)->delete();
+        foreach ($levels as $key => $level) {
+            UserLevel::updateOrCreate(
+                [
+                   'user_id' => $this->id,
+                   'site_id' => $level['site_id'],
+                   'building_id' => $level['site_building_id'],
+                   'level_id' => $level['id']
+                ]
+            );
+        }
+    }
+    public function saveRooms($rooms)
+    {
+        UserRoom::where('user_id', $this->id)->delete();
+        foreach ($rooms as $key => $room) {
+            UserRoom::updateOrCreate(
+                [
+                   'user_id' => $this->id,
+                   'site_id' => $room['site_id'],
+                   'building_id' => $room['site_building_id'],
+                   'level_id' => $room['site_building_level_id'],
+                   'room_id' => $room['id']
+                ]
+            );
+        }
+    }
+
     public function saveBrands($brands)
     {
         UserBrand::where('user_id', $this->id)->delete();
@@ -127,18 +185,18 @@ class User extends Authenticatable
         }
     }
 
-    public function saveSites($sites)
-    {
-        UserSite::where('user_id', $this->id)->delete();
-        foreach ($sites as $key => $site) {
-            UserSite::updateOrCreate(
-                [
-                   'user_id' => $this->id,
-                   'site_id' => $site['id']
-                ]
-            );
-        }
-    }
+    // public function saveSites($sites)
+    // {
+    //     UserSite::where('user_id', $this->id)->delete();
+    //     foreach ($sites as $key => $site) {
+    //         UserSite::updateOrCreate(
+    //             [
+    //                'user_id' => $this->id,
+    //                'site_id' => $site['id']
+    //             ]
+    //         );
+    //     }
+    // }
 
     public function saveScreens($screens)
     {

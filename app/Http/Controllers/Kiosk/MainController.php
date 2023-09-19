@@ -43,7 +43,11 @@ use App\Models\UserRole;
 use App\Models\Role;
 use App\Models\SiteBuildingLevel;
 use App\Models\SiteBuildingRoom;
-
+use App\Models\UserSite;
+use App\Models\UserBuilding;
+use App\Models\UserLevel;
+use App\Models\UserRoom;
+use App\Models\ViewModels\AdminViewModel;
 use Hash;
 
 class MainController extends AppBaseController
@@ -52,13 +56,13 @@ class MainController extends AppBaseController
     {
         $room = SiteBuildingRoomViewModel::find($id);
 
-    //    // $this->jordan = $this->setId($room->id);
-    //     //$this->room_idz = $jordan;
-    //     $this->room_idz = 'zzz'; //$room->id;
-    //     $this->room_namez = 'zzz'; // $room->name;
-    //     $this->site_idz = 'zz'; // $room->site_id;
-    //     $this->site_building_idz = 'zz'; // $room->site_building_id;
-    //     $this->site_building_level_idz = 'zz'; //     $room->site_building_level_id; 
+        //    // $this->jordan = $this->setId($room->id);
+        //     //$this->room_idz = $jordan;
+        //     $this->room_idz = 'zzz'; //$room->id;
+        //     $this->room_namez = 'zzz'; // $room->name;
+        //     $this->site_idz = 'zz'; // $room->site_id;
+        //     $this->site_building_idz = 'zz'; // $room->site_building_id;
+        //     $this->site_building_level_idz = 'zz'; //     $room->site_building_level_id; 
 
 
         $site = Site::where('is_default', 1)->where('active', 1)->first();
@@ -150,72 +154,148 @@ class MainController extends AppBaseController
         }
     }
 
+    // public function storeConcern(Request $request)
+    // {
+
+    //     $admin_supervisor = AdminViewModel::where('mobile', '!=', '')
+    //     ->leftJoin('admin_roles', 'admins.id', '=', 'admin_roles.admin_id')
+    //             ->where('admin_roles.role_id', 11)
+    //     ->get();
+    //    // echo '<pre>'; print_r($admin_supervisor); echo '</pre>';
+       
+    //     try {
+    //         foreach($admin_supervisor as $vsupervisor){
+    //             echo $vsupervisor->mobile;
+            
+    //             $user = UserViewModel::where('mobile', '<>', '')->get();
+    //             $user_role = array();
+    //             $hk = array();
+    //             $mst = array();
+    //             $floor_room = array();
+
+    //             foreach (explode(",", $request->concern) as $v) {
+    //                 $answer = QuestionnaireAnswer::find($v);
+    //                 //$answer->sms_recepient;
+
+    //                 $rooms = SiteBuildingRoomViewModel::find($request->room_id);
+    //                 $floor = SiteBuildingLevelViewModel::find($rooms->site_building_level_id);
+
+    //                 $data = [
+    //                     'questionnaire_id' => $answer->questionnaire_id,
+    //                     'questionnaire_answer_id' => $answer->id,
+    //                     'site_id' => $rooms->site_id,
+    //                     'site_building_id' => $rooms->site_building_id,
+    //                     'site_building_level_id' => $rooms->site_building_level_id,
+    //                     'site_building_room_id' => $rooms->id,
+    //                     'remarks' => 'Pending',
+    //                     'status' => 1,
+    //                     'active' => 1,
+    //                 ];
+
+    //                 $question_survey = QuestionnaireSurvey::create($data);
+
+    //                 if ($answer->sms_recepient == 9) { //HK
+    //                     $hk[] = $answer->answer;
+    //                     $floor_room[] = $floor->name . '/' . $rooms->name;
+    //                 } else { //MST
+    //                     $mst[] = $answer->answer;
+    //                     $floor_room[] = $floor->name . '/' . $rooms->name;
+    //                 }
+    //             }
+
+            
+    //                 if (count($hk) > 0) {
+    //                     $concern = implode(",", $hk);
+    //                     $Message = 'HK Supervisor - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+    //                    // $Target = $uv->mobile;
+    //                    $Target = $vsupervisor->mobile;
+    //                     $SenderID = $uv->id;
+    //                     $sms_helper = new SMSHelper();
+    //                     $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
+    //                     echo $SMSCReturn;
+    //                 }
+            
+    //                 if (count($mst) > 0) {
+    //                     $concern = implode(",", $mst);
+    //                     $Message = 'MST - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+    //                    // $Target = $uv->mobile;
+    //                    $Target = $vsupervisor->mobile;
+    //                     $SenderID = $uv->id;
+    //                     $sms_helper = new SMSHelper();
+    //                     $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
+    //                     echo $SMSCReturn;
+    //                 }
+    //             //}
+    //         }    
+    //     }
+    // }
     public function storeConcern(Request $request)
     {
-        //try {
-        $user = UserViewModel::where('mobile', '<>', '')->get();
-        $user_role = array();
-        $hk = array();
-        $mst = array();
-        $floor_room = array();
 
-        foreach (explode(",", $request->concern) as $v) {
-            $answer = QuestionnaireAnswer::find($v);
-            //$answer->sms_recepient;
+        $admin_supervisor = AdminViewModel::where('mobile', '!=', '')
+            ->leftJoin('admin_roles', 'admins.id', '=', 'admin_roles.admin_id')
+            ->where('admin_roles.role_id', 11)
+            ->get();
+        // echo '<pre>'; print_r($admin_supervisor); echo '</pre>';
 
-            $rooms = SiteBuildingRoomViewModel::find($request->room_id);
-            $floor = SiteBuildingLevelViewModel::find($rooms->site_building_level_id);
+        foreach ($admin_supervisor as $vsupervisor) {
+            echo $vsupervisor->mobile;
 
-            $data = [
-                'questionnaire_id' => $answer->questionnaire_id,
-                'questionnaire_answer_id' => $answer->id,
-                'site_id' => $rooms->site_id,
-                'site_building_id' => $rooms->site_building_id,
-                'site_building_level_id' => $rooms->site_building_level_id,
-                'site_building_room_id' => $rooms->id,
-                'remarks' => 'Pending',
-                'status' => 1,
-                'active' => 1,
-            ];
+            $user = UserViewModel::where('mobile', '<>', '')->get();
+            $user_role = array();
+            $hk = array();
+            $mst = array();
+            $floor_room = array();
 
-            $question_survey = QuestionnaireSurvey::create($data);
+            foreach (explode(",", $request->concern) as $v) {
+                $answer = QuestionnaireAnswer::find($v);
+                //$answer->sms_recepient;
 
-            if ($answer->sms_recepient == 9) { //HK
-                $hk[] = $answer->answer;
-                $floor_room[] = $floor->name . '/' . $rooms->name;
-            } else { //MST
-                $mst[] = $answer->answer;
-                $floor_room[] = $floor->name . '/' . $rooms->name;
+                $rooms = SiteBuildingRoomViewModel::find($request->room_id);
+                $floor = SiteBuildingLevelViewModel::find($rooms->site_building_level_id);
+
+                $data = [
+                    'questionnaire_id' => $answer->questionnaire_id,
+                    'questionnaire_answer_id' => $answer->id,
+                    'site_id' => $rooms->site_id,
+                    'site_building_id' => $rooms->site_building_id,
+                    'site_building_level_id' => $rooms->site_building_level_id,
+                    'site_building_room_id' => $rooms->id,
+                    'remarks' => 'Pending',
+                    'status' => 1,
+                    'active' => 1,
+                ];
+
+                $question_survey = QuestionnaireSurvey::create($data);
+
+                if ($answer->sms_recepient == 9) { //HK
+                    $hk[] = $answer->answer;
+                    $floor_room[] = $floor->name . '/' . $rooms->name;
+                } else { //MST
+                    $mst[] = $answer->answer;
+                    $floor_room[] = $floor->name . '/' . $rooms->name;
+                }
+            }
+            if (count($hk) > 0) {
+                $concern = implode(",", $hk);
+                $Message = 'HK Supervisor - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                // $Target = $uv->mobile;
+                $Target = $vsupervisor->mobile;
+                $SenderID = $vsupervisor->id;
+                $sms_helper = new SMSHelper();
+                $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
+                echo $SMSCReturn;
             }
 
-            // $Target = '';
-
-            // $Message = '';
-
-            // $SenderID = '';
-        }
-
-        foreach ($user as $uv) {
-            if ($uv->role == 9) {
-                if (count($hk) > 0) {
-                    $concern = implode(",", $hk);
-                    $Message = 'HK Supervisor - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
-                    $Target = $uv->mobile;
-                    $SenderID = $uv->id;
-                    $sms_helper = new SMSHelper();
-                    $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
-                    echo $SMSCReturn;
-                }
-            } else {
-                if (count($mst) > 0) {
-                    $concern = implode(",", $mst);
-                    $Message = 'MST - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
-                    $Target = $uv->mobile;
-                    $SenderID = $uv->id;
-                    $sms_helper = new SMSHelper();
-                    $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
-                    echo $SMSCReturn;
-                }
+            if (count($mst) > 0) {
+                $concern = implode(",", $mst);
+                $Message = 'MST - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                // $Target = $uv->mobile;
+                $Target = $vsupervisor->mobile;
+                $SenderID = $vsupervisor->id;
+                $sms_helper = new SMSHelper();
+                $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
+                echo $SMSCReturn;
             }
         }
     }
@@ -524,10 +604,19 @@ class MainController extends AppBaseController
         }
     }
 
-    public function getAll()
+    public function getAll(Request $request)
     {
         try {
-            $sites = SiteViewModel::orderBy('name')->where('active', 1)->get();
+
+            $filters = json_decode($request->filters);
+            $user_site = UserSite::where('user_id', $filters)
+                ->get();
+            $site_ids = array();
+            foreach ($user_site as $v) {
+                $site_ids[] = $v->site_id;
+            }
+
+            $sites = SiteViewModel::orderBy('name')->whereIn('id', $site_ids)->where('active', 1)->get();
             return $this->response($sites, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -538,15 +627,30 @@ class MainController extends AppBaseController
         }
     }
 
-    public function getBuildingss($id)
+    public function getBuildingss(Request $request)
     {
-        try
-    	{
-            $buildings = SiteBuilding::where('site_id', $id)->get();
+        $filters = json_decode($request);
+        // echo '>>>>';
+        // echo $request->local_admin_id;
+        // echo '<<<';
+        // echo $request->site_id;
+        $user_building = UserBuilding::where('user_id', $request->local_admin_id)
+            ->where('site_id', $request->site_id)
+            ->get();
+        try {
+            if (count($user_building) > 0) {
+                $building_ids = array();
+                foreach ($user_building as $v) {
+                    $building_ids[] = $v->building_id;
+                }
+                $buildings = SiteBuilding::where('site_id', $request->site_id)
+                    ->whereIn('id', $building_ids)
+                    ->get();
+            } else {
+                $buildings = SiteBuilding::where('site_id', $request->site_id)->get();
+            }
             return $this->response($buildings, 'Successfully Deleted!', 200);
-        }
-        catch (\Exception $e) 
-        {
+        } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
                 'status' => false,
@@ -555,15 +659,29 @@ class MainController extends AppBaseController
         }
     }
 
-    public function getFloors($id)
+    public function getFloors(Request $request)
     {
-        try
-    	{
-            $building_levels = SiteBuildingLevel::where('site_building_id', $id)->get();
+        $filters = json_decode($request);
+
+        $user_level = UserLevel::where('user_id', $request->local_admin_id)
+            ->where('building_id', $request->building_id)
+            ->get();
+
+        try {
+            if (count($user_level) > 0) {
+                $level_ids = array();
+                foreach ($user_level as $v) {
+                    $level_ids[] = $v->level_id;
+                }
+                $building_levels = SiteBuildingLevel::where('site_building_id', $request->building_id)
+                    ->whereIn('id', $level_ids)
+                    ->get();
+            } else {
+                $building_levels = SiteBuildingLevel::where('site_building_id', $request->building_id)->get();
+            }
+
             return $this->response($building_levels, 'Successfully Retreived!', 200);
-        }
-        catch (\Exception $e) 
-        {
+        } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
                 'status' => false,
@@ -572,15 +690,28 @@ class MainController extends AppBaseController
         }
     }
 
-    public function getRoomss($id)
+    public function getRoomss(Request $request)
     {
-        try
-    	{   
-            $building_rooms = SiteBuildingRoom::where('site_building_level_id', $id)->get();
+        $filters = json_decode($request);
+
+        $user_room = UserRoom::where('user_id', $request->local_admin_id)
+            ->where('level_id', $request->level_id)
+            ->get();
+
+        try {
+            if (count($user_room) > 0) {
+                $room_ids = array();
+                foreach ($user_room as $v) {
+                    $room_ids[] = $v->room_id;
+                }
+                $building_rooms = SiteBuildingRoom::where('site_building_level_id', $request->level_id)
+                    ->whereIn('id', $room_ids)
+                    ->get();
+            } else {
+                $building_rooms = SiteBuildingRoom::where('site_building_level_id', $request->level_id)->get();
+            }
             return $this->response($building_rooms, 'Successfully Retreived!', 200);
-        }
-        catch (\Exception $e) 
-        {
+        } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
                 'status' => false,

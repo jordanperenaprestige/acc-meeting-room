@@ -37,6 +37,7 @@ class RegistrationRequest extends FormRequest
                 'regex:/[0-9]/',      // must contain at least one digit
                 'regex:/[@$!%*#?&]/', // must contain a special character
             ],
+            "mobile" =>  "required|regex:/^([0-9\s\-\+\(\)]*)$/|min:11",
         ];
     }
 

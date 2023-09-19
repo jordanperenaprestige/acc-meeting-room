@@ -32,7 +32,8 @@ class Admin extends Authenticatable
         'activation_token',
         'created_by',
         'updated_by',
-        'remember_token'
+        'remember_token',
+        'mobile',
     ];
 
     /**

@@ -146,8 +146,26 @@ class RoomsController extends AppBaseController implements RoomsControllerInterf
     {
         try
     	{
-            $building_rooms = SiteBuildingroom::where('site_building_room_id', $id)->get();
+            $building_rooms = SiteBuildingRoom::where('site_building_room_id', $id)->get();
             return $this->response($building_rooms, 'Successfully Retreived!', 200);
+        }
+        catch (\Exception $e) 
+        {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
+    public function getBuildingLevelRoomByIds(Request $request)
+    {
+        try 
+    	{  
+            $filters = json_decode($request->filters);
+            $levels = SiteBuildingRoom::whereIn('site_building_level_id', $filters->site_building_level_room_ids)->get();
+            return $this->response($levels, 'Successfully Deleted!', 200);
         }
         catch (\Exception $e) 
         {

@@ -6,8 +6,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\UserRole;
 use App\Models\Permission;
+use App\Models\SiteBuilding;
+use App\Models\SiteBuildingLevel;
 use App\Models\UserBrand;
 use App\Models\UserSite;
+use App\Models\UserBuilding;
+use App\Models\UserLevel;
+use App\Models\UserRoom;
 use App\Models\UserScreen;
 
 class UserViewModel extends Model
@@ -65,8 +70,12 @@ class UserViewModel extends Model
         'roles',
         'permissions',
         'company',
+        'supervisor',
         'brands',
         'sites',
+        'buildings',
+        'levels',
+        'rooms',
         'screens',
         'profile_image',
     ];
@@ -124,6 +133,13 @@ class UserViewModel extends Model
             return $company;
     }
 
+    public function getSupervisorAttribute() 
+    {
+        $supervisor = AdminViewModel::find($this->supervisor_id);
+        if($supervisor)
+            return $supervisor;
+    }
+
     public function getBrandsAttribute() 
     {
         $brand_ids = UserBrand::where('user_id', $this->id)->get()->pluck('brand_id');
@@ -138,6 +154,28 @@ class UserViewModel extends Model
         $sites = SiteViewModel::whereIn('id', $site_ids)->get();
         if($sites)
             return $sites;
+    }
+    public function getBuildingsAttribute() 
+    {
+        $building_ids = UserBuilding::where('user_id', $this->id)->get()->pluck('building_id');
+        $buildings = SiteBuildingViewModel::whereIn('id', $building_ids)->get();
+        if($buildings)
+            return $buildings;
+    }
+    
+    public function getLevelsAttribute() 
+    {
+        $level_ids = UserLevel::where('user_id', $this->id)->get()->pluck('level_id');
+        $levels = SiteBuildingLevelViewModel::whereIn('id', $level_ids)->get();
+        if($levels)
+            return $levels;
+    }
+    public function getRoomsAttribute() 
+    {
+        $room_ids = UserRoom::where('user_id', $this->id)->get()->pluck('room_id');
+        $rooms = SiteBuildingRoomViewModel::whereIn('id', $room_ids)->get();
+        if($rooms)
+            return $rooms;
     }
 
     public function getScreensAttribute() 

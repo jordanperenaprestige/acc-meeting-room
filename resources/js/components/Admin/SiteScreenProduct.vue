@@ -49,7 +49,7 @@
 										placeholder="Select Screens" 
 										label="site_screen_location"
 										track-by="site_screen_location"
-										@input="screenDetails">
+										>
 									</multiselect>
 								</div>
 							</div>		

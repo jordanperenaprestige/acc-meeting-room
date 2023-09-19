@@ -177,5 +177,23 @@ class BuildingsController extends AppBaseController implements BuildingsControll
             ], 422);
         }
     }
+
+    public function getBuildingByIds(Request $request)
+    {
+        try 
+    	{  
+            $filters = json_decode($request->filters);
+            $buildings = SiteBuilding::whereIn('site_id', $filters->site_building_ids)->get();
+            return $this->response($buildings, 'Successfully Deleted!', 200);
+        }
+        catch (\Exception $e) 
+        {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
     
 }
