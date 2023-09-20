@@ -473,7 +473,7 @@ export default {
             this.show_pending_success = true;
             this.show_admin_button = false;
 
-            setTimeout(function () { window.location.reload(); }, 5000);
+           // setTimeout(function () { window.location.reload(); }, 5000);
 
         },
         show_button: function () {
@@ -545,10 +545,16 @@ export default {
             }
         },
 
-        loginLocalAdmin: function () {
+        loginLocalAdmin: function () { //alert(this.survey.site_id +'-'+this.survey.site_building_id +'-'+ this.survey.site_building_level_id);
             var password = this.room.input_one + this.room.input_two + this.room.input_three + this.room.input_four;
             let formData = new FormData();
             formData.append("password", password);
+            formData.append("pincode_modal", this.pincode_modal); // first or room
+            formData.append("default_room", this.defaultRoom);
+            formData.append("site_id", this.survey.site_id);
+            formData.append("site_building_id", this.survey.site_building_id);
+            formData.append("site_building_level_id", this.survey.site_building_level_id);
+
             axios.post('/api/v1/employee/local-login/', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'

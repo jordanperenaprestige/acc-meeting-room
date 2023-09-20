@@ -54,14 +54,14 @@
 												</span>
 											</div>
 										</div>
-										<div class="form-group row mb-0">
+										<!-- <div class="form-group row mb-0">
 											<label for="lastName" class="col-sm-4 col-form-label">Supervisor</label>
 											<div class="col-sm-8">
 												<span>
 													{{ user.supervisor.full_name }}
 												</span>
 											</div>
-										</div>
+										</div> -->
 									</div>
 									<div class="coll-md-1">
 										<button type="button" class="btn btn-outline-secondary btn-sm" @click="modalAdd"><i
@@ -75,13 +75,19 @@
 											</div>
 										</div>
 										<div class="form-group row mb-0">
-											<label for="firstName" class="col-sm-4">Pin Code </label>
+											<label for="firstName" class="col-sm-4">Pin Code</label>
 											<div class="col-sm-8">
 												{{ user.pass_int }}
 											</div>
 										</div>
 										<div class="form-group row mb-0">
-											<label for="firstName" class="col-sm-4">Roles </label>
+											<label for="firstName" class="col-sm-4">Level</label>
+											<div class="col-sm-8">
+												{{ user.level }}
+											</div>
+										</div>
+										<div class="form-group row mb-0">
+											<label for="firstName" class="col-sm-4">Role</label>
 											<div class="col-sm-8">
 												<span v-for="(data, index) in user.roles" class="badge badge-info mr-1">{{
 													data.name }}</span>
@@ -323,7 +329,7 @@
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="mobile" class="col-sm-4 col-form-label">Mobile Number: <span
+							<label for="mobile" class="col-sm-4 col-form-label">Mobile Number<span
 									class="font-italic text-danger"> *</span></label>
 							<div class="col-sm-8">
 								<input type="text" class="form-control" v-model="user.mobile" placeholder="Mobile Number">
@@ -337,7 +343,7 @@
 							</div>
 						</div> -->
 						<div class="form-group row">
-							<label for="inputPassword3" class="col-sm-4 col-form-label">PIN Code: <span
+							<label for="inputPassword3" class="col-sm-4 col-form-label">PIN Code<span
 									class="font-italic text-danger"> *</span></label>
 							<div class="col-sm-6">
 								<button type="button" class="btn btn-block btn-outline-info btn-sm"
@@ -359,8 +365,7 @@
 						</div>
 
 						<div class="form-group row">
-							<label for="inputPassword3" class="col-sm-4 col-form-label">Roles <span
-									class="font-italic text-danger"> *</span></label>
+							<label for="inputPassword3" class="col-sm-4 col-form-label">Role</label>
 							<div class="col-sm-8">
 								<multiselect v-model="user.roles" :options="role_list" :multiple="true"
 									:close-on-select="true" placeholder="Select Roles" label="name" track-by="name">
@@ -379,8 +384,7 @@
 						</div>
 						<hr>
 						<div class="form-group row">
-							<label for="lastName" class="col-sm-4 col-form-label">Company <span
-									class="font-italic text-danger"> *</span></label>
+							<label for="lastName" class="col-sm-4 col-form-label">Company </label>
 							<div class="col-sm-8">
 								<multiselect v-model="user.company" :options="companies" :multiple="false"
 									:close-on-select="true" placeholder="Select Company" label="name" track-by="name"
@@ -388,19 +392,26 @@
 								</multiselect>
 							</div>
 						</div>
-						<div class="form-group row">
-							<label for="lastName" class="col-sm-4 col-form-label">Supervisor <span
-									class="font-italic text-danger"> *</span></label>
+						<!-- <div class="form-group row">
+							<label for="lastName" class="col-sm-4 col-form-label">Supervisor</label>
 							<div class="col-sm-8">
 								<multiselect v-model="user.supervisor" :options="supervisors" :multiple="false"
 									:close-on-select="true" placeholder="Select Supervisor" label="full_name"
 									track-by="full_name">
 								</multiselect>
 							</div>
-						</div>
+						</div> -->
 						<div class="form-group row">
-							<label for="inputPassword3" class="col-sm-4 col-form-label">Site<span
-									class="font-italic text-danger"> *</span></label>
+								<label for="role" class="col-sm-4 col-form-label">Level</label>
+								<div class="col-sm-8">
+                                    <select class="custom-select" v-model="user.level">
+									    <option value="">Select Level</option>
+									    <option v-for="user_level in user_levels" :value="user_level"> {{ user_level }}</option>
+								    </select>
+								</div>
+							</div>
+						<div class="form-group row">
+							<label for="inputPassword3" class="col-sm-4 col-form-label">Site</label>
 							<div class="col-sm-8">
 								<multiselect v-model="user.sites" :options="site_list" :multiple="true"
 									:close-on-select="true" placeholder="Select Sites" label="name" track-by="name"
@@ -409,8 +420,7 @@
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="inputPassword3" class="col-sm-4 col-form-label">Building<span
-									class="font-italic text-danger"> *</span></label>
+							<label for="inputPassword3" class="col-sm-4 col-form-label">Building</label>
 							<div class="col-sm-8">
 								<multiselect v-model="user.site_buildings" :options="site_building_list" :multiple="true"
 									:close-on-select="true" placeholder="Select Sites" label="name" track-by="name"
@@ -419,8 +429,7 @@
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="inputPassword3" class="col-sm-4 col-form-label">Floor<span
-									class="font-italic text-danger"> *</span></label>
+							<label for="inputPassword3" class="col-sm-4 col-form-label">Floor</label>
 							<div class="col-sm-8">
 								<multiselect v-model="user.site_building_levels" :options="site_building_level_list"
 									:multiple="true" :close-on-select="true" placeholder="Select Sites" label="name"
@@ -429,8 +438,7 @@
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="inputPassword3" class="col-sm-4 col-form-label">Room<span
-									class="font-italic text-danger"> *</span></label>
+							<label for="inputPassword3" class="col-sm-4 col-form-label">Room</label>
 							<div class="col-sm-8">
 								<multiselect v-model="user.site_building_level_rooms"
 									:options="site_building_level_room_list" :multiple="true" :close-on-select="true"
@@ -438,14 +446,14 @@
 								</multiselect>
 							</div>
 						</div>
-						<div class="form-group row">
+						<!-- <div class="form-group row">
 							<label for="lastName" class="col-sm-4 col-form-label">Contact Number</label>
 							<div class="col-sm-8">
 								<span>
 									{{ user.company.contact_number }}
 								</span>
 							</div>
-						</div>
+						</div> -->
 						<!-- <div class="form-group row">
 							<label for="lastName" class="col-sm-4 col-form-label">Classification</label>
 							<div class="col-sm-8">
@@ -628,6 +636,7 @@ export default {
 				contact_number: '',
 				mobile: '',
 				pass_int: '',
+				level:'',
 			},
 			data_list: true,
 			data_form: false,
@@ -773,6 +782,7 @@ export default {
 			},
 			screenPrimaryKey: "id",
 			screenDataUrl: "/admin/site/screen/list",
+			user_levels: ['Supervisor','Staff'],
 		};
 	},
 
@@ -823,6 +833,7 @@ export default {
 			this.user.supervisor = '';
 			this.data_list = false;
 			this.data_form = true;
+			this.user.level = '';
 		},
 
 		showPassword: function () {
@@ -877,6 +888,7 @@ export default {
 					this.user.first_name = user.details.first_name;
 					this.user.last_name = user.details.last_name;
 					this.user.mobile = user.mobile;
+					this.user.level = user.level;
 					this.user.pass_int = user.pass_int;
 					// console.log();
 					this.user.roles = user.roles;
@@ -891,9 +903,9 @@ export default {
 					this.edit_record = true;
 					this.data_list = false;
 					this.data_form = true;
-					console.log('BBBBB');console.log(this.user.buildings);console.log('BBBB');
-					console.log('LLLLL');console.log(this.user.levels);console.log('LLLL');
-					console.log('RRRRR');console.log(this.user.rooms);console.log('RRRR');
+					//console.log('BBBBB');console.log(this.user.buildings);console.log('BBBB');
+					//console.log('LLLLL');console.log(this.user.levels);console.log('LLLL');
+					//console.log('RRRRR');console.log(this.user.rooms);console.log('RRRR');
 					
 				});
 			// this.getSiteBuildings();
@@ -905,7 +917,7 @@ export default {
 			//console.log(this.user);
 			axios.put('/admin/client/users/update', this.user)
 				.then(response => {
-					toastr.success(response.data.message);
+					toastr.success('Successfully Modified!');
 					this.$refs.dataTable.fetchData();
 					$('#user-form').modal('hide');
 				})

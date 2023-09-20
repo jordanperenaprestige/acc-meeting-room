@@ -162,11 +162,11 @@ class MainController extends AppBaseController
     //             ->where('admin_roles.role_id', 11)
     //     ->get();
     //    // echo '<pre>'; print_r($admin_supervisor); echo '</pre>';
-       
+
     //     try {
     //         foreach($admin_supervisor as $vsupervisor){
     //             echo $vsupervisor->mobile;
-            
+
     //             $user = UserViewModel::where('mobile', '<>', '')->get();
     //             $user_role = array();
     //             $hk = array();
@@ -203,7 +203,7 @@ class MainController extends AppBaseController
     //                 }
     //             }
 
-            
+
     //                 if (count($hk) > 0) {
     //                     $concern = implode(",", $hk);
     //                     $Message = 'HK Supervisor - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
@@ -214,7 +214,7 @@ class MainController extends AppBaseController
     //                     $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
     //                     echo $SMSCReturn;
     //                 }
-            
+
     //                 if (count($mst) > 0) {
     //                     $concern = implode(",", $mst);
     //                     $Message = 'MST - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
@@ -231,18 +231,29 @@ class MainController extends AppBaseController
     // }
     public function storeConcern(Request $request)
     {
-
-        $admin_supervisor = AdminViewModel::where('mobile', '!=', '')
-            ->leftJoin('admin_roles', 'admins.id', '=', 'admin_roles.admin_id')
-            ->where('admin_roles.role_id', 11)
-            ->get();
+        // $admin_supervisor = AdminViewModel::where('mobile', '!=', '')
+        //     ->leftJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
+        //     ->where('admin_roles.role_id', 11)
+        //     ->get();
         // echo '<pre>'; print_r($admin_supervisor); echo '</pre>';
 
-        foreach ($admin_supervisor as $vsupervisor) {
-            echo $vsupervisor->mobile;
+        //foreach ($admin_supervisor as $vsupervisor) {
+        //    echo $vsupervisor->mobile;
+        $rooms = SiteBuildingRoomViewModel::find($request->room_id);
+        $floor = SiteBuildingLevelViewModel::find($rooms->site_building_level_id);
 
-            $user = UserViewModel::where('mobile', '<>', '')->get();
-            $user_role = array();
+        $users = UserViewModel::where('mobile', '<>', '')
+            ->leftJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
+            ->where('users.level', 'Supervisor')
+            ->leftJoin('user_sites', 'users.id', '=', 'user_sites.user_id')
+            ->select('users.id as id', 'users.level as level', 'users.mobile as mobile', 'user_roles.role_id as role')
+            ->where('user_sites.site_id', $rooms->site_id)
+            ->get();
+
+        foreach ($users as $vuser) {
+            // echo $vuser->id . '>>>' . $vuser->level . '>>>' . $vuser->mobile.'>>>' . $vuser->role;
+            // echo '------------';
+            // // $user_role = array();
             $hk = array();
             $mst = array();
             $floor_room = array();
@@ -251,8 +262,8 @@ class MainController extends AppBaseController
                 $answer = QuestionnaireAnswer::find($v);
                 //$answer->sms_recepient;
 
-                $rooms = SiteBuildingRoomViewModel::find($request->room_id);
-                $floor = SiteBuildingLevelViewModel::find($rooms->site_building_level_id);
+                //$rooms = SiteBuildingRoomViewModel::find($request->room_id);
+                //$floor = SiteBuildingLevelViewModel::find($rooms->site_building_level_id);
 
                 $data = [
                     'questionnaire_id' => $answer->questionnaire_id,
@@ -276,26 +287,28 @@ class MainController extends AppBaseController
                     $floor_room[] = $floor->name . '/' . $rooms->name;
                 }
             }
-            if (count($hk) > 0) {
-                $concern = implode(",", $hk);
-                $Message = 'HK Supervisor - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
-                // $Target = $uv->mobile;
-                $Target = $vsupervisor->mobile;
-                $SenderID = $vsupervisor->id;
-                $sms_helper = new SMSHelper();
-                $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
-                echo $SMSCReturn;
-            }
-
-            if (count($mst) > 0) {
-                $concern = implode(",", $mst);
-                $Message = 'MST - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
-                // $Target = $uv->mobile;
-                $Target = $vsupervisor->mobile;
-                $SenderID = $vsupervisor->id;
-                $sms_helper = new SMSHelper();
-                $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
-                echo $SMSCReturn;
+            if ($vuser->role == 9) {
+                if (count($hk) > 0) {
+                    $concern = implode(",", $hk);
+                    $Message = 'HK Supervisor - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                    // $Target = $uv->mobile;
+                    $Target = $vuser->mobile;
+                    $SenderID = $vuser->id;
+                    $sms_helper = new SMSHelper();
+                    $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
+                    echo $SMSCReturn;
+                }
+            } else {
+                if (count($mst) > 0) {
+                    $concern = implode(",", $mst);
+                    $Message = 'MST - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                    // $Target = $uv->mobile;
+                    $Target = $vuser->mobile;
+                    $SenderID = $vuser->id;
+                    $sms_helper = new SMSHelper();
+                    $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
+                    echo $SMSCReturn;
+                }
             }
         }
     }
@@ -479,10 +492,33 @@ class MainController extends AppBaseController
         // }
 
         try {
+            // password
+            // pincode_modal
+            // default_room
 
-            $local_admin = UserViewModel::where('pass_int', '=', $request->password)->where('active', 1)->first();
+            // $users = UserViewModel::where('mobile', '<>', '')
+            // ->leftJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
+            // ->where('users.level', 'Supervisor')
+            // ->leftJoin('user_sites', 'users.id', '=', 'user_sites.user_id')
+            // ->select('users.id as id', 'users.level as level', 'users.mobile as mobile', 'user_roles.role_id as role')
+            // ->where('user_sites.site_id', $rooms->site_id)
+            // ->get();
+            if ($request->pincode_modal == 0) {
+                $local_admin = UserViewModel::where('pass_int', '=', $request->password)->where('active', 1)
+                    ->leftJoin('user_sites', 'users.id', '=', 'user_sites.user_id')
+                    ->where('user_sites.site_id', $request->site_id)
+                    ->first();
+            } else {
+                $local_admin = UserViewModel::where('pass_int', '=', $request->password)->where('active', 1)
+                    //->leftJoin('user_sites', 'users.id', '=', 'user_sites.user_id')
+                    ->first();
+            }
+
+
+
+
+
             if ($local_admin) {
-
                 return $this->response($local_admin, 'Successfully Retreived!', 200);
             } else {
                 return $this->response(false, 'Successfully Retreived!', 200);

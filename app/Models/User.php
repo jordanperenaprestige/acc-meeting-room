@@ -21,11 +21,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'company_id',
-        'supervisor_id',
+       // 'supervisor_id',
         'full_name',
         'email',
         'email_verified_at',
-        'password',
+         'password',
         'api_token',
         'salt',
         'pass_int',
@@ -37,6 +37,7 @@ class User extends Authenticatable
         'updated_by',
         'remember_token',
         'mobile',
+        'level'
     ];
 
     /**
@@ -84,7 +85,7 @@ class User extends Authenticatable
     public static function getSalt($email)
     {
         $user_user = static::where('email', '=', $email)->first();
-        return $user_user->salt;
+        return 'userjordan';//$user_user->salt;
     }
 
     public function saveMeta($meta_data)

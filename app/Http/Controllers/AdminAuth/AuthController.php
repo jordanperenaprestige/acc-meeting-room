@@ -54,7 +54,10 @@ class AuthController extends AppBaseController implements AuthControllerInterfac
     {
         try
         {
-            $admin_user = Admin::where('email', '=', $request->email)->where('active', true)->first();
+            $admin_user = Admin::where('email', '=', $request->email)->where('active', true)
+            ->leftJoin('admin_roles', 'admins.id', '=', 'admin_roles.admin_id')
+            ->where('admin_roles.role_id','<>', 12)
+            ->first();
             if ($admin_user && Hash::check($admin_user->salt.env("PEPPER_HASH").$request->password, $admin_user->password)) {
                 $meta_details = ["last_login" => date("Y-m-d H:i:s")];
                 $admin_user->saveMeta($meta_details); 
