@@ -336,7 +336,10 @@ class MainController extends AppBaseController
     public function getBuildings()
     {
         try {
-            $building = SiteBuildingViewModel::where('active', 1)->get(); echo 'hello hello';
+            $building = SiteBuildingViewModel::where('active', 1)->get(); 
+            echo '<pre>';
+            print_r($building);
+            echo '</pre>';
             return $this->response($building, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
