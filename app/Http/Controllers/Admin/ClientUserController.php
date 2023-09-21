@@ -188,10 +188,10 @@ class ClientUserController extends AppBaseController implements ClientUserContro
             $user->saveSites($request->sites);
             $user->saveBuildings($request->site_buildings);
             $user->saveLevels($request->site_building_levels);
-            echo '>>>';
-            echo '<pre>';
-            print_r($request->site_building_level_rooms);
-            echo '</pre>';
+            // echo '>>>';
+            // echo '<pre>';
+            // print_r($request->site_building_level_rooms);
+            // echo '</pre>';
             $user->saveRooms($request->site_building_level_rooms);
         
             return $this->response($user, 'Successfully Modified!', 200);
@@ -209,6 +209,10 @@ class ClientUserController extends AppBaseController implements ClientUserContro
         try {
             $user = User::find($id);
             $user->delete();
+            echo 'delete'. $user->id;
+            $admin = Admin::where('client_id', $user->id)->first();
+            $admin->delete();
+            echo 'delete admin '. $admin->id;
             return $this->response($user, 'Successfully Deleted!', 200);
         } catch (\Exception $e) {
             return response([
