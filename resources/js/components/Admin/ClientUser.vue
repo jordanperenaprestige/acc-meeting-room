@@ -347,7 +347,7 @@
 									class="font-italic text-danger"> *</span></label>
 							<div class="col-sm-6">
 								<button type="button" class="btn btn-block btn-outline-info btn-sm"
-									v-show="displayButtonPinCode" @click="showPinCode">Show Pin Code</button>
+									v-show="displayButtonPinCode" @click="showPinCodeStart">Show Pin Code</button>
 
 								<div class="input-group mb-3" v-show="displayPinCode">
 									<input type="text" class="form-control" v-model="user.pass_int"
@@ -850,6 +850,11 @@ export default {
 
 		showPinCode: function () {
 			this.user.pass_int = this.generatePinCode();
+			this.displayPinCode = true;
+			this.displayButtonPinCode = false;
+		},
+		showPinCodeStart: function () {
+			this.user.pass_int = this.user.pass_int;//this.generatePinCode();
 			this.displayPinCode = true;
 			this.displayButtonPinCode = false;
 		},
