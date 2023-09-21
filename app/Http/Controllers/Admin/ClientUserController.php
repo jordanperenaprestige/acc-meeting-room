@@ -78,7 +78,7 @@ class ClientUserController extends AppBaseController implements ClientUserContro
                 'active' => 1,
                 'level' => $request->level
             ];
-             echo '<pre>'; print_r($data); echo '</pre>'; 
+             //echo '<pre>'; print_r($data); echo '</pre>'; 
             $user = User::create($data);
 
             $meta_details = ["first_name" => $request->first_name, "last_name" => $request->last_name];
