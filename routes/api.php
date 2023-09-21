@@ -89,7 +89,7 @@ Route::group(['prefix' => 'v1'], function ()
     | Get Update 
     |--------------------------------------------------------------------------
     */
-    Route::get('/get-update', 'Api\GetUpdateController@updateContent')->name('api.get-update');
+    // Route::get('/get-update', 'Api\GetUpdateController@updateContent')->name('api.get-update');
     Route::post('/save-logs', 'Api\LogsController@storeLogs')->name('api.save-logs');
     Route::post('/screen-uptime', 'Api\UpTimeController@storeUpTime')->name('api.screen-uptime');
     /*
