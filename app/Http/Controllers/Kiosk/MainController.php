@@ -336,7 +336,7 @@ class MainController extends AppBaseController
     public function getBuildings()
     {
         try {
-            $building = SiteBuildingViewModel::where('active', 1)->get();
+            $building = SiteBuildingViewModel::where('active', 1)->get(); echo 'hello hello';
             return $this->response($building, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -513,10 +513,6 @@ class MainController extends AppBaseController
                     //->leftJoin('user_sites', 'users.id', '=', 'user_sites.user_id')
                     ->first();
             }
-
-
-
-
 
             if ($local_admin) {
                 return $this->response($local_admin, 'Successfully Retreived!', 200);
