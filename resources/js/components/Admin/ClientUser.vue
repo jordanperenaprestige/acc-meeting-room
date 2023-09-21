@@ -96,7 +96,9 @@
 										<div class="form-group row mb-0">
 											<label for="firstName" class="col-sm-4">Active </label>
 											<div class="col-sm-8">
-												<span v-if="user.isActive" class="badge badge-info">Active</span>
+												<span v-if="user.isActive == true" class="badge badge-info">Active</span>
+												<span v-else-if="user.isActive == 1" class="badge badge-danger">Active</span>
+												<span v-else-if="user.isActive == 'add'" class="badge badge-danger"></span>
 												<span v-else class="badge badge-danger">Deactivated</span>
 											</div>
 										</div>
@@ -828,7 +830,7 @@ export default {
 			this.user.site_building_levels = [];
 			this.user.site_building_level_rooms = [];
 			this.user.screens = [];
-			this.user.isActive = false;
+			this.user.isActive = 'add';
 			this.user.company = '';
 			this.user.supervisor = '';
 			this.data_list = false;
@@ -896,7 +898,7 @@ export default {
 					this.user.level = user.level;
 					this.user.pass_int = user.pass_int;
 					// console.log();
-					this.user.roles = user.roles;
+					this.user.roles = user.roles; 
 					this.user.isActive = user.active;
 					this.user.brands = user.brands;
 					this.user.sites = user.sites;
