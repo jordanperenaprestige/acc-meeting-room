@@ -357,6 +357,7 @@
                     this.fetchData();
                     this.deleteUrl = '';
                     this.tobeDeleted = 0;
+                    toastr.success('Successfully Deleted!');
                     $('#deleteModal').modal('hide');
                 });
             },

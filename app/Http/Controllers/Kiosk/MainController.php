@@ -289,25 +289,25 @@ class MainController extends AppBaseController
             }
             if ($vuser->role == 9) {
                 if (count($hk) > 0) {
-                    $concern = implode(",", $hk);
-                    $Message = 'HK Supervisor - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
-                    // $Target = $uv->mobile;
-                    $Target = $vuser->mobile;
-                    $SenderID = $vuser->id;
-                    $sms_helper = new SMSHelper();
-                    $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
-                    echo $SMSCReturn;
+                    // $concern = implode(",", $hk);
+                    // $Message = 'HK Supervisor - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                    // // $Target = $uv->mobile;
+                    // $Target = $vuser->mobile;
+                    // $SenderID = $vuser->id;
+                    // $sms_helper = new SMSHelper();
+                    // $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
+                    // echo $SMSCReturn;
                 }
             } else {
                 if (count($mst) > 0) {
-                    $concern = implode(",", $mst);
-                    $Message = 'MST - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
-                    // $Target = $uv->mobile;
-                    $Target = $vuser->mobile;
-                    $SenderID = $vuser->id;
-                    $sms_helper = new SMSHelper();
-                    $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
-                    echo $SMSCReturn;
+                    // $concern = implode(",", $mst);
+                    // $Message = 'MST - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                    // // $Target = $uv->mobile;
+                    // $Target = $vuser->mobile;
+                    // $SenderID = $vuser->id;
+                    // $sms_helper = new SMSHelper();
+                    // $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
+                    // echo $SMSCReturn;
                 }
             }
         }

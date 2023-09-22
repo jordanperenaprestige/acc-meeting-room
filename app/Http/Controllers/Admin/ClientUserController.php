@@ -209,11 +209,11 @@ class ClientUserController extends AppBaseController implements ClientUserContro
         try {
             $user = User::find($id);
             $user->delete();
-            echo 'delete'. $user->id;
+            //echo 'delete'. $user->id;
             $admin = Admin::where('client_id', $user->id)->first();
             $admin->delete();
-            echo 'delete admin '. $admin->id;
-            return $this->response($user, 'Successfully Deleted!', 200);
+            //echo 'delete admin '. $admin->id;
+            return $this->response(true, 'Successfully Deleted!', 200);
         } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
