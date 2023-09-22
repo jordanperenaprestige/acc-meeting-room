@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="{{ URL::to('css/jquery.zoom.css') }}">
     <!-- Set Custom Theme UI -->
     <link rel="stylesheet" href="{{ URL::to('css') }}/{{ $site_name }}-theme.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="{{ URL::to('plugins/toastr/toastr.min.css') }}">
 </head>
 
 <body>
@@ -45,6 +47,8 @@
     <script src="{{ URL::to('js/way-finding.js') }}"></script>
     <script src="{{ URL::to('js/helper.js') }}"></script>
     <script src="{{ URL::to('js/autoSizr.js') }}"></script>
+    <!-- Toastr -->
+    <script src="{{ URL::to('plugins/toastr/toastr.min.js') }}"></script>
     <script src="{{ mix('/js/app.js') }}"></script>
     @stack('scripts') <!-- To include script links -->
 </body>

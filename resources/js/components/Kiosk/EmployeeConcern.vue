@@ -590,7 +590,8 @@ export default {
                         this.room.input_two = '';
                         this.room.input_three = '';
                         this.room.input_four = '';
-                        this.show_resolve = false;
+                        this.show_resolve = false; 
+                        toastr.error('Unauthorized Access!');
                     }
                 });
         },
