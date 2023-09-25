@@ -323,22 +323,22 @@ class MainController extends AppBaseController
     {
         $user = UserViewModel::where('mobile', '<>', '')->get();
         echo 'user id: '.$request->user_id;
-        // foreach (explode(",", $request->concern_pending) as $v) {
-        //     $id = str_replace('pending_', '', $v);
-        //     $answer = QuestionnaireAnswer::find($id);
-        //     QuestionnaireSurvey::where('questionnaire_id', $answer->questionnaire_id)
-        //         ->where('remarks', 'Pending')
-        //         ->where('questionnaire_answer_id', $answer->id)
-        //         ->where('site_id', $request->site_id)
-        //         ->where('site_building_id', $request->site_building_id)
-        //         ->where('site_building_level_id', $request->site_building_level_id)
-        //         ->where('site_building_room_id',  $request->room_id)
-        //         ->update([
-        //             'remarks' => 'Done',
-        //             'status' => 2,
-        //             'user_id' => $request->user_id
-        //         ]);
-        // }
+        foreach (explode(",", $request->concern_pending) as $v) {
+            $id = str_replace('pending_', '', $v);
+            $answer = QuestionnaireAnswer::find($id);
+            QuestionnaireSurvey::where('questionnaire_id', $answer->questionnaire_id)
+                ->where('remarks', 'Pending')
+                ->where('questionnaire_answer_id', $answer->id)
+                ->where('site_id', $request->site_id)
+                ->where('site_building_id', $request->site_building_id)
+                ->where('site_building_level_id', $request->site_building_level_id)
+                ->where('site_building_room_id',  $request->room_id)
+                ->update([
+                    'remarks' => 'Done',
+                    'status' => 2,
+                    'user_id' => $request->user_id
+                ]);
+        }
     }
 
     public function getBuildings()
