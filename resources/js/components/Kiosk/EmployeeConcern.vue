@@ -447,11 +447,11 @@ export default {
             this.room.input_four = '';
             this.show_resolve = false;
             this.show_admin_button = false;
-            setTimeout(function () { window.location.reload(); }, 5000);
+            //setTimeout(function () { window.location.reload(); }, 5000);
 
         },
         submit_pending: function () {
-            let formData = new FormData();
+            let formData = new FormData(); alert(this.filter.local_admin_id.id);
             formData.append("concern_pending", this.concern_pending);
             formData.append("room_id", this.room.id);
             formData.append("site_id", this.survey.site_id);
