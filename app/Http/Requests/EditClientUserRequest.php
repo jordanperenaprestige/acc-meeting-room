@@ -47,4 +47,16 @@ class EditClientUserRequest extends FormRequest
             "level" => "required|string",
         ];;
     }
+    /**
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            
+            'pass_int.min' => 'The PIN Code must be at least 4 characters.',
+            'pass_int.max' => 'The PIN Code must be at least 4 characters.'
+            ,
+        ];
+    }
 }

@@ -43,4 +43,5 @@ class ClientUserRequest extends FormRequest
             "level" => "required|string",
         ];
     }
+    
 }

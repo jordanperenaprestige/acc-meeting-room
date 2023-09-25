@@ -1816,7 +1816,7 @@ span {
     font-family: Henry Sans Regular;
     /* color: #FFFFFF; */
     -webkit-text-stroke: 2px #ffdb00;
-    font-size: 25px;
+    font-size: 20px;
     text-align: left;
     padding: 0.5em;
 
@@ -1842,6 +1842,7 @@ span {
 }
 
 .first-title {
+    color: #ffdb00;
     /* font-family: Henry Sans Regular;
     font-size: 30px;
     font-weight: 500;
@@ -1849,11 +1850,11 @@ span {
     -webkit-text-stroke: 2px #ffdb00; */
     /* margin-top: 21rem; */
     font-family: Henry Sans Regular;
-    color: #ffdb00;
+    /* color: #FFFFFF; */
     /* -webkit-text-stroke: 2px #ffdb00; */
     font-size: 25px;
     text-align: left;
-    padding: 0.5em;
+    /* padding: 0.5em; */
 
 }
 
@@ -1862,7 +1863,7 @@ span {
     color: #FFFFFF;
     font-size: 25px;
     text-align: right;
-    padding: 0.5em;
+    /* padding: 0.5em; */
     /* margin-top: 20rem; */
 }
 

@@ -1,137 +1,137 @@
 <template>
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <!-- <div class="card-tools"> -->
-                            <form class="col-sm-12">
-                                <div class="form-group row">
-                                    <h3 class="card-title justify-content-center">Trends</h3>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-2">
-                                        <label for="userName" class="col-form-label">Filter By</label>
-                                        <select class="custom-select mr-2" v-model="filter.by" @change="filterBy()">
-                                            <option value="">Select All</option>
-                                            <option v-for="(filter, index) in filters_by" :value="index"> {{ filter }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <div v-show="by_day">
-												<!-- v-show="show_concerns" -->
-												<label for="day" class="col-form-label">Day</label>
-												<date-picker v-model="filter.day" placeholder="Day" :config="options_D"
-													id="day" autocomplete="off" @dp-change="daySelected"></date-picker>
-											</div>
-											<div v-show="by_week">
-												<!-- v-show="show_concerns" -->
-												<label for="week" class="col-form-label">Week</label>
-												<date-picker v-model="filter.week" placeholder="Week" :config="options_D"
-													id="week" autocomplete="off" @dp-change="weekSelected"></date-picker>
-											</div>
-											<div v-show="by_month">
-												<!-- v-show="show_concerns" -->
-												<label for="month" class="col-form-label">Month</label>
-												<date-picker v-model="filter.month" placeholder="Month" :config="options_M"
-													id="month" autocomplete="off" @dp-change="monthSelected"></date-picker>
-											</div>
-											<div v-show="by_year">
-												<!-- v-show="show_concerns" -->
-												<label for="month" class="col-form-label">Year</label>
-												<date-picker v-model="filter.year" placeholder="Year" :config="options_Y"
-													id="month" autocomplete="off" @dp-change="yearSelected"></date-picker>
-											</div>
-											<div v-show="by_start">
-												<label for="userName" class="col-form-label">Start Date</label>
-												<date-picker v-model="filter.start_date" placeholder="YYYY-MM-DD"
-													:config="options" id="date_from" autocomplete="off"></date-picker>
-											</div>
-                                    </div>
-                                    <div class="col-sm-2">
-
-                                        <div v-show="by_end">
-                                            <label for="userName" class="col-form-label">End Date</label>
-                                            <date-picker v-model="filter.end_date" placeholder="YYYY-MM-DD"
-                                                :config="options" id="date_end" autocomplete="off"></date-picker>
-                                        </div>
-                                    </div>
-									<div class="form-group row">
-										<div class="col-sm-2">
-											<label for="userName" class="col-form-label">Ave. Time: <span
-													id="average_time"></span>
-											</label>
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-header">
+							<!-- <div class="card-tools"> -->
+							<form class="col-sm-12">
+								<div class="form-group row">
+									<h3 class="card-title justify-content-center">Trends</h3>
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-2">
+										<label for="userName" class="col-form-label">Filter By</label>
+										<select class="custom-select mr-2" v-model="filter.by" @change="filterBy()">
+											<option value="">Select All</option>
+											<option v-for="(filter, index) in filters_by" :value="index"> {{ filter }}
+											</option>
+										</select>
+									</div>
+									<div class="col-sm-2">
+										<div v-show="by_day">
+											<!-- v-show="show_concerns" -->
+											<label for="day" class="col-form-label">Day</label>
+											<date-picker v-model="filter.day" placeholder="Day" :config="options_D" id="day"
+												autocomplete="off" @dp-change="daySelected"></date-picker>
+										</div>
+										<div v-show="by_week">
+											<!-- v-show="show_concerns" -->
+											<label for="week" class="col-form-label">Week</label>
+											<date-picker v-model="filter.week" placeholder="Week" :config="options_D"
+												id="week" autocomplete="off" @dp-change="weekSelected"></date-picker>
+										</div>
+										<div v-show="by_month">
+											<!-- v-show="show_concerns" -->
+											<label for="month" class="col-form-label">Month</label>
+											<date-picker v-model="filter.month" placeholder="Month" :config="options_M"
+												id="month" autocomplete="off" @dp-change="monthSelected"></date-picker>
+										</div>
+										<div v-show="by_year">
+											<!-- v-show="show_concerns" -->
+											<label for="month" class="col-form-label">Year</label>
+											<date-picker v-model="filter.year" placeholder="Year" :config="options_Y"
+												id="month" autocomplete="off" @dp-change="yearSelected"></date-picker>
+										</div>
+										<div v-show="by_start">
+											<label for="userName" class="col-form-label">Start Date</label>
+											<date-picker v-model="filter.start_date" placeholder="YYYY-MM-DD"
+												:config="options" id="date_from" autocomplete="off"></date-picker>
 										</div>
 									</div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-4">
-                                        <label for="userName" class="col-form-label">Site</label>
-                                        <select class="custom-select mr-2" v-model="filter.site_id" @change="filterChart()">
-                                            <option value="">Select All</option>
-                                            <option v-for="site in sites" :value="site.id"> {{ site.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </form>
-                            <!-- </div> -->
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <label for="" class="col-form-label">Reports Total: <span id="reports_total">{{
-                                        reports_total }}</span></label>
-                                    <div>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur,
-                                        adipisci velit...</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="chart-responsive">
-                                        <canvas id="reportBarChart"
-                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <label for="" class="col-form-label">Incidents Total: <span id="incidents_total">{{
-                                        incidents_total }}</span></label>
-                                    <div>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur,
-                                        adipisci velit...</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="chart-responsive">
-                                        <canvas id="incidentBarChart"
-                                            style="min-height: 250px; height: 250px; max-height: 280px; max-width: 100%;"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="chart-responsive">
-                                        <canvas id="pieChartSurvey"
-                                            style="min-height: 250px; height: 250px; max-height: 280px; max-width: 100%;"></canvas>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="chart-responsive">
-                                        <canvas id="pieChartSurveyAnswer"
-                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+									<div class="col-sm-2">
+
+										<div v-show="by_end">
+											<label for="userName" class="col-form-label">End Date</label>
+											<date-picker v-model="filter.end_date" placeholder="YYYY-MM-DD"
+												:config="options" id="date_end" autocomplete="off"></date-picker>
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-4">
+										<label for="userName" class="col-form-label">Site</label>
+										<select class="custom-select mr-2" v-model="filter.site_id" @change="filterChart()">
+											<option value="">Select All</option>
+											<option v-for="site in sites" :value="site.id"> {{ site.name }}</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-4">
+										<label for="userName" class="col-form-label">Ave. Time: <span
+												id="average_time"></span>
+										</label>
+									</div>
+								</div>
+							</form>
+							<!-- </div> -->
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="" class="col-form-label">Reports Total: <span id="reports_total">{{
+										reports_total }}</span></label>
+									<div>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur,
+										adipisci velit...</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="chart-responsive">
+										<canvas id="reportBarChart"
+											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="" class="col-form-label">Incidents Total: <span id="incidents_total">{{
+										incidents_total }}</span></label>
+									<div>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur,
+										adipisci velit...</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="chart-responsive">
+										<canvas id="incidentBarChart"
+											style="min-height: 250px; height: 250px; max-height: 280px; max-width: 100%;"></canvas>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="chart-responsive">
+										<canvas id="pieChartSurvey"
+											style="min-height: 250px; height: 250px; max-height: 280px; max-width: 100%;"></canvas>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="chart-responsive">
+										<canvas id="pieChartSurveyAnswer"
+											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+									</div>
+								</div>
+							</div>
+							<div class="row"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 </template>
 <script>
 import moment from 'moment';
@@ -140,234 +140,234 @@ import datePicker from 'vue-bootstrap-datetimepicker';
 // Import date picker css
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 export default {
-    name: "Dashboard_Merchant_Population",
-    data() {
-        return {
-            filter: {
-                site_id: '',
-                select_date: '',
-                start_date: '',
-                end_date: '',
-                day: '',
-                week: '',
-                month: '',
-                year: '',
-                by: 0,
-            },
-            sites: [],
-            options: {
-                format: 'YYYY-MM-DD',
-                useCurrent: false,
-            },
-            options_YYYY_MM_DD: {
-                format: 'YYYY-MM-DD',
-                useCurrent: false,
-            },
-            options_Y: {
-                format: 'Y',
-                useCurrent: false,
-            },
-            options_M: {
-                format: 'YYYY-MM',
-                useCurrent: false,
-            },
-            options_D: {
-                format: 'YYYY-MM-DD',
-                useCurrent: false,
-            },
-            options_YYYY_MM_DD: {
-                format: 'YYYY-MM-DD',
-                useCurrent: false,
-            },
-            options_YYYY_MM_DD: {
-                format: 'YYYY-MM-DD',
-                useCurrent: false,
-            },
-            filters_by: ['Lifetime', 'Day', 'Week', 'Month', 'Year', 'Customize'],
-            by_day: false,
-            by_month: false,
-            by_year: false,
-            by_lifetime: false,
-            survey_number_day: 0,
-            reports_total: 0,
-            incidents_total: 0,
+	name: "Dashboard_Merchant_Population",
+	data() {
+		return {
+			filter: {
+				site_id: '',
+				select_date: '',
+				start_date: '',
+				end_date: '',
+				day: '',
+				week: '',
+				month: '',
+				year: '',
+				by: 0,
+			},
+			sites: [],
+			options: {
+				format: 'YYYY-MM-DD',
+				useCurrent: false,
+			},
+			options_YYYY_MM_DD: {
+				format: 'YYYY-MM-DD',
+				useCurrent: false,
+			},
+			options_Y: {
+				format: 'Y',
+				useCurrent: false,
+			},
+			options_M: {
+				format: 'YYYY-MM',
+				useCurrent: false,
+			},
+			options_D: {
+				format: 'YYYY-MM-DD',
+				useCurrent: false,
+			},
+			options_YYYY_MM_DD: {
+				format: 'YYYY-MM-DD',
+				useCurrent: false,
+			},
+			options_YYYY_MM_DD: {
+				format: 'YYYY-MM-DD',
+				useCurrent: false,
+			},
+			filters_by: ['Lifetime', 'Day', 'Week', 'Month', 'Year', 'Customize'],
+			by_day: false,
+			by_month: false,
+			by_year: false,
+			by_lifetime: false,
+			survey_number_day: 0,
+			reports_total: 0,
+			incidents_total: 0,
 			average_time: 0,
-        }
-    },
+		}
+	},
 
-    created() {
-        this.getSites();
-        this.filterChart();
-        this.filterBy();
+	created() {
+		this.getSites();
+		this.filterChart();
+		this.filterBy();
 
-    },
+	},
 
-    methods: {
-        getSites: function () {
-            axios.get('/admin/site/get-all')
-                .then(response => this.sites = response.data.data);
-        },
-        filterBy: function () {
+	methods: {
+		getSites: function () {
+			axios.get('/admin/site/get-all')
+				.then(response => this.sites = response.data.data);
+		},
+		filterBy: function () {
 
-            if (this.filter.by == 0) {//lifetime
-                this.by_day = false;
-                this.by_week = false;
-                this.by_month = false;
-                this.by_year = false;
-                this.by_start = false;
-                this.by_end = false;
-                const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
-                const currentDay = moment(new Date()).format("YYYY-MM-DD");
-                this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
-                this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
-                this.filterChartByDaily();
-                //alert('lifetime');
-            } else if (this.filter.by == 1) {//day
-                // this.clear_filter();
-                this.by_day = true;
-                this.by_week = false;
-                this.by_month = false;
-                this.by_year = false;
-                this.by_start = false;
-                this.by_end = false;
+			if (this.filter.by == 0) {//lifetime
+				this.by_day = false;
+				this.by_week = false;
+				this.by_month = false;
+				this.by_year = false;
+				this.by_start = false;
+				this.by_end = false;
+				const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
+				const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
+				this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
+				this.filterChartByDaily();
+				//alert('lifetime');
+			} else if (this.filter.by == 1) {//day
+				// this.clear_filter();
+				this.by_day = true;
+				this.by_week = false;
+				this.by_month = false;
+				this.by_year = false;
+				this.by_start = false;
+				this.by_end = false;
 
-                const currentDay = moment(new Date()).format("YYYY-MM-DD");
-                this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
-                //alert(this.filter.day);
-                // axios.get('/admin/reports/filter-survey-first-last')
-                // 	.then(response => {
-                // 		var day = response.data.data;
-                // 		alert(day);
-                // 		if (day == 0) {
-                // 			this.filterChartByDaily();
-                // 		} else {
-                // 			this.filterChartByDay();
-                // 		}
+				const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
+				//alert(this.filter.day);
+				// axios.get('/admin/reports/filter-survey-first-last')
+				// 	.then(response => {
+				// 		var day = response.data.data;
+				// 		alert(day);
+				// 		if (day == 0) {
+				// 			this.filterChartByDaily();
+				// 		} else {
+				// 			this.filterChartByDay();
+				// 		}
 
-                // 	});
-                this.filterChartByDay();
-                //this.filterChartByDaily();
-            }
-            else if (this.filter.by == 2) {//week
-                this.clear_filter();
-                this.by_day = false;
-                this.by_week = true;
-                this.by_month = false;
-                this.by_year = false;
-                this.by_start = false;
-                this.by_end = false;
+				// 	});
+				this.filterChartByDay();
+				//this.filterChartByDaily();
+			}
+			else if (this.filter.by == 2) {//week
+				this.clear_filter();
+				this.by_day = false;
+				this.by_week = true;
+				this.by_month = false;
+				this.by_year = false;
+				this.by_start = false;
+				this.by_end = false;
 
-                const currentDay = moment(new Date()).format("YYYY-MM-DD");
-                this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
-                // axios.get('/admin/reports/filter-survey-first-last')
-                // 	.then(response => {
-                // 		var day = response.data.data;
-                // 		//alert(day);
-                // 	});
-                this.filterChartByWeek();
-            }
-            else if (this.filter.by == 3) {//month
-                //this.clear_filter();
-                this.by_day = false;
-                this.by_week = false;
-                this.by_month = true;
-                this.by_year = false;
-                this.by_start = false;
-                this.by_end = false;
-                const currentMonth = moment(new Date()).format("YYYY-MM");
-                //console.log(currentMonth);
-                this.filter.month = currentMonth; (this.filter.month == '') ? currentMonth : this.filter.month;
-                //alert(this.filter.month);
-                // axios.get('/admin/reports/filter-survey-first-last')
-                // 	.then(response => {
-                // 		var day = response.data.data;
-                // 		alert(day);
-                // 	});
-                this.filterChartByMonth();
-            } else if (this.filter.by == 4) {//year
-                //this.clear_filter();
-                this.by_day = false;
-                this.by_week = false;
-                this.by_month = false;
-                this.by_year = true;
-                this.by_start = false;
-                this.by_end = false;
-                const currentYear = moment(new Date()).format("YYYY");
-                //console.log(currentYear);
-                this.filter.year = currentYear;
-                this.filter.year = currentYear; (this.filter.year == '') ? currentYear : this.filter.year;
-                // axios.get('/admin/reports/filter-survey-first-last')
-                // 	.then(response => {
-                // 		var day = response.data.data;
-                // 		alert(day);
-                // 	}); alert('year');
-                this.filterChartByYear();
-            } else { //customize
-                // this.clear_filter();
-                this.by_day = false;
-                this.by_week = false;
-                this.by_month = false;
-                this.by_year = false;
-                this.by_start = true;
-                this.by_end = true;
-                const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
-                const currentDay = moment(new Date()).format("YYYY-MM-DD");
-                this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
-                this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
-                //lert(this.filter.start_date +'--'+this.filter.end_date);
-                this.filterChartByDaily();
-            }
-        },
+				const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
+				// axios.get('/admin/reports/filter-survey-first-last')
+				// 	.then(response => {
+				// 		var day = response.data.data;
+				// 		//alert(day);
+				// 	});
+				this.filterChartByWeek();
+			}
+			else if (this.filter.by == 3) {//month
+				//this.clear_filter();
+				this.by_day = false;
+				this.by_week = false;
+				this.by_month = true;
+				this.by_year = false;
+				this.by_start = false;
+				this.by_end = false;
+				const currentMonth = moment(new Date()).format("YYYY-MM");
+				//console.log(currentMonth);
+				this.filter.month = currentMonth; (this.filter.month == '') ? currentMonth : this.filter.month;
+				//alert(this.filter.month);
+				// axios.get('/admin/reports/filter-survey-first-last')
+				// 	.then(response => {
+				// 		var day = response.data.data;
+				// 		alert(day);
+				// 	});
+				this.filterChartByMonth();
+			} else if (this.filter.by == 4) {//year
+				//this.clear_filter();
+				this.by_day = false;
+				this.by_week = false;
+				this.by_month = false;
+				this.by_year = true;
+				this.by_start = false;
+				this.by_end = false;
+				const currentYear = moment(new Date()).format("YYYY");
+				//console.log(currentYear);
+				this.filter.year = currentYear;
+				this.filter.year = currentYear; (this.filter.year == '') ? currentYear : this.filter.year;
+				// axios.get('/admin/reports/filter-survey-first-last')
+				// 	.then(response => {
+				// 		var day = response.data.data;
+				// 		alert(day);
+				// 	}); alert('year');
+				this.filterChartByYear();
+			} else { //customize
+				// this.clear_filter();
+				this.by_day = false;
+				this.by_week = false;
+				this.by_month = false;
+				this.by_year = false;
+				this.by_start = true;
+				this.by_end = true;
+				const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
+				const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
+				this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
+				//lert(this.filter.start_date +'--'+this.filter.end_date);
+				this.filterChartByDaily();
+			}
+		},
 
-        filterChart: function () { //alert('site:'+this.filter.site_id);
-            const moment = require('moment');
-            if(this.filter.by == 0){
-                this.filterChartByDaily();
+		filterChart: function () { //alert('site:'+this.filter.site_id);
+			const moment = require('moment');
+			if (this.filter.by == 0) {
+				this.filterChartByDaily();
 
-            }else if (this.filter.by == 1) {//day
-                const currentDay = moment(new Date()).format("YYYY-MM-DD");
-                this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
-                this.filterChartByDay();
+			} else if (this.filter.by == 1) {//day
+				const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
+				this.filterChartByDay();
 
-            }
-            else if (this.filter.by == 2) {//Week
-                const currentDay = moment(new Date()).format("YYYY-MM-DD");
-                this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
-                this.filterChartByWeek();
-            }
-            else if (this.filter.by == 3) {//Month
-                const currentMonth = moment().month();
-                this.filter.month = (this.filter.month == '') ? currentMonth : this.filter.month;
-                this.filterChartByMonth();
+			}
+			else if (this.filter.by == 2) {//Week
+				const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
+				this.filterChartByWeek();
+			}
+			else if (this.filter.by == 3) {//Month
+				const currentMonth = moment().month();
+				this.filter.month = (this.filter.month == '') ? currentMonth : this.filter.month;
+				this.filterChartByMonth();
 
-            } else if (this.filter.by == 4) {//Year
-                const currentYear = moment().year();
-                this.filter.year = (this.filter.year == '') ? currentYear : this.filter.year;
-                this.filterChartByYear();
+			} else if (this.filter.by == 4) {//Year
+				const currentYear = moment().year();
+				this.filter.year = (this.filter.year == '') ? currentYear : this.filter.year;
+				this.filterChartByYear();
 
-            } else {//lifetime
-                const firstDateOfMonth = moment().startOf('year').format('YYYY-MM-DD');
-                const lastDateOfMonth = moment().endOf('month').format('YYYY-MM-DD');
-                this.filter.start_date = (this.filter.start_date == '') ? firstDateOfMonth : this.filter.start_date;
-                this.filter.end_date = (this.filter.end_date == '') ? lastDateOfMonth : this.filter.end_date;
-               
-                this.filterChartByDaily();
+			} else {//lifetime
+				const firstDateOfMonth = moment().startOf('year').format('YYYY-MM-DD');
+				const lastDateOfMonth = moment().endOf('month').format('YYYY-MM-DD');
+				this.filter.start_date = (this.filter.start_date == '') ? firstDateOfMonth : this.filter.start_date;
+				this.filter.end_date = (this.filter.end_date == '') ? lastDateOfMonth : this.filter.end_date;
 
-            }
-        },
-        clear_filter: function () {
-            this.filter.select_date = '';
-            this.filter.start_date = '';
-            this.filter.end_date = '';
-            this.filter.week = '';
-            this.filter.day = '';
-            this.filter.month = '';
-            this.filter.year = '';
+				this.filterChartByDaily();
 
-        },
+			}
+		},
+		clear_filter: function () {
+			this.filter.select_date = '';
+			this.filter.start_date = '';
+			this.filter.end_date = '';
+			this.filter.week = '';
+			this.filter.day = '';
+			this.filter.month = '';
+			this.filter.year = '';
 
-        filterChartByDaily: function () {
-			var filter = this.filter;  
+		},
+
+		filterChartByDaily: function () {
+			var filter = this.filter;
 			$.get("/admin/reports/trend-report-by-daily/list", filter, function (data) {
 				var xValues = [];
 				var yValues = [];
@@ -420,8 +420,10 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				//if(bar) bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					//data: reportBarChartData,
 					data: {
@@ -481,7 +483,7 @@ export default {
 				this.incidents_total = sum_incidents_total;
 				$('#incidents_total').text(sum_incidents_total);
 
-				var reportBarChartCanvas = $('#incidentBarChart').get(0).getContext('2d')
+				var incidentBarChartCanvas = $('#incidentBarChart').get(0).getContext('2d')
 				var reportBarChartOptions = {
 					responsive: true,
 					maintainAspectRatio: false,
@@ -499,8 +501,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				//if(bar) bar.destroy();
+				window.incident_bar = new Chart(incidentBarChartCanvas, {
+					//new Chart(incidentBarChartCanvas, {
 					type: 'bar',
 					//data: reportBarChartData,
 					data: {
@@ -563,8 +568,11 @@ export default {
 					inGraphDataRadiusPosition: 2,
 					inGraphDataFontColor: 'white'
 				}
-
-				var myChart = new Chart(pieChartSurveyCanvas, {
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+				
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+				//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -665,8 +673,11 @@ export default {
 						display: false,
 					},
 				}
-
-				new Chart(pieChartSurveyCanvas_answer, {
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+				
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+				//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -678,7 +689,7 @@ export default {
 			});
 		},
 
-		filterChartByDay: function () { 
+		filterChartByDay: function () {
 			var filter = this.filter;
 			$.get("/admin/reports/trend-report-by-day/list", filter, function (data) {
 				let datasetsz = [];
@@ -740,8 +751,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvasz, {
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				//if(bar) bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvasz, {
+				//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
 					data: reportBarChartDataz,
 					options: reportBarChartOptionsz
@@ -808,8 +822,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvasz, {
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				//if(bar) bar.destroy();
+				window.incident_bar = new Chart(reportBarChartCanvasz, {
+				//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
 					data: reportBarChartDataz,
 					options: reportBarChartOptionsz
@@ -856,8 +873,11 @@ export default {
 					inGraphDataRadiusPosition: 2,
 					inGraphDataFontColor: 'white'
 				}
-
-				var myChart = new Chart(pieChartSurveyCanvas, {
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+				
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+				//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -962,8 +982,11 @@ export default {
 						display: false,
 					},
 				}
-
-				new Chart(pieChartSurveyCanvas_answer, {
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+				
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+				//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -979,7 +1002,7 @@ export default {
 		filterChartByWeek: function () {
 
 			var filter = this.filter;
-			console.log('>>>>>>>week'); console.log(filter); console.log('<<<<<<<');
+			
 			$.get("/admin/reports/trend-report-by-week/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -1036,8 +1059,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				//if(bar) bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvas, {
+				//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1104,8 +1130,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvasz, {
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				//if(bar) bar.destroy();
+				window.incident_bar = new Chart(reportBarChartCanvasz, {
+				//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
 					data: reportBarChartDataz,
 					options: reportBarChartOptionsz
@@ -1152,8 +1181,11 @@ export default {
 					inGraphDataRadiusPosition: 2,
 					inGraphDataFontColor: 'white'
 				}
-
-				var myChart = new Chart(pieChartSurveyCanvas, {
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+				
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+				//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1258,8 +1290,11 @@ export default {
 						display: false,
 					},
 				}
-
-				new Chart(pieChartSurveyCanvas_answer, {
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+				
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+				//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1274,7 +1309,7 @@ export default {
 		filterChartByMonth: function () {
 
 			var filter = this.filter;
-			console.log('>>>>>>>month'); console.log(filter); console.log('<<<<<<<');
+		
 			$.get("/admin/reports/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -1332,8 +1367,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				//if(bar) bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvas, {
+				//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1393,8 +1431,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				//if(bar) bar.destroy();
+				window.incident_bar = new Chart(reportBarChartCanvas, {
+				//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1439,8 +1480,11 @@ export default {
 					inGraphDataRadiusPosition: 2,
 					inGraphDataFontColor: 'white'
 				}
-
-				var myChart = new Chart(pieChartSurveyCanvas, {
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+				
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+				//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1545,8 +1589,11 @@ export default {
 						display: false,
 					},
 				}
-
-				new Chart(pieChartSurveyCanvas_answer, {
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+				
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+				//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1560,7 +1607,7 @@ export default {
 		},
 		filterChartByYear: function () {
 			var filter = this.filter;
-			console.log('>>>>>>>Year'); console.log(filter); console.log('<<<<<<<');
+			
 			$.get("/admin/reports/trend-report-by-year/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -1618,8 +1665,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				//if(bar) bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvas, {
+				//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1683,8 +1733,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				//if(bar) bar.destroy();
+				window.incident_bar = new Chart(reportBarChartCanvas, {
+				//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1699,7 +1752,7 @@ export default {
 						labels.push(value.questionnaire);
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
-						});
+					});
 					// console.log(labels);
 				}
 				else {
@@ -1731,12 +1784,11 @@ export default {
 					inGraphDataFontColor: 'white'
 				}
 
-				// new Chart(pieChartSurveyCanvas, {
-				//     type: 'pie',
-				//     data: pieData,
-				//     options: pieOptions
-				// })
-				var myChart = new Chart(pieChartSurveyCanvas, {
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+				
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+				//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1840,8 +1892,11 @@ export default {
 						display: false,
 					},
 				}
-
-				new Chart(pieChartSurveyCanvas_answer, {
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+				
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+				//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1905,7 +1960,11 @@ export default {
 				//     data: pieData,
 				//     options: pieOptions
 				// })
-				var myChart = new Chart(pieChartSurveyCanvas, {
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+				
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+				//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{ //plugin added for this chart
@@ -1969,10 +2028,10 @@ export default {
 			//alert('Site:' + this.filter.site_id);
 			this.filterChartByYear();
 		},
-    },
-    components: {
-        datePicker
-    }
+	},
+	components: {
+		datePicker
+	}
 
 
 };
