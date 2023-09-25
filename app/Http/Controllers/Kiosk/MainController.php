@@ -322,7 +322,7 @@ class MainController extends AppBaseController
     public function storeConcernPending(Request $request)
     {
         $user = UserViewModel::where('mobile', '<>', '')->get();
-
+        echo 'user_id:'.$request->user_id;
         foreach (explode(",", $request->concern_pending) as $v) {
             $id = str_replace('pending_', '', $v);
             $answer = QuestionnaireAnswer::find($id);
