@@ -90,8 +90,16 @@
 											<div v-show="by_end">
 												<label for="userName" class="col-form-label">End Date</label>
 												<date-picker v-model="filter.end_date" placeholder="YYYY-MM-DD"
-													:config="options" id="date_end" autocomplete="off"></date-picker>
+													:config="options" id="date_end" autocomplete="off"
+													@dp-change="customizedSelected"></date-picker>
 											</div>
+										</div>
+									</div>
+									<div class="form-group row">
+										<div class="col-sm-2">
+											<label for="userName" class="col-form-label">Ave. Time: <span
+													id="average_time"></span>
+											</label>
 										</div>
 									</div>
 								</form>
@@ -210,7 +218,7 @@ export default {
 				format: 'YYYY-MM-DD',
 				useCurrent: false,
 			},
-			filters_by: ['Lifetime', 'Day', 'Week', 'Month', 'Year','Customize'],
+			filters_by: ['Lifetime', 'Day', 'Week', 'Month', 'Year', 'Customize'],
 			by_day: false,
 			by_month: false,
 			by_year: false,
@@ -218,6 +226,7 @@ export default {
 			survey_number_day: 0,
 			reports_total: 0,
 			incidents_total: 0,
+			average_time: 0,
 		}
 	},
 	created() {
@@ -315,11 +324,10 @@ export default {
 				this.by_start = false;
 				this.by_end = false;
 				const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
-                const currentDay = moment(new Date()).format("YYYY-MM-DD");
-                this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
-                this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
+				const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
+				this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
 				this.filterChartByDaily();
-				//alert('lifetime');
 			} else if (this.filter.by == 1) {//day
 				// this.clear_filter();
 				this.by_day = true;
@@ -331,7 +339,7 @@ export default {
 
 				const currentDay = moment(new Date()).format("YYYY-MM-DD");
 				this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
-				//alert(this.filter.day);
+				alert(this.filter.day);
 				this.filterChartByDay();
 			}
 			else if (this.filter.by == 2) {//week
@@ -381,12 +389,14 @@ export default {
 				this.by_year = false;
 				this.by_start = true;
 				this.by_end = true;
-				const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
-                const currentDay = moment(new Date()).format("YYYY-MM-DD");
-                this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
-                this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
-                //lert(this.filter.start_date +'--'+this.filter.end_date);
-                this.filterChartByDaily();
+				alert(this.start_date + '--' + this.end_data);
+
+				// const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
+				// const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				// this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
+				// this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
+				// //lert(this.filter.start_date +'--'+this.filter.end_date);
+				// this.filterChartByDaily();
 			}
 		},
 
@@ -445,6 +455,7 @@ export default {
 		// },
 		filterChartByDaily: function () {
 			var filter = this.filter;
+			alert('hello filter by lifetime'); console.log(filter);
 			$.get("/admin/dashboard/trend-report-by-daily/list", filter, function (data) {
 				var xValues = [];
 				var yValues = [];
@@ -749,6 +760,10 @@ export default {
 					options: pieOptions_answer
 				})
 			});
+			$.get("/admin/dashboard/average-time-by-daily/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(data.data);
+			});
 		},
 
 		filterChartByDay: function () { //alert('hellop');
@@ -1042,6 +1057,10 @@ export default {
 					options: pieOptions_answer
 				})
 			});
+			$.get("/admin/dashboard/average-time-by-day/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(data.data);
+			});
 		},
 
 		filterChartByWeek: function () {
@@ -1333,6 +1352,11 @@ export default {
 					options: pieOptions_answer
 				})
 			});
+
+			$.get("/admin/dashboard/average-time-by-week/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(parseFloat(data.data));
+			});
 		},
 
 		filterChartByMonth: function () {
@@ -1616,6 +1640,11 @@ export default {
 					options: pieOptions_answer
 				})
 			});
+
+			$.get("/admin/dashboard/average-time-by-month/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(parseFloat(data.data));
+			});
 		},
 		filterChartByYear: function () {
 			var filter = this.filter;
@@ -1760,7 +1789,7 @@ export default {
 						labels.push(value.questionnaire);
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
-						});
+					});
 					// console.log(labels);
 				}
 				else {
@@ -1908,6 +1937,10 @@ export default {
 					options: pieOptions_answer
 				})
 			});
+			$.get("/admin/dashboard/average-time-by-year/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(parseFloat(data.data));
+			});
 
 		},
 		filterChartByLifetime: function () {
@@ -1995,6 +2028,11 @@ export default {
 					options: pieOptions
 				});
 			});
+			$.get("/admin/dashboard/average-time-by-lifetime/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(parseFloat(data.data));
+			});
+
 
 		},
 		dateSelected: function (e) {
@@ -2018,6 +2056,35 @@ export default {
 			//alert(this.filter.year + 'year');
 			this.filterChartByYear();
 		},
+		customizedSelected: function (e) {
+
+	// 		var date1 = new Date(this.filter.start_date);
+    // var date2 = new Date(this.filter.end_date);
+	// var Difference_In_Time = date2.getTime() - date1.getTime();
+      
+    // // To calculate the no. of days between two dates
+    // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24); 
+	// if(Difference_In_Days == 0){
+	// 	alert(0 + 'day');
+	// }else if(Difference_In_Days = ){
+	// 	alert();
+	// }
+	// else if(Difference_In_Days){
+	// 	alert();
+	// }
+	// else if(Difference_In_Days){
+	// 	alert();
+	// }
+
+			// var d_from = this.filter.start_date;
+			// var d_to = this.filter.end_date; alert(d_to); d_to.getTime()
+			// var Difference_In_Time = d_to.getTime() - d_from.getTime();
+
+			// // To calculate the no. of days between two dates
+			// var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+			// alert(Difference_In_Days);
+
+		}
 	},
 
 	mounted() {

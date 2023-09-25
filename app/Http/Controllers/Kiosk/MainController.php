@@ -230,7 +230,7 @@ class MainController extends AppBaseController
     //     }
     // }
     public function storeConcern(Request $request)
-    {
+    {   //echo '<pre>'; print_r($request->concern); echo '</pre>'; die();
         // $admin_supervisor = AdminViewModel::where('mobile', '!=', '')
         //     ->leftJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
         //     ->where('admin_roles.role_id', 11)
@@ -241,6 +241,42 @@ class MainController extends AppBaseController
         //    echo $vsupervisor->mobile;
         $rooms = SiteBuildingRoomViewModel::find($request->room_id);
         $floor = SiteBuildingLevelViewModel::find($rooms->site_building_level_id);
+
+        $hk = array();
+        $mst = array();
+        $hk_floor_room = array();
+        $mst_floor_room = array();
+
+        foreach (explode(",", $request->concern) as $v) {
+            $answer = QuestionnaireAnswer::find($v);
+            //$answer->sms_recepient;
+
+            //$rooms = SiteBuildingRoomViewModel::find($request->room_id);
+            //$floor = SiteBuildingLevelViewModel::find($rooms->site_building_level_id);
+
+            $data = [
+                'questionnaire_id' => $answer->questionnaire_id,
+                'questionnaire_answer_id' => $answer->id,
+                'site_id' => $rooms->site_id,
+                'site_building_id' => $rooms->site_building_id,
+                'site_building_level_id' => $rooms->site_building_level_id,
+                'site_building_room_id' => $rooms->id,
+                'remarks' => 'Pending',
+                'status' => 1,
+                'active' => 1,
+            ];
+
+            $question_survey = QuestionnaireSurvey::create($data);
+
+            if ($answer->sms_recepient == 9) { //HK
+                $hk[] = $answer->answer;
+                $hk_floor_room[] = $floor->name . '/' . $rooms->name;
+            } else { //MST
+                $mst[] = $answer->answer;
+                $mst_floor_room[] = $floor->name . '/' . $rooms->name;
+            }
+        }
+
 
         $users = UserViewModel::where('mobile', '<>', '')
             ->leftJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
@@ -254,43 +290,12 @@ class MainController extends AppBaseController
             // echo $vuser->id . '>>>' . $vuser->level . '>>>' . $vuser->mobile.'>>>' . $vuser->role;
             // echo '------------';
             // // $user_role = array();
-            $hk = array();
-            $mst = array();
-            $floor_room = array();
 
-            foreach (explode(",", $request->concern) as $v) {
-                $answer = QuestionnaireAnswer::find($v);
-                //$answer->sms_recepient;
-
-                //$rooms = SiteBuildingRoomViewModel::find($request->room_id);
-                //$floor = SiteBuildingLevelViewModel::find($rooms->site_building_level_id);
-
-                $data = [
-                    'questionnaire_id' => $answer->questionnaire_id,
-                    'questionnaire_answer_id' => $answer->id,
-                    'site_id' => $rooms->site_id,
-                    'site_building_id' => $rooms->site_building_id,
-                    'site_building_level_id' => $rooms->site_building_level_id,
-                    'site_building_room_id' => $rooms->id,
-                    'remarks' => 'Pending',
-                    'status' => 1,
-                    'active' => 1,
-                ];
-
-                $question_survey = QuestionnaireSurvey::create($data);
-
-                if ($answer->sms_recepient == 9) { //HK
-                    $hk[] = $answer->answer;
-                    $floor_room[] = $floor->name . '/' . $rooms->name;
-                } else { //MST
-                    $mst[] = $answer->answer;
-                    $floor_room[] = $floor->name . '/' . $rooms->name;
-                }
-            }
             if ($vuser->role == 9) {
                 if (count($hk) > 0) {
-                    // $concern = implode(",", $hk);
-                    // $Message = 'HK Supervisor - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                    $concern = implode(",", $hk);
+                    $Message = 'HK Supervisor - ' . $hk_floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                    /// echo $Message; echo '------------------------------';
                     // // $Target = $uv->mobile;
                     // $Target = $vuser->mobile;
                     // $SenderID = $vuser->id;
@@ -300,8 +305,9 @@ class MainController extends AppBaseController
                 }
             } else {
                 if (count($mst) > 0) {
-                    // $concern = implode(",", $mst);
-                    // $Message = 'MST - ' . $floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                    $concern = implode(",", $mst);
+                    $Message = 'MST - ' . $mst_floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                    // echo $Message;
                     // // $Target = $uv->mobile;
                     // $Target = $vuser->mobile;
                     // $SenderID = $vuser->id;
@@ -321,6 +327,7 @@ class MainController extends AppBaseController
             $id = str_replace('pending_', '', $v);
             $answer = QuestionnaireAnswer::find($id);
             QuestionnaireSurvey::where('questionnaire_id', $answer->questionnaire_id)
+                ->where('remarks', 'Pending')
                 ->where('questionnaire_answer_id', $answer->id)
                 ->where('site_id', $request->site_id)
                 ->where('site_building_id', $request->site_building_id)
@@ -328,7 +335,8 @@ class MainController extends AppBaseController
                 ->where('site_building_room_id',  $request->room_id)
                 ->update([
                     'remarks' => 'Done',
-                    'status' => 2
+                    'status' => 2,
+                    'user_id' => $request->user_id
                 ]);
         }
     }
@@ -336,7 +344,7 @@ class MainController extends AppBaseController
     public function getBuildings()
     {
         try {
-            $building = SiteBuildingViewModel::where('active', 1)->get(); 
+            $building = SiteBuildingViewModel::where('active', 1)->get();
             return $this->response($building, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -457,6 +465,28 @@ class MainController extends AppBaseController
     {
         try {
             $questionnaire_survey = QuestionnaireSurvey::find($request->id);
+            $data = [
+                'status' => $request->status,
+                'remarks' => ($request->status == 1) ? 'Pending' : 'Done',
+            ];
+
+            $questionnaire_survey->update($data);
+            return $this->response($questionnaire_survey, 'Successfully Modified!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
+    public function updateStatusKiosk(Request $request)
+    {
+        try {
+            $questionnaire_survey = QuestionnaireSurvey::where('id', $request->id)
+            ->where('Remarks','Pending')
+            ->get();
             $data = [
                 'status' => $request->status,
                 'remarks' => ($request->status == 1) ? 'Pending' : 'Done',

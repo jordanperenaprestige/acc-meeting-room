@@ -457,7 +457,7 @@ export default {
             formData.append("site_id", this.survey.site_id);
             formData.append("site_building_id", this.survey.site_building_id);
             formData.append("site_building_level_id", this.survey.site_building_level_id);
-
+            formData.append("user_id", this.filter.local_admin_id.id);
             axios.post('/api/v1/employee/store-concern-pending/', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'

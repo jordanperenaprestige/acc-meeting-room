@@ -21,34 +21,34 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <div v-show="by_day">
-                                            <!-- v-show="show_concerns" -->
-                                            <label for="day" class="col-form-label">Day</label>
-                                            <date-picker v-model="filter.day" placeholder="Day" :config="options_D" id="day"
-                                                autocomplete="off"></date-picker>
-                                        </div>
-                                        <div v-show="by_week">
-                                            <!-- v-show="show_concerns" -->
-                                            <label for="week" class="col-form-label">Week</label>
-                                            <date-picker v-model="filter.week" placeholder="Week" :config="options_D"
-                                                id="week" autocomplete="off"></date-picker>
-                                        </div>
-                                        <div v-show="by_month">
-                                            <!-- v-show="show_concerns" -->
-                                            <label for="month" class="col-form-label">Month</label>
-                                            <date-picker v-model="filter.month" placeholder="Month" :config="options_M"
-                                                id="month" autocomplete="off"></date-picker>
-                                        </div>
-                                        <div v-show="by_year">
-                                            <!-- v-show="show_concerns" -->
-                                            <label for="month" class="col-form-label">Year</label>
-                                            <date-picker v-model="filter.year" placeholder="Year" :config="options_Y"
-                                                id="month" autocomplete="off"></date-picker>
-                                        </div>
-                                        <div v-show="by_start">
-                                            <label for="userName" class="col-form-label">Start Date</label>
-                                            <date-picker v-model="filter.start_date" placeholder="YYYY-MM-DD"
-                                                :config="options" id="date_from" autocomplete="off"></date-picker>
-                                        </div>
+												<!-- v-show="show_concerns" -->
+												<label for="day" class="col-form-label">Day</label>
+												<date-picker v-model="filter.day" placeholder="Day" :config="options_D"
+													id="day" autocomplete="off" @dp-change="daySelected"></date-picker>
+											</div>
+											<div v-show="by_week">
+												<!-- v-show="show_concerns" -->
+												<label for="week" class="col-form-label">Week</label>
+												<date-picker v-model="filter.week" placeholder="Week" :config="options_D"
+													id="week" autocomplete="off" @dp-change="weekSelected"></date-picker>
+											</div>
+											<div v-show="by_month">
+												<!-- v-show="show_concerns" -->
+												<label for="month" class="col-form-label">Month</label>
+												<date-picker v-model="filter.month" placeholder="Month" :config="options_M"
+													id="month" autocomplete="off" @dp-change="monthSelected"></date-picker>
+											</div>
+											<div v-show="by_year">
+												<!-- v-show="show_concerns" -->
+												<label for="month" class="col-form-label">Year</label>
+												<date-picker v-model="filter.year" placeholder="Year" :config="options_Y"
+													id="month" autocomplete="off" @dp-change="yearSelected"></date-picker>
+											</div>
+											<div v-show="by_start">
+												<label for="userName" class="col-form-label">Start Date</label>
+												<date-picker v-model="filter.start_date" placeholder="YYYY-MM-DD"
+													:config="options" id="date_from" autocomplete="off"></date-picker>
+											</div>
                                     </div>
                                     <div class="col-sm-2">
 
@@ -58,6 +58,13 @@
                                                 :config="options" id="date_end" autocomplete="off"></date-picker>
                                         </div>
                                     </div>
+									<div class="form-group row">
+										<div class="col-sm-2">
+											<label for="userName" class="col-form-label">Ave. Time: <span
+													id="average_time"></span>
+											</label>
+										</div>
+									</div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
@@ -184,6 +191,7 @@ export default {
             survey_number_day: 0,
             reports_total: 0,
             incidents_total: 0,
+			average_time: 0,
         }
     },
 
@@ -311,7 +319,7 @@ export default {
             }
         },
 
-        filterChart: function () {
+        filterChart: function () { //alert('site:'+this.filter.site_id);
             const moment = require('moment');
             if(this.filter.by == 0){
                 this.filterChartByDaily();
@@ -664,6 +672,10 @@ export default {
 					options: pieOptions_answer
 				})
 			});
+			$.get("/admin/reports/average-time-by-daily/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(data.data);
+			});
 		},
 
 		filterChartByDay: function () { 
@@ -957,6 +969,11 @@ export default {
 					options: pieOptions_answer
 				})
 			});
+
+			$.get("/admin/reports/average-time-by-day/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(data.data);
+			});
 		},
 
 		filterChartByWeek: function () {
@@ -1248,6 +1265,10 @@ export default {
 					options: pieOptions_answer
 				})
 			});
+			$.get("/admin/reports/average-time-by-week/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(parseFloat(data.data));
+			});
 		},
 
 		filterChartByMonth: function () {
@@ -1531,6 +1552,11 @@ export default {
 					options: pieOptions_answer
 				})
 			});
+
+			$.get("/admin/reports/average-time-by-month/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(parseFloat(data.data));
+			});
 		},
 		filterChartByYear: function () {
 			var filter = this.filter;
@@ -1664,8 +1690,6 @@ export default {
 					options: reportBarChartOptions
 				})
 			});
-
-
 			$.get("/admin/reports/donut-report-by-day/list", filter, function (data) {
 				let labels = [];
 				let data_value = [];
@@ -1823,6 +1847,10 @@ export default {
 					options: pieOptions_answer
 				})
 			});
+			$.get("/admin/reports/average-time-by-year/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(parseFloat(data.data));
+			});
 
 		},
 		filterChartByLifetime: function () {
@@ -1831,7 +1859,7 @@ export default {
 
 			//alert(this.filter.lifetime);
 			var filter = this.filter;
-			$.get("admin/dashboard/donut-report-by-day/list", filter, function (data) {
+			$.get("admin/reports/donut-report-by-day/list", filter, function (data) {
 				let labels = [];
 				let data_value = [];
 				let incident_report = 0;
@@ -1910,6 +1938,10 @@ export default {
 					options: pieOptions
 				});
 			});
+			$.get("/admin/reports/average-time-by-lifetime/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(parseFloat(data.data));
+			});
 
 		},
 		dateSelected: function (e) {
@@ -1919,18 +1951,22 @@ export default {
 
 		daySelected: function (e) {
 			//alert(this.filter.day + 'day');
+			//alert('Site:' + this.filter.site_id);
 			this.filterChartByDay();
 		},
 		weekSelected: function (e) {
 			//alert(this.filter.week + 'week');
+			//alert('Site:' + this.filter.site_id);
 			this.filterChartByWeek();
 		},
 		monthSelected: function (e) {
 			//alert(this.filter.month + 'month');
+			//alert('Site:' + this.filter.site_id);
 			this.filterChartByMonth();
 		},
 		yearSelected: function (e) {
 			//alert(this.filter.year + 'year');
+			//alert('Site:' + this.filter.site_id);
 			this.filterChartByYear();
 		},
     },
