@@ -98,7 +98,7 @@
 									<div class="form-group row">
 										<div class="col-sm-2">
 											<label for="userName" class="col-form-label">Ave. Time: <span
-													id="average_time"></span>
+													id="average_time"></span>&nbsp;m
 											</label>
 										</div>
 									</div>
@@ -455,7 +455,7 @@ export default {
 		// },
 		filterChartByDaily: function () {
 			var filter = this.filter;
-			alert('hello filter by lifetime'); console.log(filter);
+			//alert('hello filter by lifetime'); console.log(filter);
 			$.get("/admin/dashboard/trend-report-by-daily/list", filter, function (data) {
 				var xValues = [];
 				var yValues = [];
