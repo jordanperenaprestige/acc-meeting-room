@@ -297,11 +297,11 @@ class MainController extends AppBaseController
                     $Message = 'HK Supervisor - ' . $hk_floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
                     /// echo $Message; echo '------------------------------';
                     // // $Target = $uv->mobile;
-                    // $Target = $vuser->mobile;
-                    // $SenderID = $vuser->id;
-                    // $sms_helper = new SMSHelper();
-                    // $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
-                    // echo $SMSCReturn;
+                    $Target = $vuser->mobile;
+                    $SenderID = $vuser->id;
+                    $sms_helper = new SMSHelper();
+                    $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
+                    echo $SMSCReturn;
                 }
             } else {
                 if (count($mst) > 0) {
@@ -309,11 +309,11 @@ class MainController extends AppBaseController
                     $Message = 'MST - ' . $mst_floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
                     // echo $Message;
                     // // $Target = $uv->mobile;
-                    // $Target = $vuser->mobile;
-                    // $SenderID = $vuser->id;
-                    // $sms_helper = new SMSHelper();
-                    // $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
-                    // echo $SMSCReturn;
+                    $Target = $vuser->mobile;
+                    $SenderID = $vuser->id;
+                    $sms_helper = new SMSHelper();
+                    $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
+                    echo $SMSCReturn;
                 }
             }
         }
