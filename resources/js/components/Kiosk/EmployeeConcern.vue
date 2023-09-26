@@ -42,7 +42,9 @@
                                 @click="switchImagePending($event)"
                                 :id="'pending_' + survey_pending.questionnaire_answer_id" class="responsive"
                                 :alt="survey_pending.questionnaire_button.replace('.png', '_red.png')">
-                            <img v-else :src="check_green_logo" class="responsive">
+                            <img style="display: block;
+  margin-left: auto;
+  margin-right: auto;" v-else :src="check_green_logo" class="responsive_test">
                         </div>
                         <div v-else>
                             <img style="display: block;
