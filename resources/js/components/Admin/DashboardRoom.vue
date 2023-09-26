@@ -339,7 +339,7 @@ export default {
 
 				const currentDay = moment(new Date()).format("YYYY-MM-DD");
 				this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
-				alert(this.filter.day);
+				//alert(this.filter.day);
 				this.filterChartByDay();
 			}
 			else if (this.filter.by == 2) {//week
@@ -389,7 +389,7 @@ export default {
 				this.by_year = false;
 				this.by_start = true;
 				this.by_end = true;
-				alert(this.start_date + '--' + this.end_data);
+				//alert(this.start_date + '--' + this.end_data);
 
 				// const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
 				// const currentDay = moment(new Date()).format("YYYY-MM-DD");
