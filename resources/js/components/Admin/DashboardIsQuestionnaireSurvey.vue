@@ -753,7 +753,6 @@ export default {
 				}
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
-				//if(bar) bar.destroy();
 				window.report_bar = new Chart(reportBarChartCanvasz, {
 				//new Chart(reportBarChartCanvasz, {
 					type: 'bar',

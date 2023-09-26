@@ -167,6 +167,7 @@ import datePicker from 'vue-bootstrap-datetimepicker';
 // Import date picker css
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import moment from 'moment';
+import { shallowReactive } from 'vue';
 
 export default {
 	name: "DASHBOARDROOMS",
@@ -508,8 +509,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				//if(bar) bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvas, {
+				//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					//data: reportBarChartData,
 					data: {
@@ -587,8 +591,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				//if(bar) bar.destroy();
+				window.incident_bar = new Chart(incidentBarChartCanvas, {
+				//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					//data: reportBarChartData,
 					data: {
@@ -651,8 +658,11 @@ export default {
 					inGraphDataRadiusPosition: 2,
 					inGraphDataFontColor: 'white'
 				}
-
-				var myChart = new Chart(pieChartSurveyCanvas, {
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+				
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+				//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -753,8 +763,11 @@ export default {
 						display: false,
 					},
 				}
-
-				new Chart(pieChartSurveyCanvas_answer, {
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+				
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+				//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -828,8 +841,10 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvasz, {
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvasz, {
+				//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
 					data: reportBarChartDataz,
 					options: reportBarChartOptionsz
@@ -896,8 +911,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvasz, {
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				//if(bar) bar.destroy();
+				window.incident_bar = new Chart(reportBarChartCanvasz, {
+				//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
 					data: reportBarChartDataz,
 					options: reportBarChartOptionsz
@@ -944,8 +962,11 @@ export default {
 					inGraphDataRadiusPosition: 2,
 					inGraphDataFontColor: 'white'
 				}
-
-				var myChart = new Chart(pieChartSurveyCanvas, {
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+				
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+				//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1050,8 +1071,11 @@ export default {
 						display: false,
 					},
 				}
-
-				new Chart(pieChartSurveyCanvas_answer, {
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+				
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+				//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1123,8 +1147,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				//if(bar) bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvas, {
+				//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1191,8 +1218,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvasz, {
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				//if(bar) bar.destroy();
+				window.incident_bar = new Chart(reportBarChartCanvasz, {
+				//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
 					data: reportBarChartDataz,
 					options: reportBarChartOptionsz
@@ -1239,8 +1269,11 @@ export default {
 					inGraphDataRadiusPosition: 2,
 					inGraphDataFontColor: 'white'
 				}
-
-				var myChart = new Chart(pieChartSurveyCanvas, {
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+				
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+				//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1345,8 +1378,11 @@ export default {
 						display: false,
 					},
 				}
-
-				new Chart(pieChartSurveyCanvas_answer, {
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+				
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+				//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1420,8 +1456,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				//if(bar) bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvas, {
+				//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1481,8 +1520,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				//if(bar) bar.destroy();
+				window.incident_bar = new Chart(reportBarChartCanvas, {
+				//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1527,8 +1569,11 @@ export default {
 					inGraphDataRadiusPosition: 2,
 					inGraphDataFontColor: 'white'
 				}
-
-				var myChart = new Chart(pieChartSurveyCanvas, {
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+				
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+				//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1633,8 +1678,11 @@ export default {
 						display: false,
 					},
 				}
-
-				new Chart(pieChartSurveyCanvas_answer, {
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+				
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+				//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1706,8 +1754,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				//if(bar) bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvas, {
+				//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1771,8 +1822,11 @@ export default {
 						}
 					}
 				}
-
-				new Chart(reportBarChartCanvas, {
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				//if(bar) bar.destroy();
+				window.incident_bar = new Chart(reportBarChartCanvas, {
+				//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1821,12 +1875,11 @@ export default {
 					inGraphDataFontColor: 'white'
 				}
 
-				// new Chart(pieChartSurveyCanvas, {
-				//     type: 'pie',
-				//     data: pieData,
-				//     options: pieOptions
-				// })
-				var myChart = new Chart(pieChartSurveyCanvas, {
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+				
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+				//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1930,8 +1983,11 @@ export default {
 						display: false,
 					},
 				}
-
-				new Chart(pieChartSurveyCanvas_answer, {
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+				
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+				//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -2058,33 +2114,61 @@ export default {
 		},
 		customizedSelected: function (e) {
 
-	// 		var date1 = new Date(this.filter.start_date);
-    // var date2 = new Date(this.filter.end_date);
-	// var Difference_In_Time = date2.getTime() - date1.getTime();
-      
-    // // To calculate the no. of days between two dates
-    // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24); 
-	// if(Difference_In_Days == 0){
-	// 	alert(0 + 'day');
-	// }else if(Difference_In_Days = ){
-	// 	alert();
-	// }
-	// else if(Difference_In_Days){
-	// 	alert();
-	// }
-	// else if(Difference_In_Days){
-	// 	alert();
-	// }
-
-			// var d_from = this.filter.start_date;
-			// var d_to = this.filter.end_date; alert(d_to); d_to.getTime()
-			// var Difference_In_Time = d_to.getTime() - d_from.getTime();
-
+			// var d_start = new Date(this.filter.start_date);
+			// var d_end = new Date(this.filter.end_date);
+			// var y_start = d_start.getFullYear();
+			// var y_end = d_end.getFullYear();
+			// var date_start = d_start.getDate();
+			// var day_start = d_start.getDay();
+			// var date_end = d_end.getDate();
+			// var day_end = d_end.getDay();
 			// // To calculate the no. of days between two dates
-			// var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-			// alert(Difference_In_Days);
+			// var difference_in_time = d_end.getTime() - d_start.getTime();
+			// var difference_in_days = difference_in_time / (1000 * 3600 * 24);
+			// // Difference_In_Days; 
+			// if (difference_in_days == 0) {
+			// 	alert(difference_in_days + 'day for hour');// 01 - 23 hour
+			// } else if (difference_in_days >= 1 && difference_in_days <= 7) {
+
+			// 	var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+			// 	var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+			// 	if (y_start == y_end) {
+			// 		if (week_of_month_start == week_of_month_end) {
+			// 			alert('cal week days');
+			// 		} else {
+			// 			alert('cal month week');
+			// 		}
+			// 	} else {
+			// 		// wishlist
+			// 	}
+			// }
+			// else if (difference_in_days >= 8 && difference_in_days <= 31) {
+			// 	alert(d_start + ' - ' + d_end);
+			// 	alert('cal month week');
+			// }
+			// // else if(difference_in_days){
+			// // 	alert();
+			// // }
+
+			// // var d_from = this.filter.start_date;
+			// // var d_to = this.filter.end_date; alert(d_to); d_to.getTime()
+			// // var Difference_In_Time = d_to.getTime() - d_from.getTime();
+
+			// // // To calculate the no. of days between two dates
+			// // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+			// // alert(Difference_In_Days);
+
+
+
+		},
+		diff_weeks: function (dt2, dt1) {
+
+			var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+			diff /= (60 * 60 * 24 * 7);
+			return Math.abs(Math.round(diff));
 
 		}
+
 	},
 
 	mounted() {
