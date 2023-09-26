@@ -94,7 +94,7 @@
         </div>
         <div v-show="show_pending_success">
             <div class="row justify-content-center" style="border: 1cm;">
-                <div class="col-12 mr-2">
+                <div class="col-6">
                     <img :src="this.success_logo" class="responsive">
                 </div>
                 <div class="col-12 concern-title">
