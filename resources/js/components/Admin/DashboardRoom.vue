@@ -218,7 +218,7 @@ export default {
 				format: 'YYYY-MM-DD',
 				useCurrent: false,
 			},
-			filters_by: ['Lifetime', 'Day', 'Week', 'Month', 'Year', 'Customize'],
+			filters_by: ['Lifetime', 'Day', 'Week', 'Month', 'Year', 'Custom date'],
 			by_day: false,
 			by_month: false,
 			by_year: false,
