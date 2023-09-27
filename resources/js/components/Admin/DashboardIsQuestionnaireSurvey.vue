@@ -55,7 +55,8 @@
 										<div v-show="by_end">
 											<label for="userName" class="col-form-label">End Date</label>
 											<date-picker v-model="filter.end_date" placeholder="YYYY-MM-DD"
-												:config="options" id="date_end" autocomplete="off"></date-picker>
+												:config="options" id="date_end" autocomplete="off"
+												@dp-change="customizedSelected"></date-picker>
 										</div>
 									</div>
 								</div>
@@ -570,9 +571,9 @@ export default {
 				}
 				if (window.doughnut_chart != undefined)
 					window.doughnut_chart.destroy();
-				
+
 				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
-				//var myChart = new Chart(pieChartSurveyCanvas, {
+					//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -675,9 +676,9 @@ export default {
 				}
 				if (window.doughnut_chart_answer != undefined)
 					window.doughnut_chart_answer.destroy();
-				
+
 				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
-				//new Chart(pieChartSurveyCanvas_answer, {
+					//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -754,7 +755,7 @@ export default {
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
 				window.report_bar = new Chart(reportBarChartCanvasz, {
-				//new Chart(reportBarChartCanvasz, {
+					//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
 					data: reportBarChartDataz,
 					options: reportBarChartOptionsz
@@ -825,7 +826,7 @@ export default {
 					window.incident_bar.destroy();
 				//if(bar) bar.destroy();
 				window.incident_bar = new Chart(reportBarChartCanvasz, {
-				//new Chart(reportBarChartCanvasz, {
+					//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
 					data: reportBarChartDataz,
 					options: reportBarChartOptionsz
@@ -874,9 +875,9 @@ export default {
 				}
 				if (window.doughnut_chart != undefined)
 					window.doughnut_chart.destroy();
-				
+
 				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
-				//var myChart = new Chart(pieChartSurveyCanvas, {
+					//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -983,9 +984,9 @@ export default {
 				}
 				if (window.doughnut_chart_answer != undefined)
 					window.doughnut_chart_answer.destroy();
-				
+
 				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
-				//new Chart(pieChartSurveyCanvas_answer, {
+					//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1001,7 +1002,7 @@ export default {
 		filterChartByWeek: function () {
 
 			var filter = this.filter;
-			
+
 			$.get("/admin/reports/trend-report-by-week/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -1062,7 +1063,7 @@ export default {
 					window.report_bar.destroy();
 				//if(bar) bar.destroy();
 				window.report_bar = new Chart(reportBarChartCanvas, {
-				//new Chart(reportBarChartCanvas, {
+					//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1133,7 +1134,7 @@ export default {
 					window.incident_bar.destroy();
 				//if(bar) bar.destroy();
 				window.incident_bar = new Chart(reportBarChartCanvasz, {
-				//new Chart(reportBarChartCanvasz, {
+					//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
 					data: reportBarChartDataz,
 					options: reportBarChartOptionsz
@@ -1182,9 +1183,9 @@ export default {
 				}
 				if (window.doughnut_chart != undefined)
 					window.doughnut_chart.destroy();
-				
+
 				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
-				//var myChart = new Chart(pieChartSurveyCanvas, {
+					//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1291,9 +1292,9 @@ export default {
 				}
 				if (window.doughnut_chart_answer != undefined)
 					window.doughnut_chart_answer.destroy();
-				
+
 				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
-				//new Chart(pieChartSurveyCanvas_answer, {
+					//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1308,7 +1309,7 @@ export default {
 		filterChartByMonth: function () {
 
 			var filter = this.filter;
-		
+
 			$.get("/admin/reports/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -1370,7 +1371,7 @@ export default {
 					window.report_bar.destroy();
 				//if(bar) bar.destroy();
 				window.report_bar = new Chart(reportBarChartCanvas, {
-				//new Chart(reportBarChartCanvas, {
+					//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1434,7 +1435,7 @@ export default {
 					window.incident_bar.destroy();
 				//if(bar) bar.destroy();
 				window.incident_bar = new Chart(reportBarChartCanvas, {
-				//new Chart(reportBarChartCanvas, {
+					//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1481,9 +1482,9 @@ export default {
 				}
 				if (window.doughnut_chart != undefined)
 					window.doughnut_chart.destroy();
-				
+
 				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
-				//var myChart = new Chart(pieChartSurveyCanvas, {
+					//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1590,9 +1591,9 @@ export default {
 				}
 				if (window.doughnut_chart_answer != undefined)
 					window.doughnut_chart_answer.destroy();
-				
+
 				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
-				//new Chart(pieChartSurveyCanvas_answer, {
+					//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1606,7 +1607,7 @@ export default {
 		},
 		filterChartByYear: function () {
 			var filter = this.filter;
-			
+
 			$.get("/admin/reports/trend-report-by-year/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -1668,7 +1669,7 @@ export default {
 					window.report_bar.destroy();
 				//if(bar) bar.destroy();
 				window.report_bar = new Chart(reportBarChartCanvas, {
-				//new Chart(reportBarChartCanvas, {
+					//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1736,7 +1737,7 @@ export default {
 					window.incident_bar.destroy();
 				//if(bar) bar.destroy();
 				window.incident_bar = new Chart(reportBarChartCanvas, {
-				//new Chart(reportBarChartCanvas, {
+					//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1785,9 +1786,9 @@ export default {
 
 				if (window.doughnut_chart != undefined)
 					window.doughnut_chart.destroy();
-				
+
 				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
-				//var myChart = new Chart(pieChartSurveyCanvas, {
+					//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1893,9 +1894,9 @@ export default {
 				}
 				if (window.doughnut_chart_answer != undefined)
 					window.doughnut_chart_answer.destroy();
-				
+
 				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
-				//new Chart(pieChartSurveyCanvas_answer, {
+					//new Chart(pieChartSurveyCanvas_answer, {
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1961,9 +1962,9 @@ export default {
 				// })
 				if (window.doughnut_chart != undefined)
 					window.doughnut_chart.destroy();
-				
+
 				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
-				//var myChart = new Chart(pieChartSurveyCanvas, {
+					//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{ //plugin added for this chart
@@ -2026,6 +2027,68 @@ export default {
 			//alert(this.filter.year + 'year');
 			//alert('Site:' + this.filter.site_id);
 			this.filterChartByYear();
+		},
+		customizedSelected: function (e) {
+
+			var d_start = new Date(this.filter.start_date);
+			var d_end = new Date(this.filter.end_date);
+			var m_start = d_start.getMonth();
+			var m_end = d_end.getMonth();
+			var y_start = d_start.getFullYear();
+			var y_end = d_end.getFullYear();
+			var date_start = d_start.getDate();
+			var day_start = d_start.getDay();
+			var date_end = d_end.getDate();
+			var day_end = d_end.getDay();
+			// To calculate the no. of days between two dates
+			var difference_in_time = d_end.getTime() - d_start.getTime();
+			var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
+			// // Difference_In_Days; 
+			if (difference_in_days == 0) { //ok
+				//alert(difference_in_days + 'day for hour');// 01 - 23 hour
+				this.filter.day = d_end; console.log(this.filter);
+				this.filterChartByDay();
+			} else if (difference_in_days >= 1 && difference_in_days <= 7) {
+				var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+				var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+				if (y_start == y_end) {
+					if (week_of_month_start == week_of_month_end) {
+						this.filterChartByWeek();
+					} else {
+						this.filterChartByMonth();
+					}
+				} else {
+					// wishlist
+				}
+			}
+			else if (difference_in_days >= 0 && difference_in_days <= 31) {
+				var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+				var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+				//alert(m_start + '== ' + m_end);
+				this.filterChartByMonth();
+				if (y_start == y_end) {
+					if (m_start == m_start) {
+						this.filterChartByMonth();
+					} else {
+						this.filterChartByYear();
+					}
+				} else {
+					// wishlist
+				}
+			} else {
+				this.filterChartByYear();
+			}
+			// else if(difference_in_days){
+			// 	alert();
+			// }
+
+			// // var d_from = this.filter.start_date;
+			// // var d_to = this.filter.end_date; alert(d_to); d_to.getTime()
+			// // var Difference_In_Time = d_to.getTime() - d_from.getTime();
+
+			// // // To calculate the no. of days between two dates
+			// // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+			// // alert(Difference_In_Days);
 		},
 	},
 	components: {

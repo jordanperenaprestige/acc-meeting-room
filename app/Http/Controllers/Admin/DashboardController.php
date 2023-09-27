@@ -606,7 +606,7 @@ class DashboardController extends AppBaseController
             }
 
             $current_year = date("Y");
-            ////echo '>>>>>>>> by'. $request->by;
+        
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -1208,8 +1208,6 @@ class DashboardController extends AppBaseController
                 $end_date = $request->end_date;
             }
         } else if ($request->month) {
-            //$start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-            //$end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             if ($request->by == 3) {
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';

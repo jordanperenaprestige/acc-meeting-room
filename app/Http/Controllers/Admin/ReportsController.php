@@ -99,14 +99,29 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
         } else if ($request->week) {
             $date = Carbon::parse($request->week);
-            $start_date  = date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00';
-            $end_date = date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59';
+            if ($request->by == 2) {
+                $start_date = $date->startOfWeek()->format('Y-m-d');
+                $end_date = $date->endOfWeek()->format('Y-m-d');
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
         } else if ($request->month) {
-            $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-            $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            if ($request->by == 3) {
+                $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
         } else if ($request->year) {
-            $start_date  = $request->year . '-01-01 00:00:00';
-            $end_date = $request->year . '-12-31 23:59:59';
+            if ($request->by == 4) {
+                $start_date  = $request->year . '-01-01 00:00:00';
+                $end_date = $request->year . '-12-31 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
         } else if ($request->start_date && $request->start_date) {
             $start_date = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
             $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
@@ -114,6 +129,27 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $start_date = date("Y-m-d", strtotime("-1 months"));
             $end_date = date("Y-m-d");
         }
+
+        // if ($request->day) {
+        //     $start_date  = date('Y-m-d', strtotime($request->day)) . ' 00:00:00';
+        //     $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
+        // } else if ($request->week) {
+        //     $date = Carbon::parse($request->week);
+        //     $start_date  = date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00';
+        //     $end_date = date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59';
+        // } else if ($request->month) {
+        //     $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+        //     $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+        // } else if ($request->year) {
+        //     $start_date  = $request->year . '-01-01 00:00:00';
+        //     $end_date = $request->year . '-12-31 23:59:59';
+        // } else if ($request->start_date && $request->start_date) {
+        //     $start_date = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+        //     $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
+        // } else {
+        //     $start_date = date("Y-m-d", strtotime("-1 months"));
+        //     $end_date = date("Y-m-d");
+        // }
 
         //->where('created_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
         //->where('created_at', '<=', date('Y-m-d', s   trtotime($request->day)) . ' 23:59:59')
@@ -160,14 +196,31 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
         } else if ($request->week) {
             $date = Carbon::parse($request->week);
-            $start_date  = date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00';
-            $end_date = date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59';
+            if ($request->by == 2) {
+                $start_date = $date->startOfWeek()->format('Y-m-d');
+                $end_date = $date->endOfWeek()->format('Y-m-d');
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
         } else if ($request->month) {
-            $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-            $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            //$start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+            //$end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            if ($request->by == 3) {
+                $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
         } else if ($request->year) {
-            $start_date  = $request->year . '-01-01 00:00:00';
-            $end_date = $request->year . '-12-31 23:59:59';
+            if ($request->by == 4) {
+                $start_date  = $request->year . '-01-01 00:00:00';
+                $end_date = $request->year . '-12-31 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
         } else if ($request->start_date && $request->start_date) {
             $start_date = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
             $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
@@ -175,6 +228,27 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $start_date = date("Y-m-d", strtotime("-1 months"));
             $end_date = date("Y-m-d");
         }
+
+        // if ($request->day) {
+        //     $start_date  = date('Y-m-d', strtotime($request->day)) . ' 00:00:00';
+        //     $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
+        // } else if ($request->week) {
+        //     $date = Carbon::parse($request->week);
+        //     $start_date  = date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00';
+        //     $end_date = date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59';
+        // } else if ($request->month) {
+        //     $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+        //     $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+        // } else if ($request->year) {
+        //     $start_date  = $request->year . '-01-01 00:00:00';
+        //     $end_date = $request->year . '-12-31 23:59:59';
+        // } else if ($request->start_date && $request->start_date) {
+        //     $start_date = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+        //     $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
+        // } else {
+        //     $start_date = date("Y-m-d", strtotime("-1 months"));
+        //     $end_date = date("Y-m-d");
+        // }
 
         //->where('created_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
         //->where('created_at', '<=', date('Y-m-d', s   trtotime($request->day)) . ' 23:59:59')
@@ -915,6 +989,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
 
             $current_year = date("Y");
             $date = Carbon::parse($request->week);
+            if ($request->by == 2) {
+                $start_date = $date->startOfWeek()->format('Y-m-d');
+                $end_date = $date->endOfWeek()->format('Y-m-d');
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
             // $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
             //     return $query->where('site_id', $site_id);
             // })
@@ -934,8 +1015,8 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('avg(TIMESTAMPDIFF(minute, created_at,updated_at)) AS minutes')
-                ->where('created_at', '>=', date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00')
-                ->where('created_at', '<=', date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59')
+                ->where('created_at', '>=', date('Y-m-d', strtotime($start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($end_date)) . ' 23:59:59')
                 //->where('site_building_room_id', $id)
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
@@ -972,13 +1053,20 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
 
             $date = Carbon::parse($request->week);
             $current_year = date("Y");
+            if ($request->by == 2) {
+                $start_date = $date->startOfWeek()->format('Y-m-d');
+                $end_date = $date->endOfWeek()->format('Y-m-d');
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
 
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
-                ->where('created_at', '>=', date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00')
-                ->where('created_at', '<=', date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59')
+                ->where('created_at', '>=', date('Y-m-d', strtotime($start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($end_date)) . ' 23:59:59')
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
                 ->get();
@@ -1021,12 +1109,19 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
 
             $current_year = date("Y");
             $date = Carbon::parse($request->week);
+            if ($request->by == 2) {
+                $start_date = $date->startOfWeek()->format('Y-m-d');
+                $end_date = $date->endOfWeek()->format('Y-m-d');
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
-                ->where('created_at', '>=', date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00')
-                ->where('created_at', '<=', date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59')
+                ->where('created_at', '>=', date('Y-m-d', strtotime($start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($end_date)) . ' 23:59:59')
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
@@ -1069,8 +1164,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-            $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            if ($request->by == 3) {
+                $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
             // $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
             //     return $query->where('site_id', $site_id);
             // })
@@ -1124,8 +1224,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             //$current_year = date("Y");
             //$start_date  = date("Y-m-d H:i:s", mktime(0, 0, 0, $request->month, 1, 2023)); 
             //$end_date = date("Y-m-d H:i:s", mktime(23, 59, 59, $request->month, 31, 2023)); 
-            $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-            $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            if ($request->by == 3) {
+                $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -1170,6 +1275,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
+            if ($request->by == 3) {
+                $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
             $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
             $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
@@ -1223,8 +1335,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            $start_date  = $request->year . '-01-01 00:00:00';
-            $end_date = $request->year . '-12-31 23:59:59';
+            if ($request->by == 4) {
+                $start_date  = $request->year . '-01-01 00:00:00';
+                $end_date = $request->year . '-12-31 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -1268,11 +1385,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            //    echo 'xxxxxx'; print_r($request->year); echo 'zzzzzzzzzzzzzzzz';
-            $start_date  = $request->year . '-01-01 00:00:00';
-            $end_date = $request->year . '-12-31 23:59:59';
-            // echo '-----'.$start_date;
-            // echo '=='.$end_date.'----';
+            if ($request->by == 4) {
+                $start_date  = $request->year . '-01-01 00:00:00';
+                $end_date = $request->year . '-12-31 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -1330,11 +1449,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            //    echo 'xxxxxx'; print_r($request->year); echo 'zzzzzzzzzzzzzzzz';
-            $start_date  = $request->year . '-01-01 00:00:00';
-            $end_date = $request->year . '-12-31 23:59:59';
-            // echo '-----'.$start_date;
-            // echo '=='.$end_date.'----';
+            if ($request->by == 4) {
+                $start_date  = $request->year . '-01-01 00:00:00';
+                $end_date = $request->year . '-12-31 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
