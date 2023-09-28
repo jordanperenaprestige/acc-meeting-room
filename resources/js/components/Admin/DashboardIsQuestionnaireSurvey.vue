@@ -75,6 +75,11 @@
 												id="average_time"></span>&nbsp;m
 										</label>
 									</div>
+									<div class="col-sm-2">
+											<label for="userName" class="col-form-label">SMS: <span
+													id="total_sms"></span>&nbsp;
+											</label>
+										</div>
 								</div>
 							</form>
 							<!-- </div> -->
@@ -193,6 +198,7 @@ export default {
 			reports_total: 0,
 			incidents_total: 0,
 			average_time: 0,
+			total_sms: 0,
 		}
 	},
 
@@ -688,6 +694,10 @@ export default {
 				console.log(data.data);
 				$('#average_time').text(data.data);
 			});
+			$.get("/admin/reports/total-sms-by-daily/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(data.data);
+			});
 		},
 
 		filterChartByDay: function () {
@@ -997,6 +1007,10 @@ export default {
 				console.log(data.data);
 				$('#average_time').text(data.data);
 			});
+			$.get("/admin/reports/tottal-sms-by-day/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(data.data);
+			});
 		},
 
 		filterChartByWeek: function () {
@@ -1304,6 +1318,10 @@ export default {
 				console.log(data.data);
 				$('#average_time').text(parseFloat(data.data));
 			});
+			$.get("/admin/reports/total-sms-by-week/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(parseFloat(data.data));
+			});
 		},
 
 		filterChartByMonth: function () {
@@ -1603,6 +1621,10 @@ export default {
 			$.get("/admin/reports/average-time-by-month/list", filter, function (data) {
 				console.log(data.data);
 				$('#average_time').text(parseFloat(data.data));
+			});
+			$.get("/admin/reports/total-sms-by-month/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(parseFloat(data.data));
 			});
 		},
 		filterChartByYear: function () {
@@ -1906,6 +1928,10 @@ export default {
 				console.log(data.data);
 				$('#average_time').text(parseFloat(data.data));
 			});
+			$.get("/admin/reports/total-sms-by-year/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(parseFloat(data.data));
+			});
 
 		},
 		filterChartByLifetime: function () {
@@ -2000,6 +2026,10 @@ export default {
 			$.get("/admin/reports/average-time-by-lifetime/list", filter, function (data) {
 				console.log(data.data);
 				$('#average_time').text(parseFloat(data.data));
+			});
+			$.get("/admin/reports/total-sms-by-lifetime/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(parseFloat(data.data));
 			});
 
 		},

@@ -19,6 +19,7 @@ use App\Models\ViewModels\QuestionnaireSurveyViewModel;
 use App\Models\Log;
 use App\Models\SiteScreenUptime;
 use App\Models\QuestionnaireSurvey;
+use App\Models\SendSMS;
 use Carbon\Carbon;
 
 // use App\Exports\MerchantPopulationExport;
@@ -709,6 +710,34 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             ], 422);
         }
     }
+    public function getTotalSMSByDaily(Request $request)
+    {
+        try {
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+
+            $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->get()
+                ->count();
+            return $this->response($logs, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
     public function getTrendReportByDaily(Request $request)
     {
         try {
@@ -828,6 +857,35 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             }
 
             return $this->response($avg_time, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+    public function getTotalSMSByDay(Request $request)
+    {
+        try {
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+
+            $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->where('created_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($request->day)) . ' 23:59:59')
+                ->get()
+                ->count();
+
+            return $this->response($logs, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
@@ -1041,6 +1099,43 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             ], 422);
         }
     }
+    public function getTotalSMSByWeek(Request $request)
+    {
+        try {
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+            $date = Carbon::parse($request->week);
+            if ($request->by == 2) {
+                $start_date = $date->startOfWeek()->format('Y-m-d');
+                $end_date = $date->endOfWeek()->format('Y-m-d');
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
+            
+            $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->where('created_at', '>=', date('Y-m-d', strtotime($start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($end_date)) . ' 23:59:59')
+                ->get()
+                ->count();
+        
+            return $this->response($logs, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
     public function getTrendReportByWeek(Request $request)
     {
         try {
@@ -1212,6 +1307,41 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             ], 422);
         }
     }
+    public function getTotalSMSByMonth(Request $request)
+    {
+        try {
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+
+            if ($request->by == 3) {
+                $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
+
+            $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->whereBetween('created_at', [$start_date, $end_date])
+                ->get()
+                ->count();
+            return $this->response($logs, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
     public function getTrendReportByMonth(Request $request)
     {
         try {
@@ -1374,6 +1504,39 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             ], 422);
         }
     }
+    public function getTotalSMSByYear(Request $request)
+    {
+        try {
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+            if ($request->by == 4) {
+                $start_date  = $request->year . '-01-01 00:00:00';
+                $end_date = $request->year . '-12-31 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
+            $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->whereBetween('created_at', [$start_date, $end_date])
+                ->get()
+                ->count();
+            return $this->response($logs, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
     public function getTrendReportByYear(Request $request)
     {
         try {
@@ -1503,81 +1666,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             ], 422);
         }
     }
-
-    // public function getTrendIncidentByDay(Request $request)
-    // {
-    //     try {
-    //         $site_id = '';
-    //         $filters = json_decode($request->filters);
-    //         if ($filters)
-    //             $site_id = $filters->site_id;
-    //         if ($request->site_id)
-    //             $site_id = $request->site_id;
-
-    //         $current_year = date("Y");
-
-    //         //QuestionnaireSurveyViewModel::setSiteId($site_id, $current_year);
-    //         //$start_date = ($request->start_date) ? $request->start_date : date("Y-m-d", strtotime("-1 months"));;
-    //         //$end_date = ($request->end_date) ? $request->end_date : date("Y-m-d");
-
-    //         $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
-    //             return $query->where('site_id', $site_id);
-    //         })
-    //             ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
-    //             ->where('created_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
-    //             ->where('created_at', '<=', date('Y-m-d', strtotime($request->day)) . ' 23:59:59')
-    //             //->where('remarks','Done')
-    //             ->groupBy('site_building_id')
-    //             ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
-    //             ->get();
-    //         // echo '-----------------------------';
-    //         // echo '<pre>';
-    //         // print_r($logs);
-    //         // echo '</pre>';
-    //         // echo '-----------------------------';
-
-    //         $percentage = [];
-    //         foreach ($logs as $index => $log) {
-    //             $hour = date("H", strtotime($log->created_at));
-    //             $per_hour[] = [
-    //                 'building_name' => $log->building_name,
-    //                 'twentyfour' => ($hour == '00') ? $log->total_survey : '',
-    //                 'one' => ($hour == '01') ? $log->total_survey : '',
-    //                 'two' => ($hour == '02') ? $log->total_survey : '',
-    //                 'three' => ($hour == '03') ? $log->total_survey : '',
-    //                 'four' => ($hour == '04') ? $log->total_survey : '',
-    //                 'five' => ($hour == '05') ? $log->total_survey : '',
-    //                 'six' => ($hour == '06') ? $log->total_survey : '',
-    //                 'seven' => ($hour == '07') ? $log->total_survey : '',
-    //                 'eight' => ($hour == '08') ? $log->total_survey : '',
-    //                 'nine' => ($hour == '09') ? $log->total_survey : '',
-    //                 'ten' => ($hour == '10') ? $log->total_survey : '',
-    //                 'eleven' => ($hour == '11') ? $log->total_survey : '',
-    //                 'twelve' => ($hour == '12') ? $log->total_survey : '',
-    //                 'thirteen' => ($hour == '13') ? $log->total_survey : '',
-    //                 'forteen' => ($hour == '14') ? $log->total_survey : '',
-    //                 'fifteen' => ($hour == '15') ? $log->total_survey : '',
-    //                 'sixteen' => ($hour == '16') ? $log->total_survey : '',
-    //                 'seventeen' => ($hour == '17') ? $log->total_survey : '',
-    //                 'eighteen' => ($hour == '18') ? $log->total_survey : '',
-    //                 'nineteen' => ($hour == '19') ? $log->total_survey : '',
-    //                 'twenty' => ($hour == '20') ? $log->total_survey : '',
-    //                 'twentyone' => ($hour == '21') ? $log->total_survey : '',
-    //                 'twentytwo' => ($hour == '22') ? $log->total_survey : '',
-    //                 'twentythree' => ($hour == '23') ? $log->total_survey : '',
-    //                 'reports' => $log->total_survey,
-    //             ];
-    //         }
-
-    //         return $this->response($per_hour, 'Successfully Retreived!', 200);
-    //     } catch (\Exception $e) {
-    //         return response([
-    //             'message' => $e->getMessage(),
-    //             'status' => false,
-    //             'status_code' => 422,
-    //         ], 422);
-    //     }
-    // }
 
     public function getYearlyUsage(Request $request)
     {

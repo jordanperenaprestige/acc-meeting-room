@@ -15,10 +15,13 @@ class SendSMS extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'site_id',
+        'site_building_room_id',
         'sendid',
         'target',
         'message',
         'result',
+        'created_at',
     ];
 
     /**

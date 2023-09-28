@@ -101,6 +101,11 @@
 													id="average_time"></span>&nbsp;m
 											</label>
 										</div>
+										<div class="col-sm-2">
+											<label for="userName" class="col-form-label">SMS: <span
+													id="total_sms"></span>&nbsp;
+											</label>
+										</div>
 									</div>
 								</form>
 							</div>
@@ -228,6 +233,7 @@ export default {
 			reports_total: 0,
 			incidents_total: 0,
 			average_time: 0,
+			total_sms: 0,
 		}
 	},
 	created() {
@@ -777,6 +783,10 @@ export default {
 				console.log(data.data);
 				$('#average_time').text(data.data);
 			});
+			$.get("/admin/dashboard/total-sms-by-daily/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(data.data);
+			});
 		},
 
 		filterChartByDay: function () { //alert('hellop');
@@ -1084,6 +1094,10 @@ export default {
 			$.get("/admin/dashboard/average-time-by-day/list", filter, function (data) {
 				console.log(data.data);
 				$('#average_time').text(data.data);
+			});
+			$.get("/admin/dashboard/total-sms-by-day/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(data.data);
 			});
 		},
 
@@ -1393,6 +1407,10 @@ export default {
 				console.log(data.data);
 				$('#average_time').text(parseFloat(data.data));
 			});
+			$.get("/admin/dashboard/total-sms-by-week/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(parseFloat(data.data));
+			});
 		},
 
 		filterChartByMonth: function () {
@@ -1692,6 +1710,10 @@ export default {
 			$.get("/admin/dashboard/average-time-by-month/list", filter, function (data) {
 				console.log(data.data);
 				$('#average_time').text(parseFloat(data.data));
+			});
+			$.get("/admin/dashboard/total-sms-by-month/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(parseFloat(data.data));
 			});
 		},
 		filterChartByYear: function () {
@@ -1997,6 +2019,10 @@ export default {
 				console.log(data.data);
 				$('#average_time').text(parseFloat(data.data));
 			});
+			$.get("/admin/dashboard/total-sms-by-year/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(parseFloat(data.data));
+			});
 
 		},
 		filterChartByLifetime: function () {
@@ -2118,7 +2144,6 @@ export default {
 			console.log(this.filter);
 		},
 		customizedSelected: function (e) {
-
 			var d_start = new Date(this.filter.start_date);
 			var d_end = new Date(this.filter.end_date);
 			var m_start = d_start.getMonth();
@@ -2153,7 +2178,6 @@ export default {
 			else if (difference_in_days >= 0 && difference_in_days <= 31) {
 				var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 				var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
-				//alert(m_start + '== ' + m_end);
 				this.filterChartByMonth();
 				if (y_start == y_end) {
 					if (m_start == m_start) {
@@ -2167,20 +2191,6 @@ export default {
 			} else {
 				this.filterChartByYear();
 			}
-			// else if(difference_in_days){
-			// 	alert();
-			// }
-
-			// // var d_from = this.filter.start_date;
-			// // var d_to = this.filter.end_date; alert(d_to); d_to.getTime()
-			// // var Difference_In_Time = d_to.getTime() - d_from.getTime();
-
-			// // // To calculate the no. of days between two dates
-			// // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-			// // alert(Difference_In_Days);
-
-
-
 		},
 		diff_weeks: function (dt2, dt1) {
 

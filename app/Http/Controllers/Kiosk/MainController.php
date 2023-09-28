@@ -246,6 +246,7 @@ class MainController extends AppBaseController
         $mst = array();
         $hk_floor_room = array();
         $mst_floor_room = array();
+        $created_at = array();
 
         foreach (explode(",", $request->concern) as $v) {
             $answer = QuestionnaireAnswer::find($v);
@@ -267,7 +268,7 @@ class MainController extends AppBaseController
             ];
 
             $question_survey = QuestionnaireSurvey::create($data);
-
+            $created_at[] = $question_survey->created_at;
             if ($answer->sms_recepient == 9) { //HK
                 $hk[] = $answer->answer;
                 $hk_floor_room[] = $floor->name . '/' . $rooms->name;
@@ -276,7 +277,6 @@ class MainController extends AppBaseController
                 $mst_floor_room[] = $floor->name . '/' . $rooms->name;
             }
         }
-
 
         $users = UserViewModel::where('mobile', '<>', '')
             ->leftJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
@@ -287,33 +287,46 @@ class MainController extends AppBaseController
             ->get();
 
         foreach ($users as $vuser) {
-            // echo $vuser->id . '>>>' . $vuser->level . '>>>' . $vuser->mobile.'>>>' . $vuser->role;
-            // echo '------------';
-            // // $user_role = array();
 
             if ($vuser->role == 9) {
                 if (count($hk) > 0) {
                     $concern = implode(",", $hk);
-                    $Message = 'HK Supervisor - ' . $hk_floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
-                    /// echo $Message; echo '------------------------------';
-                    // // $Target = $uv->mobile;
-                    // $Target = $vuser->mobile;
-                    // $SenderID = $vuser->id;
-                    // $sms_helper = new SMSHelper();
-                    // $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
-                    // echo $SMSCReturn;
+                    $message = 'HK - ' . $hk_floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                    $target = $vuser->mobile;
+                    $sender_id = $vuser->id;
+                    $sms_helper = new SMSHelper();
+                    $sms_return = $sms_helper->sendSMS($target, $message, $sender_id);
+                    $sms = json_decode($sms_return);
+                    $data_sms = [
+                        'site_id' => $rooms->site_id,
+                        'site_building_room_id' => $rooms->id,
+                        'sendid' => $sms->transid,
+                        'target' => $sms->timestamp,
+                        'message' => 'hk',
+                        'result' => $sms->code,
+                        'created_at' => $created_at[0],
+                    ];
+                    $send_sms = SendSMS::create($data_sms);
                 }
             } else {
                 if (count($mst) > 0) {
                     $concern = implode(",", $mst);
-                    $Message = 'MST - ' . $mst_floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
-                    // echo $Message;
-                    // // $Target = $uv->mobile;
-                    // $Target = $vuser->mobile;
-                    // $SenderID = $vuser->id;
-                    // $sms_helper = new SMSHelper();
-                    // $SMSCReturn = $sms_helper->sendSMS($Target, $Message, $SenderID);
-                    // echo $SMSCReturn;
+                    $message = 'MST - ' . $mst_floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                    $target = $vuser->mobile;
+                    $sender_id = $vuser->id;
+                    $sms_helper = new SMSHelper();
+                    $sms_return = $sms_helper->sendSMS($target, $message, $sender_id);
+                    $sms = json_decode($sms_return);
+                    $data_sms = [
+                        'site_id' => $rooms->site_id,
+                        'site_building_room_id' => $rooms->id,
+                        'sendid' => $sms->transid,
+                        'target' => $sms->timestamp,
+                        'message' => 'mst',
+                        'result' => $sms->code,
+                        'created_at' => $created_at[0],
+                    ]; 
+                    $send_sms = SendSMS::create($data_sms);
                 }
             }
         }
@@ -322,7 +335,7 @@ class MainController extends AppBaseController
     public function storeConcernPending(Request $request)
     {
         $user = UserViewModel::where('mobile', '<>', '')->get();
-       // echo 'user id: '.$request->user_id;
+        // echo 'user id: '.$request->user_id;
         foreach (explode(",", $request->concern_pending) as $v) {
             $id = str_replace('pending_', '', $v);
             $answer = QuestionnaireAnswer::find($id);
@@ -485,8 +498,8 @@ class MainController extends AppBaseController
     {
         try {
             $questionnaire_survey = QuestionnaireSurvey::where('id', $request->id)
-            ->where('Remarks','Pending')
-            ->get();
+                ->where('Remarks', 'Pending')
+                ->get();
             $data = [
                 'status' => $request->status,
                 'remarks' => ($request->status == 1) ? 'Pending' : 'Done',

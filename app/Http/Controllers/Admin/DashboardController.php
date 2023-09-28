@@ -13,6 +13,7 @@ use App\Models\ViewModels\SiteBuildingRoomViewModel;
 use App\Models\ViewModels\QuestionnaireSurveyViewModel;
 use App\Models\QuestionnaireAnswer;
 use App\Models\QuestionnaireSurvey;
+use App\Models\SendSMS;
 use Illuminate\Support\Facades\DB;
 
 
@@ -104,6 +105,8 @@ class DashboardController extends AppBaseController
 
     public function storeUpdate(Request $request)
     {
+        $user = AdminViewModel::find(Auth::user()->id);
+
         if ($request->concern) {
             // pending_survey_answer_room
             foreach (explode(",", $request->concern) as $v) {
@@ -127,6 +130,7 @@ class DashboardController extends AppBaseController
 
                     if (count($questionnaire_survey) == 0) {
                         $data = [
+                            'supervisor_id' =>   $user->client_id,
                             'questionnaire_id' => $questionnaire_id,
                             'questionnaire_answer_id' => $answer_id,
                             'site_id' => $site_id,
@@ -162,7 +166,7 @@ class DashboardController extends AppBaseController
                         ->get();
 
                     if (count($questionnaire_surveyz) != 0) {
-                        echo 'meron';
+
                         // $data = [
                         //     'Remarks' => 'Done',
                         // ];
@@ -178,9 +182,11 @@ class DashboardController extends AppBaseController
                         DB::unprepared(
                             '
                             update 
-                                questionnaire_surveys set 
+                                questionnaire_surveys set
+                                    supervisor_id = "' . $user->client_id . '",
                                     remarks = "Done", 
-                                    status = "2" 
+                                    status = "2", 
+                                    updated_at = "' . date("Y-m-d H:i:s") . '"
                             where
                             questionnaire_id = "' . $questionnaire_id . '" and
                             questionnaire_answer_id = "' . $answer_id . '" and
@@ -191,10 +197,9 @@ class DashboardController extends AppBaseController
 
                         );
 
-                        // echo 'zzzzzzzzzzzzzzzzzzzzzzzzzzzz';
                         //return $this->response('', 'Successfully Modified!', 200);
                     }
-                    echo 'zzzzzzzzzzzzzzzzzzzzzzzzzzzz';
+
                     return $this->response('', 'Successfully Modified!', 200);
                 }
             }
@@ -202,6 +207,7 @@ class DashboardController extends AppBaseController
 
         return $this->response('', 'Successfully Retreived!', 200);
     }
+
     public function getAverageTimeByDaily(Request $request)
     {
         try {
@@ -238,6 +244,36 @@ class DashboardController extends AppBaseController
 
             // echo '>>>>>>>>>>>>>>'.$avg_time;
             return $this->response($avg_time, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+    public function getTotalSMSByDaily(Request $request)
+    {
+        try {
+            $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+
+            $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->where('site_building_room_id', $id)
+                ->get()
+                ->count();
+            return $this->response($logs, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
@@ -370,6 +406,37 @@ class DashboardController extends AppBaseController
             }
 
             return $this->response($avg_time, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+    public function getTotalSMSByDay(Request $request)
+    {
+        try {
+            $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+
+            $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->where('created_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($request->day)) . ' 23:59:59')
+                ->where('site_building_room_id', $id)
+                ->get()
+                ->count();
+
+            return $this->response($logs, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
@@ -585,6 +652,46 @@ class DashboardController extends AppBaseController
         }
     }
 
+    public function getTotalSMSByWeek(Request $request)
+    {
+        try {
+            $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+            $date = Carbon::parse($request->week);
+            if ($request->by == 2) {
+                $start_date = $date->startOfWeek()->format('Y-m-d');
+                $end_date = $date->endOfWeek()->format('Y-m-d');
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
+            
+            $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->where('created_at', '>=', date('Y-m-d', strtotime($start_date)) . ' 00:00:00')
+                ->where('created_at', '<=', date('Y-m-d', strtotime($end_date)) . ' 23:59:59')
+                ->where('site_building_room_id', $id)
+                ->get()
+                ->count();
+        
+            return $this->response($logs, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
     public function getTrendReportByWeek(Request $request)
     {
         try {
@@ -606,7 +713,7 @@ class DashboardController extends AppBaseController
             }
 
             $current_year = date("Y");
-        
+
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -887,6 +994,43 @@ class DashboardController extends AppBaseController
             ], 422);
         }
     }
+    public function getTotalSMSByMonth(Request $request)
+    {
+        try {
+            $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+
+            if ($request->by == 3) {
+                $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
+
+            $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->whereBetween('created_at', [$start_date, $end_date])
+                ->where('site_building_room_id', $id)
+                ->get()
+                ->count();
+            return $this->response($logs, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
     public function getTrendReportByMonth(Request $request)
     {
         try {
@@ -1052,6 +1196,43 @@ class DashboardController extends AppBaseController
             ], 422);
         }
     }
+
+    public function gerTotalSMSByYear(Request $request)
+    {
+        try {
+            $id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+            if ($request->by == 4) {
+                $start_date  = $request->year . '-01-01 00:00:00';
+                $end_date = $request->year . '-12-31 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
+            $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->whereBetween('created_at', [$start_date, $end_date])
+                ->where('site_building_room_id', $id)
+                ->get()
+                ->count();
+            return $this->response($logs, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
     public function getTrendReportByYear(Request $request)
     {
         try {
@@ -1355,7 +1536,7 @@ class DashboardController extends AppBaseController
             $currentDate = $currentDateTime->format('Y-m-d');
             $start_date  = date('Y-m-d', strtotime($currentDate)) . ' 00:00:00';
             $end_date = date('Y-m-d', strtotime($currentDate)) . ' 23:59:59';
-            // $logs = QuestionnaireSurveyViewModel::where('site_building_room_id', $id)->get();
+                // $logs = QuestionnaireSurveyViewModel::where('site_building_room_id', $id)->get();
             // $created_at = array();
             // foreach ($logs as $k => $v) {
             //     $created_at[] = $v->created_at;
