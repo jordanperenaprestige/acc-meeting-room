@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div v-show="show_submit_pending_button" class="row concern-title submit_button">
-                    <div class=" col-2">
+                    <div class=" col-12">
                         <img :src="this.resolve_logo" @click="submit_pending()">
                     </div>
                 </div>
