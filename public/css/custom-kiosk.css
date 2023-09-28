@@ -11,7 +11,7 @@ body,
 html {
     height: 100%;
     /* background-color: #f9f9f9; */
-    color: #888888;
+    color: #ffffff;
     font-family: 'Henry Sans Regular';
     font-size: 1em;
     scroll-behavior: smooth;
@@ -1755,7 +1755,7 @@ span {
 
 .grid-container {
     display: grid;
-    column-gap: 5px;
+    column-gap: 50px;
     row-gap: 50px;
     grid-template-columns: auto auto auto;
     padding: 3px;
@@ -1769,36 +1769,17 @@ span {
     padding-right: 5rem;
 }
 
-.grid-item {
+/* .grid-item {
     font-family: Henry Sans Regular;
     color: #FFFFFF;
     font-size: 16px;
     text-align: center;
     padding: 0.em;
 
-}
-.grid-item-grey {
-    font-family: Henry Sans Regular;
-    color: #D3D3D3;
-    font-size: 16px;
-    text-align: center;
-    /* padding: 0.1em; */
-
-}
-
-.concern-message {
-    font-family: Henry Sans Regular;
-    color: #FFFFFF;
-    font-size: 20px;
-    text-align: center;
-    padding: 0.5em;
-    margin-left: 2rem;
-
-}
+} */
 
 .concern-title {
     font-family: Henry Sans Regular;
-    /* color: #; */
     font-size: 30px;
     font-weight: 500;
     text-align: center;
@@ -1806,6 +1787,7 @@ span {
     margin-top: 2rem;
 
 }
+
 .first-title {
     /* font-family: Henry Sans Regular;
     font-size: 30px;
@@ -1822,16 +1804,10 @@ span {
 
 }
 
-.concern-title2 {
-    font-family: Henry Sans Regular;
-    /* color: #; */
-    font-size: 20px;
-    font-weight: 500;
-    text-align: center;
-    color: #ffdb00;
-    /* -webkit-text-stroke: 2px #ffdb00; */
-    margin-top: 1rem;
-
+.img_local_admin {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .building-floor-room-title {
@@ -1849,17 +1825,6 @@ span {
     text-align: right;
     /* padding: 0.5em; */
     /* margin-top: 20rem; */
-}
-
-.responsive {
-    width: 75%;
-    height: auto;
-    margin-top: 2rem;
-}
-.responsive_test {
-    width: 75%;
-    height: auto;
-    margin-top: 2rem;
 }
 
 .grid-keypad {
@@ -1892,7 +1857,7 @@ input.transparent-input {
         linear-gradient(#000, #000) center bottom 5px /calc(100% - 10px) 2px no-repeat;
     border: 1px solid;
     padding: 1px;
-    text-align: center;   
+    text-align: center;
     font-size: 24px;
 }
 
