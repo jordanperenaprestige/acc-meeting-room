@@ -12,7 +12,7 @@
                         <div style="padding: 0em 0em 0em 1.5em;">
                             <img :src="questionnaire.button" @click="switchImage($event)" :id="questionnaire.id">
                         </div>
-                        <div style="text-align: center;">{{ questionnaire.answer }}aaaa</div>
+                        <div style="text-align: center;">{{ questionnaire.answer }}</div>
                     </div>
                 </div>
                 <div class="row justify-content-center">
