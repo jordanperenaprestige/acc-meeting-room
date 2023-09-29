@@ -1834,7 +1834,7 @@ span {
     grid-template-columns: repeat(5, 1fr);
     grid-auto-rows: 120px;
     grid-auto-columns: 500px;
-    margin-top: 5rem;
+    margin-top: 3rem;
     margin-left: 0rem;
     margin-right: 0rem;
     padding-left: 5rem;
