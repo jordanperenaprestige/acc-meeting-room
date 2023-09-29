@@ -166,6 +166,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         })
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->whereBetween('created_at', [$start_date, $end_date])
+            ->where('remarks', 'Done')
             ->groupBy('questionnaire_id')
             ->orderBy('questionnaire_id', 'ASC')
             ->get();
@@ -265,6 +266,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         })
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->whereBetween('created_at', [$start_date, $end_date])
+            ->where('remarks', 'Done')
             ->groupBy('questionnaire_id')
             ->groupBy('questionnaire_answer_id')
             ->orderBy('questionnaire_id', 'ASC')
