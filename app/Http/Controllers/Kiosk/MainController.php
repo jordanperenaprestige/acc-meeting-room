@@ -184,43 +184,43 @@ class MainController extends AppBaseController
         foreach ($users as $vuser) {
             if ($vuser->role == 9) {
                 if (count($hk) > 0) {
-                    // $concern = implode(",", $hk);
-                    // $message = 'HK - ' . $hk_floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
-                    // $target = $vuser->mobile;
-                    // $sender_id = $vuser->id;
-                    // $sms_helper = new SMSHelper();
-                    // $sms_return = $sms_helper->sendSMS($target, $message, $sender_id);
-                    // $sms = json_decode($sms_return);
-                    // $data_sms = [
-                    //     'site_id' => $rooms->site_id,
-                    //     'site_building_room_id' => $rooms->id,
-                    //     'sendid' => $sms->transid,
-                    //     'target' => $sms->timestamp,
-                    //     'message' => 'hk',
-                    //     'result' => $sms->code,
-                    //     'created_at' => $created_at[0],
-                    // ];
-                    // $send_sms = SendSMS::create($data_sms);
+                    $concern = implode(",", $hk);
+                    $message = 'HK - ' . $hk_floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                    $target = $vuser->mobile;
+                    $sender_id = $vuser->id;
+                    $sms_helper = new SMSHelper();
+                    $sms_return = $sms_helper->sendSMS($target, $message, $sender_id);
+                    $sms = json_decode($sms_return);
+                    $data_sms = [
+                        'site_id' => $rooms->site_id,
+                        'site_building_room_id' => $rooms->id,
+                        'sendid' => $sms->transid,
+                        'target' => $sms->timestamp,
+                        'message' => 'hk',
+                        'result' => $sms->code,
+                        'created_at' => $created_at[0],
+                    ];
+                    $send_sms = SendSMS::create($data_sms);
                 }
             } else {
                 if (count($mst) > 0) {
-                    // $concern = implode(",", $mst);
-                    // $message = 'MST - ' . $mst_floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
-                    // $target = $vuser->mobile;
-                    // $sender_id = $vuser->id;
-                    // $sms_helper = new SMSHelper();
-                    // $sms_return = $sms_helper->sendSMS($target, $message, $sender_id);
-                    // $sms = json_decode($sms_return);
-                    // $data_sms = [
-                    //     'site_id' => $rooms->site_id,
-                    //     'site_building_room_id' => $rooms->id,
-                    //     'sendid' => $sms->transid,
-                    //     'target' => $sms->timestamp,
-                    //     'message' => 'mst',
-                    //     'result' => $sms->code,
-                    //     'created_at' => $created_at[0],
-                    // ]; 
-                    // $send_sms = SendSMS::create($data_sms);
+                    $concern = implode(",", $mst);
+                    $message = 'MST - ' . $mst_floor_room[0] . ' - Concern: ' . $concern . ' ' . date("Y-m-d h:i:sa");
+                    $target = $vuser->mobile;
+                    $sender_id = $vuser->id;
+                    $sms_helper = new SMSHelper();
+                    $sms_return = $sms_helper->sendSMS($target, $message, $sender_id);
+                    $sms = json_decode($sms_return);
+                    $data_sms = [
+                        'site_id' => $rooms->site_id,
+                        'site_building_room_id' => $rooms->id,
+                        'sendid' => $sms->transid,
+                        'target' => $sms->timestamp,
+                        'message' => 'mst',
+                        'result' => $sms->code,
+                        'created_at' => $created_at[0],
+                    ]; 
+                    $send_sms = SendSMS::create($data_sms);
                 }
             }
         }
