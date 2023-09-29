@@ -166,7 +166,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         })
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->whereBetween('created_at', [$start_date, $end_date])
-            ->where('remarks', 'Done')
             ->groupBy('questionnaire_id')
             ->orderBy('questionnaire_id', 'ASC')
             ->get();
@@ -266,7 +265,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         })
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->whereBetween('created_at', [$start_date, $end_date])
-            ->where('remarks', 'Done')
             ->groupBy('questionnaire_id')
             ->groupBy('questionnaire_answer_id')
             ->orderBy('questionnaire_id', 'ASC')
@@ -373,6 +371,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 // ->where('site_building_room_id', $id)
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->where('remarks', 'Done')
                 ->groupBy('questionnaire_id')
                 ->orderBy('questionnaire_id', 'ASC')
                 ->get();
@@ -419,6 +418,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 //   ->where('site_building_room_id', $id)
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->where('remarks', 'Done')
                 ->groupBy('questionnaire_id')
                 ->groupBy('questionnaire_answer_id')
                 ->orderBy('questionnaire_id', 'ASC')
