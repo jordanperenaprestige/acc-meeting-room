@@ -137,12 +137,9 @@ class ClientUserController extends AppBaseController implements ClientUserContro
 
     public function update(EditClientUserRequest $request)
     //public function update(Request $request)
-    {
+    {  
         try {
             $user_admin = Admin::where('client_id',$request->id)->first();
-            // echo '<pre>'; print_r($user_admin->salt); echo '</pre>'; 
-            // echo 
-            // $user_admin = Admin::find($request->id);
             $password = PasswordHelper::generatePassword($user_admin->salt, $request->password);
             $data = [
                 'full_name' => $request->last_name . ', ' . $request->first_name,
@@ -179,7 +176,7 @@ class ClientUserController extends AppBaseController implements ClientUserContro
             ];
 
             if ($request->password)
-                $data['password'] = $password;
+                $data['password'] = $password;// echo '<pre>'; print_r($data); echo '</pre>'; die();
             $user->update($data);
 
             $meta_details = ["first_name" => $request->first_name, "last_name" => $request->last_name];

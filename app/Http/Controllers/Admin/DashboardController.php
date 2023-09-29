@@ -1426,6 +1426,7 @@ class DashboardController extends AppBaseController
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->whereBetween('created_at', [$start_date, $end_date])
             ->where('site_building_room_id', $id)
+            ->where('remarks', 'Done')
             ->groupBy('questionnaire_id')
             ->orderBy('questionnaire_id', 'ASC')
             ->get();
@@ -1506,6 +1507,7 @@ class DashboardController extends AppBaseController
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->where('site_building_room_id', $id)
             ->whereBetween('created_at', [$start_date, $end_date])
+            ->where('remarks', 'Done')
             ->groupBy('questionnaire_id')
             ->groupBy('questionnaire_answer_id')
             ->orderBy('questionnaire_id', 'ASC')
