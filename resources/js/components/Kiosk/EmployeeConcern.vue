@@ -9,7 +9,7 @@
                 </div>
                 <div class="grid-container">
                     <div v-for="(questionnaire, index) in questionnaires">
-                        <div style="padding: 0em 0em 0em .2em;">
+                        <div style="padding: 0em 0em 0em 0em;">
                             <img :src="questionnaire.button" @click="switchImage($event)" :id="questionnaire.id">
                         </div>
                         <div style="text-align: center;">{{ questionnaire.answer }}</div>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="grid-container">
                     <div v-for="(survey_pending, index) in survey_pendings">
-                        <div v-if="survey_pending.questionnaire_user_role == user_role" style="padding: 0em 0em 0em .2em;">
+                        <div v-if="survey_pending.questionnaire_user_role == user_role" style="padding: 0em 0em 0em 0em;">
                             <img v-if="survey_pending.questionnaire_survey_id > 0"
                                 :src="survey_pending.questionnaire_button.replace('.png', '_red.png')"
                                 @click="switchImagePending($event)"
@@ -43,7 +43,7 @@
                                 :alt="survey_pending.questionnaire_button.replace('.png', '_red.png')">
                             <img v-else :src="check_green_logo">
                         </div>
-                        <div v-else style="padding: 0em 0em 0em .2em;">
+                        <div v-else style="padding: 0em 0em 0em 0em;">
                             <img :src="survey_pending.questionnaire_button.replace('.png', '_gray.png')">
                         </div>
                         <!-- test -->
