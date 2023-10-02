@@ -702,6 +702,9 @@ export default {
 
 		filterChartByDay: function () {
 			var filter = this.filter;
+		    	filter.week = '';
+				filter.month = '';
+				filter.year = '';
 			$.get("/admin/reports/trend-report-by-day/list", filter, function (data) {
 				let datasetsz = [];
 				var yValues = [];
@@ -1007,7 +1010,7 @@ export default {
 				console.log(data.data);
 				$('#average_time').text(data.data);
 			});
-			$.get("/admin/reports/tottal-sms-by-day/list", filter, function (data) {
+			$.get("/admin/reports/total-sms-by-day/list", filter, function (data) {
 				console.log(data.data);
 				$('#total_sms').text(data.data);
 			});
@@ -1016,8 +1019,10 @@ export default {
 		filterChartByWeek: function () {
 
 			var filter = this.filter;
-
-			$.get("/admin/reports/trend-report-by-week/list", filter, function (data) {
+				filter.day = '';
+				filter.month = '';
+				filter.year = '';
+			$.get("/admin/reports/trend-report-by-week/list", filter, function (data) { console.log('trend-report-by-week'); console.log(filter);
 				let datasets = [];
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272'];
@@ -1073,19 +1078,19 @@ export default {
 						}
 					}
 				}
-				if (window.report_bar != undefined)
-					window.report_bar.destroy();
+				if (window.report_bar_week != undefined)
+					window.report_bar_week.destroy();
 				//if(bar) bar.destroy();
-				window.report_bar = new Chart(reportBarChartCanvas, {
+				window.report_bar_week = new Chart(reportBarChartCanvas, {
 					//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
 				})
-
+console.log('>>>>>>>>>>>'); console.log(data);
 			});
 
-			$.get("/admin/reports/trend-incident-by-week/list", filter, function (data) {
+			$.get("/admin/reports/trend-incident-by-week/list", filter, function (data) {console.log('trend-incident-by-week'); console.log(filter);
 				let datasetsz = [];
 				var yValues = [];
 
@@ -1156,7 +1161,7 @@ export default {
 
 			});
 
-			$.get("/admin/reports/donut-report-by-day/list", filter, function (data) {
+			$.get("/admin/reports/donut-report-by-day/list", filter, function (data) {console.log('donut-report-by-day'); console.log(filter);
 				let labels = [];
 				let data_value = [];
 				let incident_report = 0;
@@ -1236,7 +1241,7 @@ export default {
 				});
 			});
 
-			$.get("/admin/reports/donut-report-by-day-answer/list", filter, function (data) {
+			$.get("/admin/reports/donut-report-by-day-answer/list", filter, function (data) {console.log('donut-report-by-day-answer'); console.log(filter);
 				let labels_answer = [];
 				let data_value_answer = [];
 				let incident_report_answer = 0;
@@ -1327,16 +1332,22 @@ export default {
 		filterChartByMonth: function () {
 
 			var filter = this.filter;
+			    filter.day = '';
+				filter.week = '';
+				filter.year = '';
 
 			$.get("/admin/reports/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
+				let week_range = [];
 				var yValues = [];
-				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8'];
+				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8','#ff00cc', '00cc00'];
 
 
-				$.each(data.data, function (key, value) {
+				$.each(data.data, function (key, value) {  ///console.log('>>>>'); console.log(value);
 					let background_color = dynamicColors[key];
 					yValues.push(value.reports);
+					var bar = value.bar;
+					var week = value.week_range;
 					datasets.push({
 						label: value.building_name + '(Reports: ' + value.reports + ')',
 						backgroundColor: background_color,
@@ -1346,9 +1357,11 @@ export default {
 						pointStrokeColor: background_color,
 						pointHighlightFill: '#fff',
 						pointHighlightStroke: background_color,
-						data: [value.week_one, value.week_two, value.week_three, value.week_four]
+						data: bar
 					});
+					week_range.push(week);
 				});
+				
 				let sum_reports_total = 0;
 
 				// calculate sum using forEach() method
@@ -1359,7 +1372,7 @@ export default {
 				$('#reports_total').text(sum_reports_total);
 
 				var areaChartData = {
-					labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+					labels: week_range,
 					datasets: datasets
 				};
 
@@ -1397,12 +1410,15 @@ export default {
 			});
 			$.get("/admin/reports/trend-incident-by-month/list", filter, function (data) {
 				let datasets = [];
+				let week_range = [];
 				var yValues = [];
-				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8'];
+				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8','#ff00cc', '00cc00'];
 
-				$.each(data.data, function (key, value) {
+				$.each(data.data, function (key, value) { console.log('>>>>'); console.log(value);
 					let background_color = dynamicColors[key];
 					yValues.push(value.reports);
+					var bar = value.bar;
+					var week = value.week_range;
 					datasets.push({
 						label: value.building_name + '(Incident(s): ' + value.reports + ')',
 						backgroundColor: background_color,
@@ -1412,8 +1428,10 @@ export default {
 						pointStrokeColor: background_color,
 						pointHighlightFill: '#fff',
 						pointHighlightStroke: background_color,
-						data: [value.week_one, value.week_two, value.week_three, value.week_four]
+						data: bar
+						//data: [value.week_one, value.week_two, value.week_three, value.week_four]
 					});
+					week_range.push(week);
 				});
 				let sum_incidents_total = 0;
 				yValues.forEach(num => {
@@ -1423,7 +1441,7 @@ export default {
 				$('#incidents_total').text(sum_incidents_total);
 
 				var areaChartData = {
-					labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+					labels: week_range,//labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
 					datasets: datasets
 				};
 
@@ -1619,17 +1637,20 @@ export default {
 			});
 
 			$.get("/admin/reports/average-time-by-month/list", filter, function (data) {
-				console.log(data.data);
+				//console.log(data.data);
 				$('#average_time').text(parseFloat(data.data));
 			});
 			$.get("/admin/reports/total-sms-by-month/list", filter, function (data) {
-				console.log(data.data);
+				//console.log(data.data);
 				$('#total_sms').text(parseFloat(data.data));
 			});
 		},
 		filterChartByYear: function () {
 			var filter = this.filter;
-
+			filter.day = '';
+			filter.week = '';
+			filter.month = '';
+			
 			$.get("/admin/reports/trend-report-by-year/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -1925,7 +1946,7 @@ export default {
 				})
 			});
 			$.get("/admin/reports/average-time-by-year/list", filter, function (data) {
-				console.log(data.data);
+				//console.log(data.data);
 				$('#average_time').text(parseFloat(data.data));
 			});
 			$.get("/admin/reports/total-sms-by-year/list", filter, function (data) {

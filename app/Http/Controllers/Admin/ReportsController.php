@@ -33,6 +33,8 @@ use Carbon\Carbon;
 // use App\Exports\KioskUsageExport;
 use App\Exports\Export;
 use Storage;
+use DateTime;
+use DateInterval;
 
 class ReportsController extends AppBaseController implements ReportsControllerInterface
 {
@@ -166,6 +168,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         })
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->whereBetween('created_at', [$start_date, $end_date])
+            ->where('Remarks', 'Done')
             ->groupBy('questionnaire_id')
             ->orderBy('questionnaire_id', 'ASC')
             ->get();
@@ -265,6 +268,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         })
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->whereBetween('created_at', [$start_date, $end_date])
+            ->where('Remarks', 'Done')
             ->groupBy('questionnaire_id')
             ->groupBy('questionnaire_answer_id')
             ->orderBy('questionnaire_id', 'ASC')
@@ -1120,7 +1124,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date = $request->start_date;
                 $end_date = $request->end_date;
             }
-            
+
             $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -1128,7 +1132,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->where('created_at', '<=', date('Y-m-d', strtotime($end_date)) . ' 23:59:59')
                 ->get()
                 ->count();
-        
+
             return $this->response($logs, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -1183,7 +1187,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'reports' => $log->total_survey,
                 ];
             }
-
             return $this->response($per_day, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -1356,6 +1359,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             //$current_year = date("Y");
             //$start_date  = date("Y-m-d H:i:s", mktime(0, 0, 0, $request->month, 1, 2023)); 
             //$end_date = date("Y-m-d H:i:s", mktime(23, 59, 59, $request->month, 31, 2023)); 
+            //echo '>>>>>>>>>>>moneth: '.$request->month;
             if ($request->by == 3) {
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
@@ -1373,17 +1377,40 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->get();
 
             $per_month = [];
+            $month = explode("-",$request->month);
+            $monthz = $month[1];
+            $year = $month[0];
+            $lastDayOfWeek = '7'; //1 (for monday) to 7 (for sunday)
+            $weeks = $this->getWeeksInMonth($year, $monthz, $lastDayOfWeek);
+         //  echo '>>>>>>>>>>>>>'; echo '<pre>'; print_r($weeks); echo '</pre>';
             foreach ($logs as $index => $log) {
                 //echo '<<'.$log->created_at .'---'.$log->total_survey.'>>';
                 $day = date("d", strtotime($log->created_at));
                 //echo '<<' . $day . '>>';
+                $set = $index+1;
+                // $bar = [
+                //     ($day >= '01' && $day <= '07') ? $log->total_survey : '',
+                //     ($day >= '08' && $day <= '15') ? $log->total_survey : '',
+                //     ($day >= '16' && $day <= '22') ? $log->total_survey : '',
+                //     ($day >= '23' && $day <= '31') ? $log->total_survey : '',
+                // ];
+                $bar = array();
+                foreach ($weeks as $weekNumber => $week) {
+                    //echo "--W {$weekNumber}: {$week[0]} - {$week[1]}\r\n";
+                    $monday = substr($week[0],8);
+                    $sunday = substr($week[1],8);
+                    $bar[] = ($day >= $monday && $day <= $sunday) ? $log->total_survey : '';//echo substr($week[0],8) .'-'. substr($week[1],8);
+                    //echo '<br>';
+                }
                 $per_month[] = [
                     'building_name' => $log->building_name,
-                    'week_one' => ($day >= '01' && $day <= '07') ? $log->total_survey : '',
-                    'week_two' => ($day >= '08' && $day <= '15') ? $log->total_survey : '',
-                    'week_three' => ($day >= '16' && $day <= '22') ? $log->total_survey : '',
-                    'week_four' => ($day >= '23' && $day <= '31') ? $log->total_survey : '',
+                    // 'week_one' => ($day >= '01' && $day <= '07') ? $log->total_survey : '',
+                    // 'week_two' => ($day >= '08' && $day <= '15') ? $log->total_survey : '',
+                    // 'week_three' => ($day >= '16' && $day <= '22') ? $log->total_survey : '',
+                    // 'week_four' => ($day >= '23' && $day <= '31') ? $log->total_survey : '',
+                    'bar' => $bar,
                     'reports' => $log->total_survey,
+                    'week_range' =>  str_replace('-','/',substr($weeks[$index+1][0],5)) .' - '.str_replace('-','/',substr($weeks[$index+1][1],5)),
                 ];
             }
 
@@ -1405,8 +1432,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $filters->site_id;
             if ($request->site_id)
                 $site_id = $request->site_id;
-
-            $current_year = date("Y");
             if ($request->by == 3) {
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
@@ -1414,35 +1439,36 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date = $request->start_date;
                 $end_date = $request->end_date;
             }
-            $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-            $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
                 ->whereBetween('created_at', [$start_date, $end_date])
-                ->where('remarks', 'Done')
+                ->where('remarks','Done')
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
                 ->get();
-            // echo '-----------------------------';
-            // echo '<pre>';
-            // print_r($logs);
-            // echo '</pre>';
-            // echo '-----------------------------';
 
             $per_month = [];
+            $month = explode("-",$request->month);
+            $monthz = $month[1];
+            $year = $month[0];
+            $lastDayOfWeek = '7'; //1 (for monday) to 7 (for sunday)
+            $weeks = $this->getWeeksInMonth($year, $monthz, $lastDayOfWeek);
             foreach ($logs as $index => $log) {
-                //echo '<<'.$log->created_at .'---'.$log->total_survey.'>>';
                 $day = date("d", strtotime($log->created_at));
-                //echo '<<' . $day . '>>';
+                $set = $index+1;
+                $bar = array();
+                foreach ($weeks as $weekNumber => $week) {
+                    $monday = substr($week[0],8);
+                    $sunday = substr($week[1],8);
+                    $bar[] = ($day >= $monday && $day <= $sunday) ? $log->total_survey : '';
+                }
                 $per_month[] = [
                     'building_name' => $log->building_name,
-                    'week_one' => ($day >= '01' && $day <= '07') ? $log->total_survey : '',
-                    'week_two' => ($day >= '08' && $day <= '15') ? $log->total_survey : '',
-                    'week_three' => ($day >= '16' && $day <= '22') ? $log->total_survey : '',
-                    'week_four' => ($day >= '23' && $day <= '31') ? $log->total_survey : '',
+                    'bar' => $bar,
                     'reports' => $log->total_survey,
+                    'week_range' =>  str_replace('-','/',substr($weeks[$index+1][0],5)) .' - '.str_replace('-','/',substr($weeks[$index+1][1],5)),
                 ];
             }
 
@@ -1485,7 +1511,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->groupBy('questionnaire_answer_id')
                 ->get();
             $sum = 0;
-            
+
             //print_r($sum);
             //print_r(count($logs));
             if (count($logs) > 0) {
@@ -2411,4 +2437,25 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             ], 422);
         }
     }
+        public function getWeeksInMonth($year, $month, $lastDayOfWeek)
+        {
+            $aWeeksOfMonth = [];
+             $date = new DateTime("{$year}-{$month}-01");
+            //$date = Carbon::create("{$year}-{$month}-01");
+            $iDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+            $aOneWeek = [$date->format('Y-m-d')];
+            $weekNumber = 1;
+            for ($i = 1; $i <= $iDaysInMonth; $i++) {
+                if ($lastDayOfWeek == $date->format('N') || $i == $iDaysInMonth) {
+                    $aOneWeek[]      = $date->format('Y-m-d');
+                    $aWeeksOfMonth[$weekNumber++] = $aOneWeek;
+                    $date->add(new DateInterval('P1D'));
+                   // $date->add(CarbonInterval::days(1));
+                    $aOneWeek = [$date->format('Y-m-d')];
+                    $i++;
+                }
+                $date->add(new DateInterval('P1D'));
+            }
+            return $aWeeksOfMonth;
+        }
 }
