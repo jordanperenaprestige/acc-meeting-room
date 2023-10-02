@@ -1416,16 +1416,22 @@ export default {
 		filterChartByMonth: function () {
 
 			var filter = this.filter;
+			filter.day = '';
+			filter.week = '';
+			filter.year = '';
 			console.log('>>>>>>>month'); console.log(filter); console.log('<<<<<<<');
 			$.get("/admin/dashboard/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
+				let week_range = [];
 				var yValues = [];
-				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8'];
+				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8','#ff00cc', '#ff0000'];
 
 
-				$.each(data.data, function (key, value) {
+				$.each(data.data[0], function (key, value) {  ///console.log('>>>>'); console.log(value);
 					let background_color = dynamicColors[key];
 					yValues.push(value.reports);
+					var bar = value.bar;
+					//var week = value.week_range;
 					datasets.push({
 						label: value.building_name + '(Reports: ' + value.reports + ')',
 						backgroundColor: background_color,
@@ -1435,9 +1441,14 @@ export default {
 						pointStrokeColor: background_color,
 						pointHighlightFill: '#fff',
 						pointHighlightStroke: background_color,
-						data: [value.week_one, value.week_two, value.week_three, value.week_four]
+						data: bar
 					});
+					//week_range.push(week);
 				});
+				$.each(data.data[1], function (key, value) {  
+					week_range.push(value); 
+				});
+				
 				let sum_reports_total = 0;
 
 				// calculate sum using forEach() method
@@ -1448,7 +1459,7 @@ export default {
 				$('#reports_total').text(sum_reports_total);
 
 				var areaChartData = {
-					labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+					labels: week_range,
 					datasets: datasets
 				};
 
@@ -1486,12 +1497,15 @@ export default {
 			});
 			$.get("/admin/dashboard/trend-incident-by-month/list", filter, function (data) {
 				let datasets = [];
+				let week_range = [];
 				var yValues = [];
-				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8'];
-
-				$.each(data.data, function (key, value) {
+				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8','#ff00cc', '#ff0000']; 
+//console.log('>>>>data');  console.log(data.data); 
+				$.each(data.data[0], function (key, value) { 
 					let background_color = dynamicColors[key];
 					yValues.push(value.reports);
+					var bar = value.bar;
+					var week = value.week_range;
 					datasets.push({
 						label: value.building_name + '(Incident(s): ' + value.reports + ')',
 						backgroundColor: background_color,
@@ -1501,8 +1515,15 @@ export default {
 						pointStrokeColor: background_color,
 						pointHighlightFill: '#fff',
 						pointHighlightStroke: background_color,
-						data: [value.week_one, value.week_two, value.week_three, value.week_four]
+						data: bar
+						//data: [value.week_one, value.week_two, value.week_three, value.week_four]
 					});
+					
+					console.log('range:');console.log(week_range);
+					console.log(datasets);
+				});
+				$.each(data.data[1], function (key, value) {  
+					week_range.push(value); 
 				});
 				let sum_incidents_total = 0;
 				yValues.forEach(num => {
@@ -1512,7 +1533,8 @@ export default {
 				$('#incidents_total').text(sum_incidents_total);
 
 				var areaChartData = {
-					labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+					labels: week_range,
+					//labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
 					datasets: datasets
 				};
 

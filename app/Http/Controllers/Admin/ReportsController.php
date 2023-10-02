@@ -1356,10 +1356,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $filters->site_id;
             if ($request->site_id)
                 $site_id = $request->site_id;
-            //$current_year = date("Y");
-            //$start_date  = date("Y-m-d H:i:s", mktime(0, 0, 0, $request->month, 1, 2023)); 
-            //$end_date = date("Y-m-d H:i:s", mktime(23, 59, 59, $request->month, 31, 2023)); 
-            //echo '>>>>>>>>>>>moneth: '.$request->month;
             if ($request->by == 3) {
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
@@ -1373,48 +1369,45 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
                 ->whereBetween('created_at', [$start_date, $end_date])
                 ->groupBy('site_building_id')
+               // ->groupBy('jordan')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
                 ->get();
-
+            $total_per_month = [];
             $per_month = [];
-            $month = explode("-",$request->month);
+            $per_range = [];
+            $month = explode("-", $request->month);
             $monthz = $month[1];
             $year = $month[0];
             $lastDayOfWeek = '7'; //1 (for monday) to 7 (for sunday)
             $weeks = $this->getWeeksInMonth($year, $monthz, $lastDayOfWeek);
-         //  echo '>>>>>>>>>>>>>'; echo '<pre>'; print_r($weeks); echo '</pre>';
             foreach ($logs as $index => $log) {
-                //echo '<<'.$log->created_at .'---'.$log->total_survey.'>>';
                 $day = date("d", strtotime($log->created_at));
-                //echo '<<' . $day . '>>';
-                $set = $index+1;
-                // $bar = [
-                //     ($day >= '01' && $day <= '07') ? $log->total_survey : '',
-                //     ($day >= '08' && $day <= '15') ? $log->total_survey : '',
-                //     ($day >= '16' && $day <= '22') ? $log->total_survey : '',
-                //     ($day >= '23' && $day <= '31') ? $log->total_survey : '',
-                // ];
+                $set = $index + 1;
                 $bar = array();
+
                 foreach ($weeks as $weekNumber => $week) {
-                    //echo "--W {$weekNumber}: {$week[0]} - {$week[1]}\r\n";
-                    $monday = substr($week[0],8);
-                    $sunday = substr($week[1],8);
-                    $bar[] = ($day >= $monday && $day <= $sunday) ? $log->total_survey : '';//echo substr($week[0],8) .'-'. substr($week[1],8);
-                    //echo '<br>';
+                    $monday = substr($week[0], 8);
+                    $sunday = substr($week[1], 8);
+                    $bar[] = ($day >= $monday && $day <= $sunday) ? $log->total_survey : '';
                 }
                 $per_month[] = [
                     'building_name' => $log->building_name,
-                    // 'week_one' => ($day >= '01' && $day <= '07') ? $log->total_survey : '',
-                    // 'week_two' => ($day >= '08' && $day <= '15') ? $log->total_survey : '',
-                    // 'week_three' => ($day >= '16' && $day <= '22') ? $log->total_survey : '',
-                    // 'week_four' => ($day >= '23' && $day <= '31') ? $log->total_survey : '',
                     'bar' => $bar,
                     'reports' => $log->total_survey,
-                    'week_range' =>  str_replace('-','/',substr($weeks[$index+1][0],5)) .' - '.str_replace('-','/',substr($weeks[$index+1][1],5)),
                 ];
             }
+            foreach ($weeks as $weekNumber => $week) {
+                $monday = substr($week[0], 8);
+                $sunday = substr($week[1], 8);
+            
+                $per_range[] = [
+                    str_replace('-', '/', substr($week[0], 5)) .'--'.str_replace('-', '/', substr($week[1], 5)),//str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
+                ];
 
-            return $this->response($per_month, 'Successfully Retreived!', 200);
+            }
+            $total_per_month[] = $per_month;
+            $total_per_month[] = $per_range;
+            return $this->response($total_per_month, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
@@ -1444,35 +1437,47 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             })
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
                 ->whereBetween('created_at', [$start_date, $end_date])
-                ->where('remarks','Done')
+                ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
+               // ->groupBy('jordan')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
                 ->get();
-
+            $total_per_month = [];
             $per_month = [];
-            $month = explode("-",$request->month);
+            $per_range = [];
+            $month = explode("-", $request->month);
             $monthz = $month[1];
             $year = $month[0];
             $lastDayOfWeek = '7'; //1 (for monday) to 7 (for sunday)
             $weeks = $this->getWeeksInMonth($year, $monthz, $lastDayOfWeek);
             foreach ($logs as $index => $log) {
                 $day = date("d", strtotime($log->created_at));
-                $set = $index+1;
+                $set = $index + 1;
                 $bar = array();
+
                 foreach ($weeks as $weekNumber => $week) {
-                    $monday = substr($week[0],8);
-                    $sunday = substr($week[1],8);
+                    $monday = substr($week[0], 8);
+                    $sunday = substr($week[1], 8);
                     $bar[] = ($day >= $monday && $day <= $sunday) ? $log->total_survey : '';
                 }
                 $per_month[] = [
                     'building_name' => $log->building_name,
                     'bar' => $bar,
                     'reports' => $log->total_survey,
-                    'week_range' =>  str_replace('-','/',substr($weeks[$index+1][0],5)) .' - '.str_replace('-','/',substr($weeks[$index+1][1],5)),
                 ];
             }
+            foreach ($weeks as $weekNumber => $week) {
+                $monday = substr($week[0], 8);
+                $sunday = substr($week[1], 8);
+            
+                $per_range[] = [
+                    str_replace('-', '/', substr($week[0], 5)) .'--'.str_replace('-', '/', substr($week[1], 5)),//str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
+                ];
 
-            return $this->response($per_month, 'Successfully Retreived!', 200);
+            }
+            $total_per_month[] = $per_month;
+            $total_per_month[] = $per_range;
+            return $this->response($total_per_month, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
                 'message' => $e->getMessage(),
@@ -2437,25 +2442,25 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             ], 422);
         }
     }
-        public function getWeeksInMonth($year, $month, $lastDayOfWeek)
-        {
-            $aWeeksOfMonth = [];
-             $date = new DateTime("{$year}-{$month}-01");
-            //$date = Carbon::create("{$year}-{$month}-01");
-            $iDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-            $aOneWeek = [$date->format('Y-m-d')];
-            $weekNumber = 1;
-            for ($i = 1; $i <= $iDaysInMonth; $i++) {
-                if ($lastDayOfWeek == $date->format('N') || $i == $iDaysInMonth) {
-                    $aOneWeek[]      = $date->format('Y-m-d');
-                    $aWeeksOfMonth[$weekNumber++] = $aOneWeek;
-                    $date->add(new DateInterval('P1D'));
-                   // $date->add(CarbonInterval::days(1));
-                    $aOneWeek = [$date->format('Y-m-d')];
-                    $i++;
-                }
+    public function getWeeksInMonth($year, $month, $lastDayOfWeek)
+    {
+        $aWeeksOfMonth = [];
+        $date = new DateTime("{$year}-{$month}-01");
+        //$date = Carbon::create("{$year}-{$month}-01");
+        $iDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        $aOneWeek = [$date->format('Y-m-d')];
+        $weekNumber = 1;
+        for ($i = 1; $i <= $iDaysInMonth; $i++) {
+            if ($lastDayOfWeek == $date->format('N') || $i == $iDaysInMonth) {
+                $aOneWeek[]      = $date->format('Y-m-d');
+                $aWeeksOfMonth[$weekNumber++] = $aOneWeek;
                 $date->add(new DateInterval('P1D'));
+                // $date->add(CarbonInterval::days(1));
+                $aOneWeek = [$date->format('Y-m-d')];
+                $i++;
             }
-            return $aWeeksOfMonth;
+            $date->add(new DateInterval('P1D'));
         }
+        return $aWeeksOfMonth;
+    }
 }
