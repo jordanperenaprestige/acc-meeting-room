@@ -1401,7 +1401,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $sunday = substr($week[1], 8);
             
                 $per_range[] = [
-                    str_replace('-', '/', substr($week[0], 5)) .'--'.str_replace('-', '/', substr($week[1], 5)),//str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
+                    str_replace('-', '/', substr($week[0], 5)) .'-'.str_replace('-', '/', substr($week[1], 5)),//str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
                 ];
 
             }
@@ -1471,7 +1471,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $sunday = substr($week[1], 8);
             
                 $per_range[] = [
-                    str_replace('-', '/', substr($week[0], 5)) .'--'.str_replace('-', '/', substr($week[1], 5)),//str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
+                    str_replace('-', '/', substr($week[0], 5)) .'-'.str_replace('-', '/', substr($week[1], 5)),//str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
                 ];
 
             }
