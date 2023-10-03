@@ -1378,7 +1378,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $month = explode("-", $request->month);
             $monthz = $month[1];
             $year = $month[0];
-            $lastDayOfWeek = '7'; //1 (for monday) to 7 (for sunday)
+            $lastDayOfWeek = '6'; //1 (for monday) to 7 (for sunday)
             $weeks = $this->getWeeksInMonth($year, $monthz, $lastDayOfWeek);
             foreach ($logs as $index => $log) {
                 $day = date("d", strtotime($log->created_at));
@@ -1448,7 +1448,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $month = explode("-", $request->month);
             $monthz = $month[1];
             $year = $month[0];
-            $lastDayOfWeek = '7'; //1 (for monday) to 7 (for sunday)
+            $lastDayOfWeek = '6'; //1 (for monday) to 7 (for sunday)
             $weeks = $this->getWeeksInMonth($year, $monthz, $lastDayOfWeek);
             foreach ($logs as $index => $log) {
                 $day = date("d", strtotime($log->created_at));
