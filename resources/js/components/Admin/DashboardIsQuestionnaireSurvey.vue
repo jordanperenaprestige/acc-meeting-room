@@ -34,13 +34,13 @@
 										</div>
 										<div v-show="by_month">
 											<!-- v-show="show_concerns" -->
-											<label for="month" class="col-form-label">Month</label>
+											<label for="month" class="col-form-label">week_of_month_start</label>
 											<date-picker v-model="filter.month" placeholder="Month" :config="options_M"
 												id="month" autocomplete="off" @dp-change="monthSelected"></date-picker>
 										</div>
 										<div v-show="by_year">
 											<!-- v-show="show_concerns" -->
-											<label for="month" class="col-form-label">Year</label>
+											<label for="year" class="col-form-label">Year</label>
 											<date-picker v-model="filter.year" placeholder="Year" :config="options_Y"
 												id="month" autocomplete="off" @dp-change="yearSelected"></date-picker>
 										</div>
@@ -84,7 +84,7 @@
 							<!-- </div> -->
 						</div>
 						<div class="card-body">
-							<div class="row">
+							<!-- <div class="row">
 								<div class="col-sm-4">
 									<label for="" class="col-form-label">Reports Total: <span id="reports_total">{{
 										reports_total }}</span></label>
@@ -118,7 +118,7 @@
 								<div class="col-md-6">
 									<div class="chart-responsive">
 										<canvas id="pieChartSurvey"
-											style="min-height: 250px; height: 250px; max-height: 280px; max-width: 100%;"></canvas>
+											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -127,7 +127,52 @@
 											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
 									</div>
 								</div>
+							</div> -->
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="" class="col-form-label">Reports Total: <span id="reports_total">{{
+										reports_total }}</span></label>
+									<div>The chart below provides a breakdown of total reported concern.</div>
+								</div>
 							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="chart-responsive">
+										<canvas id="reportBarChart"
+											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="" class="col-form-label">Incidents Total: <span id="incidents_total">{{
+										incidents_total }}</span></label>
+									<div>The chart below provides a breakdown of RESOLVED concerns only.</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="chart-responsive">
+										<canvas id="incidentBarChart"
+											style="min-height: 250px; height: 250px; max-height: 280px; max-width: 100%;"></canvas>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-1"></div>
+								<div class="col-md-4">
+									<div class="chart-responsive">
+										<canvas id="pieChartSurvey"
+										style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="chart-responsive">
+										<canvas id="pieChartSurveyAnswer"
+											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+									</div>
+								</div>
+							</div>	
 							<div class="row"></div>
 						</div>
 					</div>
@@ -178,6 +223,10 @@ export default {
 				format: 'YYYY-MM-DD',
 				useCurrent: false,
 			},
+			options_W: {
+				format: 'YYYY-MM-DD',
+				useCurrent: false,
+			},
 			options_YYYY_MM_DD: {
 				format: 'YYYY-MM-DD',
 				useCurrent: false,
@@ -207,7 +256,7 @@ export default {
 	},
 
 	methods: {
-		jordan: function(){
+		jordan: function () {
 			return 'test';
 		},
 		getSites: function () {
@@ -215,7 +264,7 @@ export default {
 				.then(response => this.sites = response.data.data);
 		},
 		filterBy: function () {
-
+			//alert('filter by: ' + this.filter.by);
 			if (this.filter.by == 0) {//lifetime
 				this.by_day = false;
 				this.by_week = false;
@@ -223,12 +272,11 @@ export default {
 				this.by_year = false;
 				this.by_start = false;
 				this.by_end = false;
-				const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
-				const currentDay = moment(new Date()).format("YYYY-MM-DD");
-				this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
-				this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
+				// const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
+				// const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				// this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
+				// this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
 				this.filterChartByDaily();
-				//alert('lifetime');
 			} else if (this.filter.by == 1) {//day
 				// this.clear_filter();
 				this.by_day = true;
@@ -238,25 +286,14 @@ export default {
 				this.by_start = false;
 				this.by_end = false;
 
-				const currentDay = moment(new Date()).format("YYYY-MM-DD");
-				this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
-				//alert(this.filter.day);
-				// axios.get('/admin/reports/filter-survey-first-last')
-				// 	.then(response => {
-				// 		var day = response.data.data;
-				// 		alert(day);
-				// 		if (day == 0) {
-				// 			this.filterChartByDaily();
-				// 		} else {
-				// 			this.filterChartByDay();
-				// 		}
+				// const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				// this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
 
-				// 	});
 				this.filterChartByDay();
-				//this.filterChartByDaily();
 			}
 			else if (this.filter.by == 2) {//week
-				this.clear_filter();
+				//this.clear_filter();
+				//alert(this.filter.by + 'for week');
 				this.by_day = false;
 				this.by_week = true;
 				this.by_month = false;
@@ -264,13 +301,10 @@ export default {
 				this.by_start = false;
 				this.by_end = false;
 
-				const currentDay = moment(new Date()).format("YYYY-MM-DD");
-				this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
-				// axios.get('/admin/reports/filter-survey-first-last')
-				// 	.then(response => {
-				// 		var day = response.data.data;
-				// 		//alert(day);
-				// 	});
+				// const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				// this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
+				// const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				// this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
 				this.filterChartByWeek();
 			}
 			else if (this.filter.by == 3) {//month
@@ -299,15 +333,17 @@ export default {
 				this.by_year = true;
 				this.by_start = false;
 				this.by_end = false;
-				const currentYear = moment(new Date()).format("YYYY");
+				//const currentYear = moment(new Date()).format("YYYY");
 				//console.log(currentYear);
-				this.filter.year = currentYear;
-				this.filter.year = currentYear; (this.filter.year == '') ? currentYear : this.filter.year;
+				//this.filter.year = currentYear;
+				//this.filter.year = currentYear; (this.filter.year == '') ? currentYear : this.filter.year;
 				// axios.get('/admin/reports/filter-survey-first-last')
 				// 	.then(response => {
 				// 		var day = response.data.data;
 				// 		alert(day);
 				// 	}); alert('year');
+				const currentYear = moment().year().toString();
+				this.filter.year = (this.filter.year == '') ? currentYear : this.filter.year;
 				this.filterChartByYear();
 			} else { //customize
 				// this.clear_filter();
@@ -317,29 +353,34 @@ export default {
 				this.by_year = false;
 				this.by_start = true;
 				this.by_end = true;
-				const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
-				const currentDay = moment(new Date()).format("YYYY-MM-DD");
-				this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
-				this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
+				// const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
+				// const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				// this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
+				// this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
 				//lert(this.filter.start_date +'--'+this.filter.end_date);
 				this.filterChartByDaily();
 			}
 		},
 
-		filterChart: function () { //alert('site:'+this.filter.site_id);
+		filterChart: function () {
 			const moment = require('moment');
 			if (this.filter.by == 0) {
+				this.by_day = false;
+				this.by_week = false;
+				this.by_month = false;
+				this.by_year = false;
+				this.by_start = false;
+				this.by_end = false;
 				this.filterChartByDaily();
-
 			} else if (this.filter.by == 1) {//day
-				const currentDay = moment(new Date()).format("YYYY-MM-DD");
-				this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
+				// const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				// this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
 				this.filterChartByDay();
 
 			}
 			else if (this.filter.by == 2) {//Week
-				const currentDay = moment(new Date()).format("YYYY-MM-DD");
-				this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
+				// const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				// this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
 				this.filterChartByWeek();
 			}
 			else if (this.filter.by == 3) {//Month
@@ -375,6 +416,18 @@ export default {
 
 		filterChartByDaily: function () {
 			var filter = this.filter;
+			filter.start_date = '';
+			filter.end_date = '';
+			filter.day = '';
+			filter.week = '';
+			filter.month = '';
+			filter.year = '';
+			const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
+			const currentDay = moment(new Date()).format("YYYY-MM-DD");
+			filter.start_date = firstDayYear;
+			filter.end_date = currentDay;
+			//alert(filter.start_date + ' - ' + filter.end_date);
+			//alert('filterChartByDaily D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year + ' Start ' + filter.start_date+ ' End ' + filter.end_date);
 			$.get("/admin/reports/trend-report-by-daily/list", filter, function (data) {
 				var xValues = [];
 				var yValues = [];
@@ -705,17 +758,21 @@ export default {
 			filter.week = '';
 			filter.month = '';
 			filter.year = '';
+			const currentDay = moment(new Date()).format("YYYY-MM-DD");
+			filter.day = (filter.day == '' || filter.day == null) ? currentDay : filter.day;
+
+			this.filter.day = filter.day; //alert(this.filter.day);
+			console.log('filterChartByDay D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
 			$.get("/admin/reports/trend-report-by-day/list", filter, function (data) {
-				let datasetsz = [];
+				let datasets_day = [];
 				var yValues = [];
 
 				let dynamicColorsz = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
 
-
 				$.each(data.data, function (key, value) {
 					let background_colorz = dynamicColorsz[key];
 					yValues.push(value.reports);
-					datasetsz.push({
+					datasets_day.push({
 						label: value.building_name + '(Report: ' + value.reports + ')',
 						backgroundColor: background_colorz,
 						borderColor: background_colorz,
@@ -738,17 +795,17 @@ export default {
 				$('#reports_total').text(sum_reports_total);
 
 
-				var areaChartDataz = {
+				var areaChartDataDay = {
 					labels: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
-					datasets: datasetsz
+					datasets: datasets_day
 				};
 
-				var barChartDataz = $.extend(true, {}, areaChartDataz);
+				var barChartDataDay = $.extend(true, {}, areaChartDataDay);
 
-				var reportBarChartCanvasz = $('#reportBarChart').get(0).getContext('2d')
-				var reportBarChartDataz = $.extend(true, {}, barChartDataz)
+				var reportBarChartCanvasDay = $('#reportBarChart').get(0).getContext('2d')
+				var reportBarChartDataDay = $.extend(true, {}, barChartDataDay)
 
-				var reportBarChartOptionsz = {
+				var reportBarChartOptionsDay = {
 					responsive: true,
 					maintainAspectRatio: false,
 					scales: {
@@ -765,13 +822,13 @@ export default {
 						}
 					}
 				}
-				if (window.report_bar != undefined)
-					window.report_bar.destroy();
-				window.report_bar = new Chart(reportBarChartCanvasz, {
+				if (window.report_bar_day != undefined)
+					window.report_bar_day.destroy();
+				window.report_bar_day = new Chart(reportBarChartCanvasDay, {
 					//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
-					data: reportBarChartDataz,
-					options: reportBarChartOptionsz
+					data: reportBarChartDataDay,
+					options: reportBarChartOptionsDay
 				})
 
 			});
@@ -1022,9 +1079,12 @@ export default {
 			filter.day = '';
 			filter.month = '';
 			filter.year = '';
-			
+			console.log('week D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
+			const currentDay = moment(new Date()).format("YYYY-MM-DD");
+			filter.week = (filter.week == '') ? currentDay : filter.week;
+			this.filter.week = filter.week;
 			$.get("/admin/reports/trend-report-by-week/list", filter, function (data) {
-				console.log('trend-report-by-week'); 
+				console.log('trend-report-by-week');
 				let datasets = [];
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272'];
@@ -1048,17 +1108,17 @@ export default {
 				// calculate sum using forEach() method
 				yValues.forEach(num => {
 					sum_reports_total += num;
-					})
+				})
 				this.reports_total = sum_reports_total;
 				$('#reports_total').text(sum_reports_total);
-				var sun = obj.setToDate(new Date(obj.filter.week), 0); 
+				var sun = obj.setToDate(new Date(obj.filter.week), 0);
 				var mon = obj.setToDate(new Date(obj.filter.week), 1);
 				var tue = obj.setToDate(new Date(obj.filter.week), 2);
 				var wed = obj.setToDate(new Date(obj.filter.week), 3);
 				var thu = obj.setToDate(new Date(obj.filter.week), 4);
 				var fri = obj.setToDate(new Date(obj.filter.week), 5);
 				var sat = obj.setToDate(new Date(obj.filter.week), 6);
-				
+
 				let aLabels = [sun, mon, tue, wed, thu, fri, sat];
 				var areaChartData = {
 					labels: aLabels,
@@ -1118,7 +1178,7 @@ export default {
 						pointStrokeColor: background_colorz,
 						pointHighlightFill: '#fff',
 						pointHighlightStroke: background_colorz,
-						data: [value.mon, value.tue, value.wed, value.thu, value.fri]
+						data: [value.sun, value.mon, value.tue, value.wed, value.thu, value.fri, value.sat]
 					});
 				});
 				let sum_incidents_total = 0;
@@ -1131,16 +1191,16 @@ export default {
 				$('#incidents_total').text(sum_incidents_total);
 
 
-				var sun = obj.setToDate(new Date(obj.filter.week), 0); 
+				var sun = obj.setToDate(new Date(obj.filter.week), 0);
 				var mon = obj.setToDate(new Date(obj.filter.week), 1);
 				var tue = obj.setToDate(new Date(obj.filter.week), 2);
 				var wed = obj.setToDate(new Date(obj.filter.week), 3);
 				var thu = obj.setToDate(new Date(obj.filter.week), 4);
 				var fri = obj.setToDate(new Date(obj.filter.week), 5);
 				var sat = obj.setToDate(new Date(obj.filter.week), 6);
-				
+
 				let aLabels = [sun, mon, tue, wed, thu, fri, sat];
-			
+
 				var areaChartDataz = {
 					labels: aLabels,
 					datasets: datasetsz
@@ -1356,7 +1416,11 @@ export default {
 			filter.day = '';
 			filter.week = '';
 			filter.year = '';
-
+			console.log('D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
+			const currentMonth = moment(new Date()).format("YYYY-MM");
+			//console.log(currentMonth);
+			filter.month = currentMonth; (filter.month == '') ? currentMonth : filter.month;
+			this.filter.month = filter.month;
 			$.get("/admin/reports/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
 				let week_range = [];
@@ -1456,8 +1520,8 @@ export default {
 						//data: [value.week_one, value.week_two, value.week_three, value.week_four]
 					});
 
-					console.log('range:'); console.log(week_range);
-					console.log(datasets);
+					//console.log('range:'); console.log(week_range);
+					//console.log(datasets);
 				});
 				$.each(data.data[1], function (key, value) {
 					week_range.push(value);
@@ -1680,7 +1744,10 @@ export default {
 			filter.day = '';
 			filter.week = '';
 			filter.month = '';
-
+			console.log('YEar D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
+			const currentYear = moment().year().toString();
+			filter.year = (filter.year == '') ? currentYear : filter.year;
+			this.filter.year = filter.year; //alert(this.filter.year + 'year');
 			$.get("/admin/reports/trend-report-by-year/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -2090,27 +2157,40 @@ export default {
 		},
 
 		daySelected: function (e) {
-			//alert(this.filter.day + 'day');
+			//alert(this.filter.day + 'daySelected');
 			//alert('Site:' + this.filter.site_id);
-			this.filterChartByDay();
+			if (this.filter.day != null) {
+				this.filterChartByDay();// nakukuha sa filterChartByDaily
+			}
+
 		},
 		weekSelected: function (e) {
-			//alert(this.filter.week + 'week');
+			//alert(this.filter.week + 'weekSelected');
 			//alert('Site:' + this.filter.site_id);
-			this.filterChartByWeek();
+			if (this.filter.week != null) {
+				this.filterChartByWeek();// nakukuha sa filterChartByDaily
+			}
 		},
 		monthSelected: function (e) {
-			//alert(this.filter.month + 'month');
+			//alert(this.filter.month + 'monthSelected');
 			//alert('Site:' + this.filter.site_id);
-			this.filterChartByMonth();
+			
+			if (this.filter.month != null) {
+				this.filterChartByMonth();// nakukuha sa filterChartByDaily
+			}
 		},
 		yearSelected: function (e) {
-			//alert(this.filter.year + 'year');
+			alert(this.filter.year + 'yearSelected');
 			//alert('Site:' + this.filter.site_id);
-			this.filterChartByYear();
+			
+			if (this.filter.year != null) {
+				console.log('ys');
+				console.log(e);
+				this.filterChartByYear();// nakukuha sa filterChartByDaily
+			}
 		},
 		customizedSelected: function (e) {
-
+console.log('sa customizedSelected');console.log(this.filter);
 			var d_start = new Date(this.filter.start_date);
 			var d_end = new Date(this.filter.end_date);
 			var m_start = d_start.getMonth();
@@ -2171,7 +2251,7 @@ export default {
 			// // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
 			// // alert(Difference_In_Days);
 		},
-		setToDate: function (date, day_num) { //feeling bad because of the boil
+		setToDate: function (date, day_num) {
 			var day = date.getDay() || 7;
 			if (day !== 1) {
 
@@ -2184,10 +2264,10 @@ export default {
 				month: '2-digit',
 				year: 'numeric',
 			}).substring(0, 5);
-			
+
 			return month_day;
 		},
-		
+
 	},
 	components: {
 		datePicker

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AppBaseController;
-use DateTime;
 use App\Models\SitePoint;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -15,8 +14,8 @@ use App\Models\QuestionnaireAnswer;
 use App\Models\QuestionnaireSurvey;
 use App\Models\SendSMS;
 use Illuminate\Support\Facades\DB;
-
-
+use DateTime;
+use DateInterval;
 use Carbon\Carbon;
 
 class DashboardController extends AppBaseController
@@ -1706,5 +1705,26 @@ class DashboardController extends AppBaseController
                 'status_code' => 422,
             ], 422);
         }
+    }
+    public function getWeeksInMonth($year, $month, $lastDayOfWeek)
+    {
+        $aWeeksOfMonth = [];
+        $date = new DateTime("{$year}-{$month}-01");
+        //$date = Carbon::create("{$year}-{$month}-01");
+        $iDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        $aOneWeek = [$date->format('Y-m-d')];
+        $weekNumber = 1;
+        for ($i = 1; $i <= $iDaysInMonth; $i++) {
+            if ($lastDayOfWeek == $date->format('N') || $i == $iDaysInMonth) {
+                $aOneWeek[]      = $date->format('Y-m-d');
+                $aWeeksOfMonth[$weekNumber++] = $aOneWeek;
+                $date->add(new DateInterval('P1D'));
+                // $date->add(CarbonInterval::days(1));
+                $aOneWeek = [$date->format('Y-m-d')];
+                $i++;
+            }
+            $date->add(new DateInterval('P1D'));
+        }
+        return $aWeeksOfMonth;
     }
 }

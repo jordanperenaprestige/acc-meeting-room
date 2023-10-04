@@ -140,10 +140,11 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-md-6">
+								<div class="col-md-1"></div>
+								<div class="col-md-4">
 									<div class="chart-responsive">
 										<canvas id="pieChartSurvey"
-											style="min-height: 250px; height: 250px; max-height: 280px; max-width: 100%;"></canvas>
+										style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -381,10 +382,13 @@ export default {
 				this.by_year = true;
 				this.by_start = false;
 				this.by_end = false;
-				const currentYear = moment(new Date()).format("YYYY");
+				//const currentYear = moment(new Date()).format("YYYY");
 				//console.log(currentYear);
-				this.filter.year = currentYear;
-				this.filter.year = currentYear; (this.filter.year == '') ? currentYear : this.filter.year;
+				
+				// this.filter.year = currentYear; (this.filter.year == '') ? currentYear : this.filter.year;
+				// this.filterChartByYear();
+				const currentYear = moment().year().toString();
+				this.filter.year = (this.filter.year == '') ? currentYear : this.filter.year;
 				this.filterChartByYear();
 			} else { //customize
 				// this.clear_filter();
@@ -2159,25 +2163,58 @@ export default {
 			console.log(this.filter);
 		},
 
+		// daySelected: function (e) {
+		// 	//alert(this.filter.day + 'day');
+		// 	this.filterChartByDay();
+		// 	console.log(this.filter);
+		// },
+		// weekSelected: function (e) {
+		// 	//alert(this.filter.week + 'week');
+		// 	this.filterChartByWeek();
+		// 	console.log(this.filter);
+		// },
+		// monthSelected: function (e) {
+		// 	//alert(this.filter.month + 'month');
+		// 	this.filterChartByMonth();
+		// 	console.log(this.filter);
+		// },
+		// yearSelected: function (e) {
+		// 	//alert(this.filter.year + 'year');
+		// 	this.filterChartByYear();
+		// 	console.log(this.filter);
+		// },
 		daySelected: function (e) {
-			//alert(this.filter.day + 'day');
-			this.filterChartByDay();
-			console.log(this.filter);
+			//alert(this.filter.day + 'daySelected');
+			//alert('Site:' + this.filter.site_id);
+			if (this.filter.day != null) {
+				this.filterChartByDay();// nakukuha sa filterChartByDaily
+			}
+
 		},
 		weekSelected: function (e) {
-			//alert(this.filter.week + 'week');
-			this.filterChartByWeek();
-			console.log(this.filter);
+			//alert(this.filter.week + 'weekSelected');
+			//alert('Site:' + this.filter.site_id);
+			if (this.filter.week != null) {
+				this.filterChartByWeek();// nakukuha sa filterChartByDaily
+			}
 		},
 		monthSelected: function (e) {
-			//alert(this.filter.month + 'month');
-			this.filterChartByMonth();
-			console.log(this.filter);
+			//alert(this.filter.month + 'monthSelected');
+			//alert('Site:' + this.filter.site_id);
+			
+			if (this.filter.month != null) {
+				this.filterChartByMonth();// nakukuha sa filterChartByDaily
+			}
 		},
 		yearSelected: function (e) {
-			//alert(this.filter.year + 'year');
-			this.filterChartByYear();
-			console.log(this.filter);
+			//alert(this.filter.year + 'yearSelected');
+			//alert('Site:' + this.filter.site_id);
+			
+			if (this.filter.year != null) {
+				console.log('ys');
+				console.log(e);
+				this.filterChartByYear();// nakukuha sa filterChartByDaily
+			}
 		},
 		customizedSelected: function (e) {
 			var d_start = new Date(this.filter.start_date);

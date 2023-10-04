@@ -695,6 +695,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')   
                 ->groupBy('questionnaire_answer_id')
+                ->orderBy('created_at', 'ASC')
                 ->get();
             $sum = 0;
             if (count($logs) > 0) {
@@ -733,6 +734,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             })
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->orderBy('created_at', 'ASC')
                 ->get()
                 ->count();
             return $this->response($logs, 'Successfully Retreived!', 200);
@@ -765,6 +767,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->groupBy('site_building_id')
 
                 ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
+                ->orderBy('created_at', 'ASC')
                 ->get();
             $created_at = [];
             $per_day = [];
@@ -808,6 +811,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->where('Remarks', 'Done')
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
+                ->orderBy('created_at', 'ASC')
                 ->get();
             $created_at = [];
             $per_day = [];
@@ -1085,6 +1089,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
                 ->groupBy('questionnaire_answer_id')
+                ->orderBy('created_at', 'ASC')
                 ->get();
             $sum = 0;
             if (count($logs) > 0) {
@@ -1170,6 +1175,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->where('created_at', '<=', date('Y-m-d', strtotime($end_date)) . ' 23:59:59')
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
+                ->orderBy('created_at', 'ASC')
                 ->get();
 
             $per_day = [];
@@ -1208,8 +1214,8 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             if ($request->site_id)
                 $site_id = $request->site_id;
 
-            $current_year = date("Y");
             $date = Carbon::parse($request->week);
+            $current_year = date("Y");
             if ($request->by == 2) {
                 $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                 $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
@@ -1217,6 +1223,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date = $request->start_date;
                 $end_date = $request->end_date;
             }
+
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -1225,7 +1232,8 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->where('created_at', '<=', date('Y-m-d', strtotime($end_date)) . ' 23:59:59')
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
-                ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
+                ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
+                ->orderBy('created_at', 'ASC')
                 ->get();
 
             $per_day = [];
@@ -1233,17 +1241,17 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $day = date("D", strtotime($log->created_at));
                 $per_day[] = [
                     'building_name' => $log->building_name,
+                    'sun' => ($day == 'Sun') ? $log->total_survey : '',
                     'mon' => ($day == 'Mon') ? $log->total_survey : '',
                     'tue' => ($day == 'Tue') ? $log->total_survey : '',
                     'wed' => ($day == 'Wed') ? $log->total_survey : '',
                     'thu' => ($day == 'Thu') ? $log->total_survey : '',
                     'fri' => ($day == 'Fri') ? $log->total_survey : '',
                     'sat' => ($day == 'Sat') ? $log->total_survey : '',
-                    'sun' => ($day == 'Sun') ? $log->total_survey : '',
                     'reports' => $log->total_survey,
                 ];
             }
-
+            
             return $this->response($per_day, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
