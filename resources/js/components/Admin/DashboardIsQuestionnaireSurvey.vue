@@ -76,10 +76,9 @@
 										</label>
 									</div>
 									<div class="col-sm-2">
-											<label for="userName" class="col-form-label">SMS: <span
-													id="total_sms"></span>&nbsp;
-											</label>
-										</div>
+										<label for="userName" class="col-form-label">SMS: <span id="total_sms"></span>&nbsp;
+										</label>
+									</div>
 								</div>
 							</form>
 							<!-- </div> -->
@@ -89,8 +88,7 @@
 								<div class="col-sm-4">
 									<label for="" class="col-form-label">Reports Total: <span id="reports_total">{{
 										reports_total }}</span></label>
-									<div>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur,
-										adipisci velit...</div>
+									<div>The chart below provides a breakdown of total reported concern.</div>
 								</div>
 							</div>
 							<div class="row">
@@ -105,8 +103,7 @@
 								<div class="col-sm-4">
 									<label for="" class="col-form-label">Incidents Total: <span id="incidents_total">{{
 										incidents_total }}</span></label>
-									<div>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur,
-										adipisci velit...</div>
+									<div>The chart below provides a breakdown of RESOLVED concerns only.</div>
 								</div>
 							</div>
 							<div class="row">
@@ -210,6 +207,9 @@ export default {
 	},
 
 	methods: {
+		jordan: function(){
+			return 'test';
+		},
 		getSites: function () {
 			axios.get('/admin/site/get-all')
 				.then(response => this.sites = response.data.data);
@@ -702,9 +702,9 @@ export default {
 
 		filterChartByDay: function () {
 			var filter = this.filter;
-		    	filter.week = '';
-				filter.month = '';
-				filter.year = '';
+			filter.week = '';
+			filter.month = '';
+			filter.year = '';
 			$.get("/admin/reports/trend-report-by-day/list", filter, function (data) {
 				let datasetsz = [];
 				var yValues = [];
@@ -1017,12 +1017,14 @@ export default {
 		},
 
 		filterChartByWeek: function () {
-
+			var obj = this;
 			var filter = this.filter;
-				filter.day = '';
-				filter.month = '';
-				filter.year = '';
-			$.get("/admin/reports/trend-report-by-week/list", filter, function (data) { console.log('trend-report-by-week'); console.log(filter);
+			filter.day = '';
+			filter.month = '';
+			filter.year = '';
+			
+			$.get("/admin/reports/trend-report-by-week/list", filter, function (data) {
+				console.log('trend-report-by-week'); 
 				let datasets = [];
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272'];
@@ -1038,7 +1040,7 @@ export default {
 						pointStrokeColor: background_color,
 						pointHighlightFill: '#fff',
 						pointHighlightStroke: background_color,
-						data: [value.mon, value.tue, value.wed, value.thu, value.fri, value.sat, value.sun]
+						data: [value.sun, value.mon, value.tue, value.wed, value.thu, value.fri, value.sat]
 					});
 				});
 				let sum_reports_total = 0;
@@ -1046,13 +1048,20 @@ export default {
 				// calculate sum using forEach() method
 				yValues.forEach(num => {
 					sum_reports_total += num;
-				})
+					})
 				this.reports_total = sum_reports_total;
 				$('#reports_total').text(sum_reports_total);
-
-
+				var sun = obj.setToDate(new Date(obj.filter.week), 0); 
+				var mon = obj.setToDate(new Date(obj.filter.week), 1);
+				var tue = obj.setToDate(new Date(obj.filter.week), 2);
+				var wed = obj.setToDate(new Date(obj.filter.week), 3);
+				var thu = obj.setToDate(new Date(obj.filter.week), 4);
+				var fri = obj.setToDate(new Date(obj.filter.week), 5);
+				var sat = obj.setToDate(new Date(obj.filter.week), 6);
+				
+				let aLabels = [sun, mon, tue, wed, thu, fri, sat];
 				var areaChartData = {
-					labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+					labels: aLabels,
 					datasets: datasets
 				};
 
@@ -1087,10 +1096,10 @@ export default {
 					data: reportBarChartData,
 					options: reportBarChartOptions
 				})
-console.log('>>>>>>>>>>>'); console.log(data);
 			});
 
-			$.get("/admin/reports/trend-incident-by-week/list", filter, function (data) {console.log('trend-incident-by-week'); console.log(filter);
+			$.get("/admin/reports/trend-incident-by-week/list", filter, function (data) {
+				console.log('trend-incident-by-week'); console.log(filter);
 				let datasetsz = [];
 				var yValues = [];
 
@@ -1122,8 +1131,18 @@ console.log('>>>>>>>>>>>'); console.log(data);
 				$('#incidents_total').text(sum_incidents_total);
 
 
+				var sun = obj.setToDate(new Date(obj.filter.week), 0); 
+				var mon = obj.setToDate(new Date(obj.filter.week), 1);
+				var tue = obj.setToDate(new Date(obj.filter.week), 2);
+				var wed = obj.setToDate(new Date(obj.filter.week), 3);
+				var thu = obj.setToDate(new Date(obj.filter.week), 4);
+				var fri = obj.setToDate(new Date(obj.filter.week), 5);
+				var sat = obj.setToDate(new Date(obj.filter.week), 6);
+				
+				let aLabels = [sun, mon, tue, wed, thu, fri, sat];
+			
 				var areaChartDataz = {
-					labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+					labels: aLabels,
 					datasets: datasetsz
 				};
 
@@ -1161,7 +1180,8 @@ console.log('>>>>>>>>>>>'); console.log(data);
 
 			});
 
-			$.get("/admin/reports/donut-report-by-day/list", filter, function (data) {console.log('donut-report-by-day'); console.log(filter);
+			$.get("/admin/reports/donut-report-by-day/list", filter, function (data) {
+				console.log('donut-report-by-day'); console.log(filter);
 				let labels = [];
 				let data_value = [];
 				let incident_report = 0;
@@ -1241,7 +1261,8 @@ console.log('>>>>>>>>>>>'); console.log(data);
 				});
 			});
 
-			$.get("/admin/reports/donut-report-by-day-answer/list", filter, function (data) {console.log('donut-report-by-day-answer'); console.log(filter);
+			$.get("/admin/reports/donut-report-by-day-answer/list", filter, function (data) {
+				console.log('donut-report-by-day-answer'); console.log(filter);
 				let labels_answer = [];
 				let data_value_answer = [];
 				let incident_report_answer = 0;
@@ -1332,15 +1353,15 @@ console.log('>>>>>>>>>>>'); console.log(data);
 		filterChartByMonth: function () {
 
 			var filter = this.filter;
-			    filter.day = '';
-				filter.week = '';
-				filter.year = '';
+			filter.day = '';
+			filter.week = '';
+			filter.year = '';
 
 			$.get("/admin/reports/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
 				let week_range = [];
 				var yValues = [];
-				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8','#ff00cc', '#ff0000'];
+				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
 
 
 				$.each(data.data[0], function (key, value) {  ///console.log('>>>>'); console.log(value);
@@ -1361,10 +1382,10 @@ console.log('>>>>>>>>>>>'); console.log(data);
 					});
 					//week_range.push(week);
 				});
-				$.each(data.data[1], function (key, value) {  
-					week_range.push(value); 
+				$.each(data.data[1], function (key, value) {
+					week_range.push(value);
 				});
-				
+
 				let sum_reports_total = 0;
 
 				// calculate sum using forEach() method
@@ -1415,9 +1436,9 @@ console.log('>>>>>>>>>>>'); console.log(data);
 				let datasets = [];
 				let week_range = [];
 				var yValues = [];
-				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8','#ff00cc', '#ff0000']; 
-//console.log('>>>>data');  console.log(data.data); 
-				$.each(data.data[0], function (key, value) { 
+				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
+				//console.log('>>>>data');  console.log(data.data); 
+				$.each(data.data[0], function (key, value) {
 					let background_color = dynamicColors[key];
 					yValues.push(value.reports);
 					var bar = value.bar;
@@ -1434,12 +1455,12 @@ console.log('>>>>>>>>>>>'); console.log(data);
 						data: bar
 						//data: [value.week_one, value.week_two, value.week_three, value.week_four]
 					});
-					
-					console.log('range:');console.log(week_range);
+
+					console.log('range:'); console.log(week_range);
 					console.log(datasets);
 				});
-				$.each(data.data[1], function (key, value) {  
-					week_range.push(value); 
+				$.each(data.data[1], function (key, value) {
+					week_range.push(value);
 				});
 				let sum_incidents_total = 0;
 				yValues.forEach(num => {
@@ -1659,7 +1680,7 @@ console.log('>>>>>>>>>>>'); console.log(data);
 			filter.day = '';
 			filter.week = '';
 			filter.month = '';
-			
+
 			$.get("/admin/reports/trend-report-by-year/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -2150,6 +2171,23 @@ console.log('>>>>>>>>>>>'); console.log(data);
 			// // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
 			// // alert(Difference_In_Days);
 		},
+		setToDate: function (date, day_num) { //feeling bad because of the boil
+			var day = date.getDay() || 7;
+			if (day !== 1) {
+
+				date.setHours(-24 * (day - day_num));
+			}
+
+			var myDate = new Date(date);
+			var month_day = myDate.toLocaleString('en-PH', {
+				day: '2-digit',
+				month: '2-digit',
+				year: 'numeric',
+			}).substring(0, 5);
+			
+			return month_day;
+		},
+		
 	},
 	components: {
 		datePicker

@@ -113,8 +113,7 @@
 								<div class="col-sm-4">
 									<label for="" class="col-form-label">Reports Total: <span id="reports_total">{{
 										reports_total }}</span></label>
-									<div>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur,
-										adipisci velit...</div>
+									<div>The chart below provides a breakdown of total reported concern.</div>
 								</div>
 							</div>
 							<div class="row">
@@ -129,8 +128,7 @@
 								<div class="col-sm-4">
 									<label for="" class="col-form-label">Incidents Total: <span id="incidents_total">{{
 										incidents_total }}</span></label>
-									<div>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur,
-										adipisci velit...</div>
+									<div>The chart below provides a breakdown of RESOLVED concerns only.</div>
 								</div>
 							</div>
 							<div class="row">
@@ -1102,7 +1100,7 @@ export default {
 		},
 
 		filterChartByWeek: function () {
-
+			var obj = this;
 			var filter = this.filter;
 			console.log('>>>>>>>week'); console.log(filter); console.log('<<<<<<<');
 			$.get("/admin/dashboard/trend-report-by-week/list", filter, function (data) {
@@ -1132,10 +1130,18 @@ export default {
 				})
 				this.reports_total = sum_reports_total;
 				$('#reports_total').text(sum_reports_total);
-
+				var sun = obj.setToDate(new Date(obj.filter.week), 0); 
+				var mon = obj.setToDate(new Date(obj.filter.week), 1);
+				var tue = obj.setToDate(new Date(obj.filter.week), 2);
+				var wed = obj.setToDate(new Date(obj.filter.week), 3);
+				var thu = obj.setToDate(new Date(obj.filter.week), 4);
+				var fri = obj.setToDate(new Date(obj.filter.week), 5);
+				var sat = obj.setToDate(new Date(obj.filter.week), 6);
+				
+				let aLabels = [sun, mon, tue, wed, thu, fri, sat];
 
 				var areaChartData = {
-					labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+					labels: aLabels,
 					datasets: datasets
 				};
 
@@ -1203,10 +1209,18 @@ export default {
 				})
 				this.reports_total = sum_incidents_total;
 				$('#incidents_total').text(sum_incidents_total);
-
+				var sun = obj.setToDate(new Date(obj.filter.week), 0); 
+				var mon = obj.setToDate(new Date(obj.filter.week), 1);
+				var tue = obj.setToDate(new Date(obj.filter.week), 2);
+				var wed = obj.setToDate(new Date(obj.filter.week), 3);
+				var thu = obj.setToDate(new Date(obj.filter.week), 4);
+				var fri = obj.setToDate(new Date(obj.filter.week), 5);
+				var sat = obj.setToDate(new Date(obj.filter.week), 6);
+				
+				let aLabels = [sun, mon, tue, wed, thu, fri, sat];
 
 				var areaChartDataz = {
-					labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+					labels: aLabels,
 					datasets: datasetsz
 				};
 
@@ -2220,7 +2234,23 @@ export default {
 			diff /= (60 * 60 * 24 * 7);
 			return Math.abs(Math.round(diff));
 
-		}
+		},
+		setToDate: function (date, day_num) { 
+			var day = date.getDay() || 7;
+			if (day !== 1) {
+
+				date.setHours(-24 * (day - day_num));
+			}
+
+			var myDate = new Date(date);
+			var month_day = myDate.toLocaleString('en-PH', {
+				day: '2-digit',
+				month: '2-digit',
+				year: 'numeric',
+			}).substring(0, 5);
+			
+			return month_day;
+		},
 
 	},
 

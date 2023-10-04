@@ -693,7 +693,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
                 //->where('site_building_room_id', $id)
                 ->where('remarks', 'Done')
-                ->groupBy('site_building_id')
+                ->groupBy('site_building_id')   
                 ->groupBy('questionnaire_answer_id')
                 ->get();
             $sum = 0;
@@ -1155,8 +1155,8 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $date = Carbon::parse($request->week);
             $current_year = date("Y");
             if ($request->by == 2) {
-                $start_date = $date->startOfWeek()->format('Y-m-d');
-                $end_date = $date->endOfWeek()->format('Y-m-d');
+                $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
             } else {
                 $start_date = $request->start_date;
                 $end_date = $request->end_date;
@@ -1177,16 +1177,17 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $day = date("D", strtotime($log->created_at));
                 $per_day[] = [
                     'building_name' => $log->building_name,
+                    'sun' => ($day == 'Sun') ? $log->total_survey : '',
                     'mon' => ($day == 'Mon') ? $log->total_survey : '',
                     'tue' => ($day == 'Tue') ? $log->total_survey : '',
                     'wed' => ($day == 'Wed') ? $log->total_survey : '',
                     'thu' => ($day == 'Thu') ? $log->total_survey : '',
                     'fri' => ($day == 'Fri') ? $log->total_survey : '',
                     'sat' => ($day == 'Sat') ? $log->total_survey : '',
-                    'sun' => ($day == 'Sun') ? $log->total_survey : '',
                     'reports' => $log->total_survey,
                 ];
             }
+            
             return $this->response($per_day, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -1210,8 +1211,8 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $current_year = date("Y");
             $date = Carbon::parse($request->week);
             if ($request->by == 2) {
-                $start_date = $date->startOfWeek()->format('Y-m-d');
-                $end_date = $date->endOfWeek()->format('Y-m-d');
+                $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
             } else {
                 $start_date = $request->start_date;
                 $end_date = $request->end_date;

@@ -1126,7 +1126,7 @@ class DashboardController extends AppBaseController
             $month = explode("-", $request->month);
             $monthz = $month[1];
             $year = $month[0];
-            $lastDayOfWeek = '7'; //1 (for monday) to 7 (for sunday)
+            $lastDayOfWeek = '6'; //1 (for monday) to 7 (for sunday)
             $weeks = $this->getWeeksInMonth($year, $monthz, $lastDayOfWeek);
             foreach ($logs as $index => $log) {
                 $day = date("d", strtotime($log->created_at));
@@ -1149,7 +1149,7 @@ class DashboardController extends AppBaseController
                 $sunday = substr($week[1], 8);
             
                 $per_range[] = [
-                    str_replace('-', '/', substr($week[0], 5)) .'--'.str_replace('-', '/', substr($week[1], 5)),//str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
+                    str_replace('-', '/', substr($week[0], 5)) .'-'.str_replace('-', '/', substr($week[1], 5)),//str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
                 ];
 
             }
@@ -1253,7 +1253,7 @@ class DashboardController extends AppBaseController
         $month = explode("-", $request->month);
         $monthz = $month[1];
         $year = $month[0];
-        $lastDayOfWeek = '7'; //1 (for monday) to 7 (for sunday)
+        $lastDayOfWeek = '6'; //1 (for monday) to 7 (for sunday)
         $weeks = $this->getWeeksInMonth($year, $monthz, $lastDayOfWeek);
         foreach ($logs as $index => $log) {
             $day = date("d", strtotime($log->created_at));
@@ -1276,7 +1276,7 @@ class DashboardController extends AppBaseController
             $sunday = substr($week[1], 8);
         
             $per_range[] = [
-                str_replace('-', '/', substr($week[0], 5)) .'--'.str_replace('-', '/', substr($week[1], 5)),//str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
+                str_replace('-', '/', substr($week[0], 5)) .'-'.str_replace('-', '/', substr($week[1], 5)),//str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
             ];
 
         }
