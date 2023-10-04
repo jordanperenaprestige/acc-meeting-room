@@ -600,8 +600,8 @@ class DashboardController extends AppBaseController
             $current_year = date("Y");
             $date = Carbon::parse($request->week);
             if ($request->by == 2) {
-                $start_date = $date->startOfWeek()->format('Y-m-d');
-                $end_date = $date->endOfWeek()->format('Y-m-d');
+                $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
             } else {
                 $start_date = $request->start_date;
                 $end_date = $request->end_date;
@@ -666,8 +666,8 @@ class DashboardController extends AppBaseController
             $current_year = date("Y");
             $date = Carbon::parse($request->week);
             if ($request->by == 2) {
-                $start_date = $date->startOfWeek()->format('Y-m-d');
-                $end_date = $date->endOfWeek()->format('Y-m-d');
+                $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
             } else {
                 $start_date = $request->start_date;
                 $end_date = $request->end_date;
@@ -705,8 +705,8 @@ class DashboardController extends AppBaseController
 
             $date = Carbon::parse($request->week);
             if ($request->by == 2) {
-                $start_date = $date->startOfWeek()->format('Y-m-d');
-                $end_date = $date->endOfWeek()->format('Y-m-d');
+                $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
             } else {
                 $start_date = $request->start_date;
                 $end_date = $request->end_date;
@@ -766,8 +766,8 @@ class DashboardController extends AppBaseController
             $current_year = date("Y");
             $date = Carbon::parse($request->week);
             if ($request->by == 2) {
-                $start_date = $date->startOfWeek()->format('Y-m-d');
-                $end_date = $date->endOfWeek()->format('Y-m-d');
+                $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
             } else {
                 $start_date = $request->start_date;
                 $end_date = $request->end_date;
