@@ -2218,11 +2218,11 @@ console.log('sa customizedSelected');console.log(this.filter);
 				var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 				if (y_start == y_end) { 
 					console.log(y_start +'== '+y_end+'y_start == y_end<<<<');
-					if (week_of_month_start == week_of_month_end) {
+					if (week_of_month_start == week_of_month_end) { 
 						console.log('if'+week_of_month_start +'=='+ week_of_month_end + 'week_of_month_start == week_of_month_end<<<<');  
 						//this.filterChartByWeek();
 						this.filterChartByDaily();
-					} else {
+					} else { 
 						console.log('else'+week_of_month_start +'!='+ week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
 					//	alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
 						this.filterChartByDaily();
@@ -2240,7 +2240,7 @@ console.log('sa customizedSelected');console.log(this.filter);
 				if (y_start == y_end) { 
 					if (week_of_month_start == week_of_month_end) {
 						this.filterChartByDaily();
-					}else{ alert(this.filter.start_date +'--'+this.filter.end_date);
+					}else{ 
 						//this.filterChartByWeek();
 						//this.filterChartByDaily();
 						this.filterChartByMonth();
