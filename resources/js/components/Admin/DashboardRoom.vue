@@ -2252,7 +2252,7 @@ console.log('sa customizedSelected');console.log(this.filter);
 			var difference_in_time = d_end.getTime() - d_start.getTime();
 			var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
 			// // Difference_In_Days; 
-			if (difference_in_days == 0) { alert('if0'); //ok
+			if (difference_in_days == 0) { //alert('if0'); //ok
 				//alert(difference_in_days + 'day for hour');// 01 - 23 hour
 				this.filter.day = d_end; console.log('>>>>>>>>if'+difference_in_days);console.log(this.filter+'<<<<<<');
 				this.filterChartByDay();
