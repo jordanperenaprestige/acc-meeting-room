@@ -34,7 +34,7 @@
 										</div>
 										<div v-show="by_month">
 											<!-- v-show="show_concerns" -->
-											<label for="month" class="col-form-label">week_of_month_start</label>
+											<label for="month" class="col-form-label">Month</label>
 											<date-picker v-model="filter.month" placeholder="Month" :config="options_M"
 												id="month" autocomplete="off" @dp-change="monthSelected"></date-picker>
 										</div>
