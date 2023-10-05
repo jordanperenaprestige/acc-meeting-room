@@ -159,8 +159,8 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-md-1"></div>
-								<div class="col-md-4">
+								<!-- <div class="col-md-1"></div> -->
+								<div class="col-md-6">
 									<div class="chart-responsive">
 										<canvas id="pieChartSurvey"
 										style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
