@@ -2237,11 +2237,12 @@ console.log('sa customizedSelected');console.log(this.filter);
 				//alert(m_start + '== ' + m_end);
 				//alert(y_start + '== ' + y_end);
 				//this.filterChartByMonth();
-				if (y_start == y_end) {
+				if (y_start == y_end) { alert(week_of_month_start +'--'+week_of_month_end);
 					if (week_of_month_start == week_of_month_end) {
 						this.filterChartByDaily();
-					}else{alert('test');
-						this.filterChartByWeek();
+					}else{//alert('test');
+						//this.filterChartByWeek();
+						this.filterChartByDaily();
 					}	
 				} else {
 					if (m_start == m_start) {
