@@ -2220,7 +2220,8 @@ console.log('sa customizedSelected');console.log(this.filter);
 					console.log(y_start +'== '+y_end+'y_start == y_end<<<<');
 					if (week_of_month_start == week_of_month_end) {
 						console.log('if'+week_of_month_start +'=='+ week_of_month_end + 'week_of_month_start == week_of_month_end<<<<');  
-						this.filterChartByWeek();
+						//this.filterChartByWeek();
+						this.filterChartByDaily();
 					} else {
 						console.log('else'+week_of_month_start +'!='+ week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
 					//	alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
@@ -2237,7 +2238,11 @@ console.log('sa customizedSelected');console.log(this.filter);
 				//alert(y_start + '== ' + y_end);
 				//this.filterChartByMonth();
 				if (y_start == y_end) {
-					this.filterChartByDaily();
+					if (week_of_month_start == week_of_month_end) {
+						this.filterChartByDaily();
+					}else{
+						this.filterChartByWeek();
+					}	
 				} else {
 					if (m_start == m_start) {
 						this.filterChartByMonth();
