@@ -71,6 +71,10 @@ class QuestionnaireSurveyViewModel extends Model
     {
         return Questionnaire::find($this->questionnaire_id)->questions;
     }
+    public function getQuestionnaireColorAttribute() 
+    {
+        return Questionnaire::find($this->questionnaire_id)->color;
+    }
     public function getQuestionnaireAnswerAttribute() 
     {
         return QuestionnaireAnswer::find($this->questionnaire_answer_id)->answer;

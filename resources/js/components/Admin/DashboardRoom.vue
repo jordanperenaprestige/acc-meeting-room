@@ -935,13 +935,15 @@ export default {
 
 			});
 
-			$.get("/admin/dashboard/donut-report-by-day/list", filter, function (data) {
+			$.get("/admin/reports/donut-report-by-day/list", filter, function (data) {
 				let labels = [];
+				let colors = [];
 				let data_value = [];
 				let incident_report = 0;
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
 						labels.push(value.questionnaire);
+						colors.push(value.questionnaire_color);
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
 					});
@@ -957,7 +959,7 @@ export default {
 					datasets: [
 						{
 							data: data_value,
-							backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
+							backgroundColor: colors,//['#728FCE', '#90EE90', '#FED8B1'],
 						}
 					]
 				}
@@ -1015,8 +1017,9 @@ export default {
 				});
 			});
 
-			$.get("/admin/dashboard/donut-report-by-day-answer/list", filter, function (data) {
+			$.get("/admin/reports/donut-report-by-day-answer/list", filter, function (data) {
 				let labels_answer = [];
+				let color_answers = [];
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
@@ -1028,7 +1031,9 @@ export default {
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
 						var jordan = value.questionnaire_answer;
+						var color = value.questionnaire_color;
 						labels_answer.push(jordan);
+						color_answers.push(color);
 						//console.log(value.questionnaire);
 						//labels_answer.push(value.questionnaire);
 						//data_value.push(1);
@@ -1048,7 +1053,7 @@ export default {
 				else {
 					labels_answer = ['Empty']
 					data_value_answer = [1];
-					randomBackgroundColor = [cleanliness];
+					randomBackgroundColor = color_answers;//[cleanliness];
 				}
 				//console.log();
 				var donutData_answer = {
@@ -1262,13 +1267,15 @@ export default {
 
 			});
 
-			$.get("/admin/dashboard/donut-report-by-day/list", filter, function (data) {
+			$.get("/admin/reports/donut-report-by-day/list", filter, function (data) {
 				let labels = [];
+				let colors = [];
 				let data_value = [];
 				let incident_report = 0;
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
 						labels.push(value.questionnaire);
+						colors.push(value.questionnaire_color);
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
 					});
@@ -1284,7 +1291,7 @@ export default {
 					datasets: [
 						{
 							data: data_value,
-							backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
+							backgroundColor: colors,//['#728FCE', '#90EE90', '#FED8B1'],
 						}
 					]
 				}
@@ -1342,8 +1349,9 @@ export default {
 				});
 			});
 
-			$.get("/admin/dashboard/donut-report-by-day-answer/list", filter, function (data) {
+			$.get("/admin/reports/donut-report-by-day-answer/list", filter, function (data) {
 				let labels_answer = [];
+				let color_answers = [];
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
@@ -1355,7 +1363,9 @@ export default {
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
 						var jordan = value.questionnaire_answer;
+						var color = value.questionnaire_color;
 						labels_answer.push(jordan);
+						color_answers.push(color);
 						//console.log(value.questionnaire);
 						//labels_answer.push(value.questionnaire);
 						//data_value.push(1);
@@ -1375,7 +1385,7 @@ export default {
 				else {
 					labels_answer = ['Empty']
 					data_value_answer = [1];
-					randomBackgroundColor = [cleanliness];
+					randomBackgroundColor = color_answers;//[cleanliness];
 				}
 				//console.log();
 				var donutData_answer = {
@@ -1589,16 +1599,19 @@ export default {
 				})
 			});
 
-			$.get("/admin/dashboard/donut-report-by-day/list", filter, function (data) {
+			$.get("/admin/reports/donut-report-by-day/list", filter, function (data) {
 				let labels = [];
+				let colors = [];
 				let data_value = [];
 				let incident_report = 0;
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
 						labels.push(value.questionnaire);
+						colors.push(value.questionnaire_color);
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
 					});
+					// console.log(labels);
 				}
 				else {
 					labels = ['Empty']
@@ -1610,7 +1623,7 @@ export default {
 					datasets: [
 						{
 							data: data_value,
-							backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
+							backgroundColor: colors,//['#728FCE', '#90EE90', '#FED8B1'],
 						}
 					]
 				}
@@ -1668,8 +1681,9 @@ export default {
 				});
 			});
 
-			$.get("/admin/dashboard/donut-report-by-day-answer/list", filter, function (data) {
+			$.get("/admin/reports/donut-report-by-day-answer/list", filter, function (data) {
 				let labels_answer = [];
+				let color_answers = [];
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
@@ -1681,7 +1695,9 @@ export default {
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
 						var jordan = value.questionnaire_answer;
+						var color = value.questionnaire_color;
 						labels_answer.push(jordan);
+						color_answers.push(color);
 						//console.log(value.questionnaire);
 						//labels_answer.push(value.questionnaire);
 						//data_value.push(1);
@@ -1701,7 +1717,7 @@ export default {
 				else {
 					labels_answer = ['Empty']
 					data_value_answer = [1];
-					randomBackgroundColor = [cleanliness];
+					randomBackgroundColor = color_answers;//[cleanliness];
 				}
 				//console.log();
 				var donutData_answer = {
@@ -1896,13 +1912,15 @@ export default {
 			});
 
 
-			$.get("/admin/dashboard/donut-report-by-day/list", filter, function (data) {
+			$.get("/admin/reports/donut-report-by-day/list", filter, function (data) {
 				let labels = [];
+				let colors = [];
 				let data_value = [];
 				let incident_report = 0;
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
 						labels.push(value.questionnaire);
+						colors.push(value.questionnaire_color);
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
 					});
@@ -1911,7 +1929,6 @@ export default {
 				else {
 					labels = ['Empty']
 					data_value = [1];
-					//randomBackgroundColor = ['#d2d6de'];
 				}
 
 				var donutData = {
@@ -1919,7 +1936,7 @@ export default {
 					datasets: [
 						{
 							data: data_value,
-							backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
+							backgroundColor: colors,//['#728FCE', '#90EE90', '#FED8B1'],
 						}
 					]
 				}
@@ -1936,7 +1953,6 @@ export default {
 					inGraphDataRadiusPosition: 2,
 					inGraphDataFontColor: 'white'
 				}
-
 				if (window.doughnut_chart != undefined)
 					window.doughnut_chart.destroy();
 
@@ -1977,8 +1993,10 @@ export default {
 					}
 				});
 			});
-			$.get("/admin/dashboard/donut-report-by-day-answer/list", filter, function (data) {
+
+			$.get("/admin/reports/donut-report-by-day-answer/list", filter, function (data) {
 				let labels_answer = [];
+				let color_answers = [];
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
@@ -1990,7 +2008,9 @@ export default {
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
 						var jordan = value.questionnaire_answer;
+						var color = value.questionnaire_color;
 						labels_answer.push(jordan);
+						color_answers.push(color);
 						//console.log(value.questionnaire);
 						//labels_answer.push(value.questionnaire);
 						//data_value.push(1);
@@ -2010,7 +2030,7 @@ export default {
 				else {
 					labels_answer = ['Empty']
 					data_value_answer = [1];
-					randomBackgroundColor = [cleanliness];
+					randomBackgroundColor = color_answers;//[cleanliness];
 				}
 				//console.log();
 				var donutData_answer = {
