@@ -2223,26 +2223,27 @@ console.log('sa customizedSelected');console.log(this.filter);
 						this.filterChartByWeek();
 					} else {
 						console.log('else'+week_of_month_start +'!='+ week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
-						//alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
+					//	alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
 						this.filterChartByDaily();
 					}
 				} else {
 					// wishlist
 				}
 			}
-			else if (difference_in_days >= 0 && difference_in_days <= 31) {
+			else if (difference_in_days >= 0 && difference_in_days <= 31) { 
 				var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 				var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 				//alert(m_start + '== ' + m_end);
-				this.filterChartByMonth();
+				//alert(y_start + '== ' + y_end);
+				//this.filterChartByMonth();
 				if (y_start == y_end) {
+					this.filterChartByDaily();
+				} else {
 					if (m_start == m_start) {
 						this.filterChartByMonth();
 					} else {
 						this.filterChartByYear();
 					}
-				} else {
-					// wishlist
 				}
 			} else {
 				this.filterChartByYear();

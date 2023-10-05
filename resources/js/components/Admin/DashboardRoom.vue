@@ -2217,6 +2217,7 @@ export default {
 			}
 		},
 		customizedSelected: function (e) {
+console.log('sa customizedSelected');console.log(this.filter);
 			var d_start = new Date(this.filter.start_date);
 			var d_end = new Date(this.filter.end_date);
 			var m_start = d_start.getMonth();
@@ -2231,39 +2232,59 @@ export default {
 			var difference_in_time = d_end.getTime() - d_start.getTime();
 			var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
 			// // Difference_In_Days; 
-			if (difference_in_days == 0) { //ok
+			if (difference_in_days == 0) { alert('if0'); //ok
 				//alert(difference_in_days + 'day for hour');// 01 - 23 hour
-				this.filter.day = d_end; console.log(this.filter);
+				this.filter.day = d_end; console.log('>>>>>>>>if'+difference_in_days);console.log(this.filter+'<<<<<<');
 				this.filterChartByDay();
-			} else if (difference_in_days >= 1 && difference_in_days <= 7) {
-				var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+			} else if (difference_in_days >= 1 && difference_in_days <= 7) { 
+				console.log('>>>>>>>>else if' + difference_in_days);
+				console.log('difference_in_days >= 1 && difference_in_days <= 7');
+				console.log(this.filter);
+				var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);	
 				var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
-				if (y_start == y_end) {
+				if (y_start == y_end) { 
+					console.log(y_start +'== '+y_end+'y_start == y_end<<<<');
 					if (week_of_month_start == week_of_month_end) {
+						console.log('if'+week_of_month_start +'=='+ week_of_month_end + 'week_of_month_start == week_of_month_end<<<<');  
 						this.filterChartByWeek();
 					} else {
-						this.filterChartByMonth();
+						console.log('else'+week_of_month_start +'!='+ week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
+					//	alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
+						this.filterChartByDaily();
 					}
 				} else {
 					// wishlist
 				}
 			}
-			else if (difference_in_days >= 0 && difference_in_days <= 31) {
+			else if (difference_in_days >= 0 && difference_in_days <= 31) { 
 				var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 				var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
-				this.filterChartByMonth();
+				//alert(m_start + '== ' + m_end);
+				//alert(y_start + '== ' + y_end);
+				//this.filterChartByMonth();
 				if (y_start == y_end) {
+					this.filterChartByDaily();
+				} else {
 					if (m_start == m_start) {
 						this.filterChartByMonth();
 					} else {
 						this.filterChartByYear();
 					}
-				} else {
-					// wishlist
 				}
 			} else {
 				this.filterChartByYear();
 			}
+			// else if(difference_in_days){
+			// 	alert();
+			// }
+
+			// // var d_from = this.filter.start_date;
+			// // var d_to = this.filter.end_date; alert(d_to); d_to.getTime()
+			// // var Difference_In_Time = d_to.getTime() - d_from.getTime();
+
+			// // // To calculate the no. of days between two dates
+			// // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+			// // alert(Difference_In_Days);
 		},
 		diff_weeks: function (dt2, dt1) {
 
