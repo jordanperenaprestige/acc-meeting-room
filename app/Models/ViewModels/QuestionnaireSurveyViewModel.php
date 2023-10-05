@@ -52,6 +52,7 @@ class QuestionnaireSurveyViewModel extends Model
         'questionnaire_answer',
         'company_name',
         'building_name',
+        'building_color',
         'building_floor_name',
         'building_room_name',
         'building_floor_room_concerns'
@@ -81,6 +82,10 @@ class QuestionnaireSurveyViewModel extends Model
     public function getBuildingNameAttribute() 
     {
         return SiteBuilding::find($this->site_building_id)->name;
+    }
+    public function getBuildingColorAttribute() 
+    {
+        return SiteBuilding::find($this->site_building_id)->color;
     }
     public function getBuildingFloorNameAttribute() 
     {

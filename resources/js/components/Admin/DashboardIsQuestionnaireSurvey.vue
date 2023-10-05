@@ -449,7 +449,7 @@ export default {
 					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
 				];
 				$.each(data.data, function (key, value) {
-					let background_color = dynamicColors[key];
+					let background_color = value.building_color;//dynamicColors[key];
 					xValues.push(value.day);
 					yValues.push(value.total_survey);
 					barColors.push(dynamicColors[key]);
@@ -528,7 +528,7 @@ export default {
 					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
 				];
 				$.each(data.data, function (key, value) {
-					let background_color = dynamicColors[key];
+					let background_color = value.building_color;//dynamicColors[key];
 					xValues.push(value.day);
 					yValues.push(value.total_survey);
 					barColors.push(dynamicColors[key]);
@@ -771,7 +771,7 @@ export default {
 				let dynamicColorsz = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
 
 				$.each(data.data, function (key, value) {
-					let background_colorz = dynamicColorsz[key];
+					let background_colorz = value.building_color;//dynamicColorsz[key];
 					yValues.push(value.reports);
 					datasets_day.push({
 						label: value.building_name + '(Report: ' + value.reports + ')',
@@ -842,7 +842,7 @@ export default {
 
 
 				$.each(data.data, function (key, value) {
-					let background_colorz = dynamicColorsz[key];
+					let background_colorz = value.building_color;//dynamicColorsz[key];
 					yValues.push(value.reports);
 					datasetsz.push({
 						label: value.building_name + '(Incident: ' + value.reports + ')',
@@ -1090,7 +1090,7 @@ export default {
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272'];
 				$.each(data.data, function (key, value) {
-					let background_color = dynamicColors[key];
+					let background_color = value.building_color;//dynamicColors[key];
 					yValues.push(value.reports);
 					datasets.push({
 						label: value.building_name + '(Report(s): ' + value.reports + ')',
@@ -1168,7 +1168,7 @@ export default {
 
 
 				$.each(data.data, function (key, value) {
-					let background_colorz = dynamicColorsz[key];
+					let background_colorz = value.building_color;//dynamicColorsz[key];
 					yValues.push(value.reports);
 					datasetsz.push({
 						label: value.building_name + '(Incident: ' + value.reports + ')',
@@ -1430,7 +1430,7 @@ export default {
 
 
 				$.each(data.data[0], function (key, value) {  ///console.log('>>>>'); console.log(value);
-					let background_color = dynamicColors[key];
+					let background_color = value.building_color;//dynamicColors[key];
 					yValues.push(value.reports);
 					var bar = value.bar;
 					//var week = value.week_range;
@@ -1504,7 +1504,7 @@ export default {
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
 				//console.log('>>>>data');  console.log(data.data); 
 				$.each(data.data[0], function (key, value) {
-					let background_color = dynamicColors[key];
+					let background_color = value.building_color;//dynamicColors[key];
 					yValues.push(value.reports);
 					var bar = value.bar;
 					var week = value.week_range;
@@ -1756,7 +1756,7 @@ export default {
 
 
 				$.each(data.data, function (key, value) {
-					let background_color = dynamicColors[key];
+					let background_color = value.building_color;//dynamicColors[key];
 					yValues.push(value.reports);
 					datasets.push({
 						label: value.building_name + '(Report(s): ' + value.reports + ')',
@@ -1823,7 +1823,7 @@ export default {
 
 
 				$.each(data.data, function (key, value) {
-					let background_color = dynamicColors[key];
+					let background_color = value.building_color;//dynamicColors[key];
 					yValues.push(value.reports);
 					datasets.push({
 						label: value.building_name + '(Incident(s): ' + value.reports + ')',

@@ -777,6 +777,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'day' => $day,
                     'total_survey' => $log->total_survey,
                     'reports' => $log->total_survey,
+                    'building_color' => $log->building_color,
                 ];
             }
             return $this->response($per_day, 'Successfully Retreived!', 200);
@@ -821,6 +822,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'day' => $day,
                     'total_survey' => $log->total_survey,
                     'reports' => $log->total_survey,
+                    'building_color' => $log->building_color,
                 ];
             }
             return $this->response($per_day, 'Successfully Retreived!', 200);
@@ -936,6 +938,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $hour = date("H", strtotime($log->created_at));
                 $per_hour[] = [
                     'building_name' => $log->building_name,
+                    'building_color' => $log->building_color,
                     'twentyfour' => ($hour == '00') ? $log->total_survey : '',
                     'one' => ($hour == '01') ? $log->total_survey : '',
                     'two' => ($hour == '02') ? $log->total_survey : '',
@@ -1007,6 +1010,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $hour = date("H", strtotime($log->created_at));
                 $per_hour[] = [
                     'building_name' => $log->building_name,
+                    'building_color' => $log->building_color,
                     'twentyfour' => ($hour == '00') ? $log->total_survey : '',
                     'one' => ($hour == '01') ? $log->total_survey : '',
                     'two' => ($hour == '02') ? $log->total_survey : '',
@@ -1183,6 +1187,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $day = date("D", strtotime($log->created_at));
                 $per_day[] = [
                     'building_name' => $log->building_name,
+                    'building_color' => $log->building_color,
                     'sun' => ($day == 'Sun') ? $log->total_survey : '',
                     'mon' => ($day == 'Mon') ? $log->total_survey : '',
                     'tue' => ($day == 'Tue') ? $log->total_survey : '',
@@ -1241,6 +1246,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $day = date("D", strtotime($log->created_at));
                 $per_day[] = [
                     'building_name' => $log->building_name,
+                    'building_color' => $log->building_color,
                     'sun' => ($day == 'Sun') ? $log->total_survey : '',
                     'mon' => ($day == 'Mon') ? $log->total_survey : '',
                     'tue' => ($day == 'Tue') ? $log->total_survey : '',
@@ -1403,6 +1409,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'building_name' => $log->building_name,
                     'bar' => $bar,
                     'reports' => $log->total_survey,
+                    'building_color' => $log->building_color,
                 ];
             }
             foreach ($weeks as $weekNumber => $week) {
@@ -1473,6 +1480,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'building_name' => $log->building_name,
                     'bar' => $bar,
                     'reports' => $log->total_survey,
+                    'building_color' => $log->building_color,
                 ];
             }
             foreach ($weeks as $weekNumber => $week) {
@@ -1618,6 +1626,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 //echo '<<' . $month . '>>';
                 $per_month[] = [
                     'building_name' => $log->building_name,
+                    'building_color' => $log->building_color,
                     'jan' => ($month == '01') ? $log->total_survey : '',
                     'feb' => ($month == '02') ? $log->total_survey : '',
                     'mar' => ($month == '03') ? $log->total_survey : '',
@@ -1683,6 +1692,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 //echo '<<' . $month . '>>';
                 $per_month[] = [
                     'building_name' => $log->building_name,
+                    'building_color' => $log->building_color,
                     'jan' => ($month == '01') ? $log->total_survey : '',
                     'feb' => ($month == '02') ? $log->total_survey : '',
                     'mar' => ($month == '03') ? $log->total_survey : '',
