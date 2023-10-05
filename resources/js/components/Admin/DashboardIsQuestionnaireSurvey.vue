@@ -2240,7 +2240,7 @@ console.log('sa customizedSelected');console.log(this.filter);
 				if (y_start == y_end) {
 					if (week_of_month_start == week_of_month_end) {
 						this.filterChartByDaily();
-					}else{
+					}else{alert('test');
 						this.filterChartByWeek();
 					}	
 				} else {
