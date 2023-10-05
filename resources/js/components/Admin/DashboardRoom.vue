@@ -2249,7 +2249,7 @@ console.log('sa customizedSelected');console.log(this.filter);
 						this.filterChartByWeek();
 					} else {
 						console.log('else'+week_of_month_start +'!='+ week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
-					//	alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
+						alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
 						this.filterChartByDaily();
 					}
 				} else {
