@@ -2243,7 +2243,8 @@ console.log('sa customizedSelected');console.log(this.filter);
 					}else{ 
 						//this.filterChartByWeek();
 						//this.filterChartByDaily();
-						this.filterChartByMonth();
+						//this.filterChartByMonth();
+						this.filterChartByDaily();
 					}	
 				} else {
 					if (m_start == m_start) {
