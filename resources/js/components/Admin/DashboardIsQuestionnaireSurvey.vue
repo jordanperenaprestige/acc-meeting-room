@@ -822,9 +822,9 @@ export default {
 						}
 					}
 				}
-				if (window.report_bar_day != undefined)
-					window.report_bar_day.destroy();
-				window.report_bar_day = new Chart(reportBarChartCanvasDay, {
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvasDay, {
 					//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
 					data: reportBarChartDataDay,
