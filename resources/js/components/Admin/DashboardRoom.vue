@@ -2232,7 +2232,7 @@ console.log('sa customizedSelected');console.log(this.filter);
 			var difference_in_time = d_end.getTime() - d_start.getTime();
 			var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
 			// // Difference_In_Days; 
-			if (difference_in_days == 0) { //alert('if0'); //ok
+			if (difference_in_days == 0) { alert('if0'); //ok
 				//alert(difference_in_days + 'day for hour');// 01 - 23 hour
 				this.filter.day = d_end; console.log('>>>>>>>>if'+difference_in_days);console.log(this.filter+'<<<<<<');
 				this.filterChartByDay();
@@ -2244,15 +2244,14 @@ console.log('sa customizedSelected');console.log(this.filter);
 				var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 				if (y_start == y_end) { 
 					console.log(y_start +'== '+y_end+'y_start == y_end<<<<');
-					if (week_of_month_start == week_of_month_end) {
+					if (week_of_month_start == week_of_month_end) { 
 						console.log('if'+week_of_month_start +'=='+ week_of_month_end + 'week_of_month_start == week_of_month_end<<<<');  
-						this.filterChartByDaily();
-						
-					} else {
-						console.log('else'+week_of_month_start +'!='+ week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
-						alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
 						//this.filterChartByWeek();
-						//this.filterChartByDaily();
+						this.filterChartByDaily();
+					} else { 
+						console.log('else'+week_of_month_start +'!='+ week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
+					//	alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
+						this.filterChartByDaily();
 					}
 				} else {
 					// wishlist
@@ -2264,8 +2263,15 @@ console.log('sa customizedSelected');console.log(this.filter);
 				//alert(m_start + '== ' + m_end);
 				//alert(y_start + '== ' + y_end);
 				//this.filterChartByMonth();
-				if (y_start == y_end) {
-					this.filterChartByDaily();
+				if (y_start == y_end) { 
+					if (week_of_month_start == week_of_month_end) {
+						this.filterChartByDaily();
+					}else{ 
+						//this.filterChartByWeek();
+						//this.filterChartByDaily();
+						//this.filterChartByMonth();
+						this.filterChartByDaily();
+					}	
 				} else {
 					if (m_start == m_start) {
 						this.filterChartByMonth();
