@@ -1147,10 +1147,10 @@ export default {
 						}
 					}
 				}
-				if (window.report_bar_week != undefined)
-					window.report_bar_week.destroy();
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
 				//if(bar) bar.destroy();
-				window.report_bar_week = new Chart(reportBarChartCanvas, {
+				window.report_bar = new Chart(reportBarChartCanvas, {
 					//new Chart(reportBarChartCanvas, {
 					type: 'bar',
 					data: reportBarChartData,
