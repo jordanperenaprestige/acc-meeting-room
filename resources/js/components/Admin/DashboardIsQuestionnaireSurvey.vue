@@ -1425,8 +1425,8 @@ export default {
 			filter.day = '';
 			filter.week = '';
 			filter.year = '';
-			console.log('D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
-			console.log('>>>>>>>month'); console.log(filter); console.log('<<<<<<<');
+			//console.log('D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
+			//console.log('>>>>>>>month'); console.log(filter); console.log('<<<<<<<');
 			const currentMonth = moment(new Date()).format("YYYY-MM");
 			//console.log(currentMonth);
 			filter.month = currentMonth; (filter.month == '') ? currentMonth : filter.month;
@@ -1438,7 +1438,7 @@ export default {
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
 
 
-				$.each(data.data[0], function (key, value) {  ///console.log('>>>>'); console.log(value);
+				$.each(data.data[0], function (key, value) {  console.log('>>>>'); console.log(value);
 					let background_color = value.building_color;//dynamicColors[key];
 					yValues.push(value.reports);
 					var bar = value.bar;
