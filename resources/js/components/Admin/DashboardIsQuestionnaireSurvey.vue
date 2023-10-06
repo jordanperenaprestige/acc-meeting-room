@@ -2197,8 +2197,6 @@ export default {
 			}
 		},
 		yearSelected: function (e) {
-			alert(this.filter.year + 'yearSelected');
-			//alert('Site:' + this.filter.site_id);
 			
 			if (this.filter.year != null) {
 				console.log('ys');
