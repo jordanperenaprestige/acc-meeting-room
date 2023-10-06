@@ -1436,7 +1436,7 @@ export default {
 				let week_range = [];
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
-
+				console.log("/admin/reports/trend-report-by-month/list");
 
 				$.each(data.data[0], function (key, value) {  console.log('>>>>'); console.log(value);
 					let background_color = value.building_color;//dynamicColors[key];
