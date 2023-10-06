@@ -1775,7 +1775,16 @@ export default {
 		},
 		filterChartByYear: function () {
 			var filter = this.filter;
-			console.log('>>>>>>>Year'); console.log(filter); console.log('<<<<<<<');
+			filter.day = '';
+			filter.week = '';
+			filter.month = '';
+			
+			console.log('YEar D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
+			const currentYear = moment().year().toString();
+			filter.year = (filter.year == '' || filter.year == null ) ? currentYear : filter.year;
+			
+			this.filter.year = filter.year;
+			
 			$.get("/admin/dashboard/trend-report-by-year/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];

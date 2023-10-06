@@ -2198,6 +2198,7 @@ export default {
 		},
 		yearSelected: function (e) {
 			
+			
 			if (this.filter.year != null) {
 				console.log('ys');
 				console.log(e);
