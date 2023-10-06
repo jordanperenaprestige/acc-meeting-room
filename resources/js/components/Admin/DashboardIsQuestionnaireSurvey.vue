@@ -1427,7 +1427,7 @@ export default {
 			filter.year = ''; 
 			const currentMonth = moment(new Date()).format("YYYY-MM");
 			filter.month = (filter.month == '') ? currentMonth : filter.month;
-			alert('filterChartByMonth '+filter.month);alert('>>>>>>>>>>> '+filter.month);
+			
 			$.get("/admin/reports/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
 				let week_range = [];
@@ -2187,10 +2187,10 @@ export default {
 			}
 		},
 		monthSelected: function (e) {
-			alert(this.filter.month + 'monthSelected');
+			
 			//alert('Site:' + this.filter.site_id);
 			
-			if (this.filter.month != null) {  alert('pasok');
+			if (this.filter.month != null) { 
 				this.filterChartByMonth();// nakukuha sa filterChartByDaily
 			}
 		},
@@ -2220,7 +2220,7 @@ console.log('sa customizedSelected');console.log(this.filter);
 			var difference_in_time = d_end.getTime() - d_start.getTime();
 			var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
 			// // Difference_In_Days; 
-			if (difference_in_days == 0) { alert('if0'); //ok
+			if (difference_in_days == 0) { 
 				//alert(difference_in_days + 'day for hour');// 01 - 23 hour
 				this.filter.day = d_end; console.log('>>>>>>>>if'+difference_in_days);console.log(this.filter+'<<<<<<');
 				this.filterChartByDay();
