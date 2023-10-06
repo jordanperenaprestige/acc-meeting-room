@@ -1426,6 +1426,7 @@ export default {
 			filter.week = '';
 			filter.year = '';
 			console.log('D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
+			console.log('>>>>>>>month'); console.log(filter); console.log('<<<<<<<');
 			const currentMonth = moment(new Date()).format("YYYY-MM");
 			//console.log(currentMonth);
 			filter.month = currentMonth; (filter.month == '') ? currentMonth : filter.month;
