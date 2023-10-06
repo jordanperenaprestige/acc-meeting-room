@@ -1442,12 +1442,13 @@ export default {
 		},
 
 		filterChartByMonth: function () {
-
+			
 			var filter = this.filter;
 			filter.day = '';
 			filter.week = '';
-			filter.year = '';
-			console.log('>>>>>>>month'); console.log(filter); console.log('<<<<<<<');
+			filter.year = ''; 
+			const currentMonth = moment(new Date()).format("YYYY-MM");
+			filter.month = (filter.month == '') ? currentMonth : filter.month;
 			$.get("/admin/dashboard/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
 				let week_range = [];
@@ -2266,11 +2267,11 @@ console.log('sa customizedSelected');console.log(this.filter);
 					console.log(y_start +'== '+y_end+'y_start == y_end<<<<');
 					if (week_of_month_start == week_of_month_end) { 
 						console.log('if'+week_of_month_start +'=='+ week_of_month_end + 'week_of_month_start == week_of_month_end<<<<');  
-						//this.filterChartByWeek();
+						
 						this.filterChartByDaily();
 					} else { 
 						console.log('else'+week_of_month_start +'!='+ week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
-					//	alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
+					
 						this.filterChartByDaily();
 					}
 				} else {

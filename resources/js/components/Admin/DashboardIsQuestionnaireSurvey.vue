@@ -42,7 +42,7 @@
 											<!-- v-show="show_concerns" -->
 											<label for="year" class="col-form-label">Year</label>
 											<date-picker v-model="filter.year" placeholder="Year" :config="options_Y"
-												id="month" autocomplete="off" @dp-change="yearSelected"></date-picker>
+												id="year" autocomplete="off" @dp-change="yearSelected"></date-picker>
 										</div>
 										<div v-show="by_start">
 											<label for="userName" class="col-form-label">Start Date</label>
@@ -1424,20 +1424,15 @@ export default {
 			var filter = this.filter;
 			filter.day = '';
 			filter.week = '';
-			filter.year = '';
-			//console.log('D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
-			//console.log('>>>>>>>month'); console.log(filter); console.log('<<<<<<<');
+			filter.year = ''; 
 			const currentMonth = moment(new Date()).format("YYYY-MM");
-			//console.log(currentMonth);
-			filter.month = currentMonth; (filter.month == '') ? currentMonth : filter.month;
-			this.filter.month = filter.month;
+			filter.month = (filter.month == '') ? currentMonth : filter.month;
+			alert('filterChartByMonth '+filter.month);alert('>>>>>>>>>>> '+filter.month);
 			$.get("/admin/reports/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
 				let week_range = [];
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
-				console.log("/admin/reports/trend-report-by-month/list");
-
 				$.each(data.data[0], function (key, value) {  console.log('>>>>'); console.log(value);
 					let background_color = value.building_color;//dynamicColors[key];
 					yValues.push(value.reports);
@@ -2192,10 +2187,10 @@ export default {
 			}
 		},
 		monthSelected: function (e) {
-			//alert(this.filter.month + 'monthSelected');
+			alert(this.filter.month + 'monthSelected');
 			//alert('Site:' + this.filter.site_id);
 			
-			if (this.filter.month != null) {
+			if (this.filter.month != null) {  alert('pasok');
 				this.filterChartByMonth();// nakukuha sa filterChartByDaily
 			}
 		},
