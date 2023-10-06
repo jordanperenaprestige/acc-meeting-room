@@ -1755,10 +1755,12 @@ export default {
 			filter.day = '';
 			filter.week = '';
 			filter.month = '';
+			
 			console.log('YEar D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
 			const currentYear = moment().year().toString();
-			filter.year = (filter.year == '') ? currentYear : filter.year;
-			this.filter.year = filter.year; //alert(this.filter.year + 'year');
+			filter.year = (filter.year == '' || filter.year == null ) ? currentYear : filter.year;
+			
+			this.filter.year = filter.year; 
 			$.get("/admin/reports/trend-report-by-year/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -2195,7 +2197,7 @@ export default {
 			}
 		},
 		yearSelected: function (e) {
-			//alert(this.filter.year + 'yearSelected');
+			alert(this.filter.year + 'yearSelected');
 			//alert('Site:' + this.filter.site_id);
 			
 			if (this.filter.year != null) {
