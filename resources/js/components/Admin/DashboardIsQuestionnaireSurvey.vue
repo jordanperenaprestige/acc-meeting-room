@@ -492,7 +492,7 @@ export default {
 						datasets: [{
 							backgroundColor: barColors,
 							data: yValues,
-							label: '(Report(s): ' + yValues + ')sss',
+							label: '(Report(s): ' + yValues + ')',
 							backgroundColor: barColors,
 							borderColor: barColors,
 							pointRadius: false,
