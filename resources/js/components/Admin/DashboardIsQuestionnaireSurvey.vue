@@ -129,7 +129,7 @@
 								</div>
 							</div> -->
 							<div class="row">
-								<div class="col-sm-4">
+								<div class="col-sm-12">
 									<label for="" class="col-form-label">Reports Total: <span id="reports_total">{{
 										reports_total }}</span></label>
 									<div>The chart below provides a breakdown of total reported concern.</div>
@@ -144,7 +144,7 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-sm-4">
+								<div class="col-sm-12">
 									<label for="" class="col-form-label">Incidents Total: <span id="incidents_total">{{
 										incidents_total }}</span></label>
 									<div>The chart below provides a breakdown of RESOLVED concerns only.</div>
@@ -492,7 +492,7 @@ export default {
 						datasets: [{
 							backgroundColor: barColors,
 							data: yValues,
-							label: '(Report(s): ' + yValues + ')',
+							label: '(Report(s): ' + yValues + ')sss',
 							backgroundColor: barColors,
 							borderColor: barColors,
 							pointRadius: false,
