@@ -452,7 +452,7 @@ export default {
 					let background_color = value.building_color;//dynamicColors[key];
 					xValues.push(value.day);
 					yValues.push(value.total_survey);
-					barColors.push(dynamicColors[key]);
+					barColors.push(value.building_color);
 				});
 				let sum_reports_total = 0;
 
@@ -531,7 +531,7 @@ export default {
 					let background_color = value.building_color;//dynamicColors[key];
 					xValues.push(value.day);
 					yValues.push(value.total_survey);
-					barColors.push(dynamicColors[key]);
+					barColors.push(value.building_color);
 				});
 
 				let sum_incidents_total = 0;

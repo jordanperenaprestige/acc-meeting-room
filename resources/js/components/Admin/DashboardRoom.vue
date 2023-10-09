@@ -649,7 +649,7 @@ export default {
 					datasets: [
 						{
 							data: data_value,
-							backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
+							backgroundColor: colors,
 						}
 					]
 				}
