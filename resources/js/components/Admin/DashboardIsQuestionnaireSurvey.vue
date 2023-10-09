@@ -1750,6 +1750,7 @@ export default {
 				$('#total_sms').text(parseFloat(data.data));
 			});
 		},
+		
 		filterChartByYear: function () {
 			var filter = this.filter;
 			filter.day = '';
