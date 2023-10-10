@@ -797,7 +797,7 @@ export default {
 				let datasetsz = [];
 				var yValues = [];
 
-				let dynamicColorsz = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
+				//let dynamicColorsz = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
 
 
 				$.each(data.data, function (key, value) {
@@ -1111,7 +1111,7 @@ export default {
 		filterChartByWeek: function () {
 			var obj = this;
 			var filter = this.filter;
-			console.log('>>>>>>>week'); console.log(filter); console.log('<<<<<<<');
+			
 			$.get("/admin/dashboard/trend-report-by-week/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];

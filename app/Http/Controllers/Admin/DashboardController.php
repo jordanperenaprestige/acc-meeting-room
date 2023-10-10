@@ -283,94 +283,120 @@ class DashboardController extends AppBaseController
     }
 
     public function getTrendReportByDaily(Request $request)
-    {
-        try {
-            $id = session()->get('room_id');
-            $site_id = '';
-            $filters = json_decode($request->filters);
-            if ($filters)
-                $site_id = $filters->site_id;
-            if ($request->site_id)
-                $site_id = $request->site_id;
+{
+	try {
+		$id = session()->get('room_id');
+		$site_id = '';
+		$filters = json_decode($request->filters);
+		if ($filters)
+			$site_id = $filters->site_id;
+		if ($request->site_id)
+			$site_id = $request->site_id;
 
-            $current_year = date("Y");
+		$current_year = date("Y");
+		
+		$logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+			return $query->where('site_id', $site_id);
+		})
+			->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
+			->where('site_building_room_id', $id)
+			->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
+			->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+			->groupBy('site_building_id')
+			->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
+			->orderBy('created_at', 'ASC')
+			->get();
+		$created_at = array();
+		$data_day = array();
+		$per_day = [];
 
-            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
-                return $query->where('site_id', $site_id);
-            })
-                ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
-                ->where('site_building_room_id', $id)
-                ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
-                ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
-                ->groupBy('site_building_id')
-                ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
-                ->orderBy('created_at', 'ASC')
-                ->get();
-            $created_at = [];
-            $per_day = [];
-            foreach ($logs as $index => $log) {
-                $day = date("m/d", strtotime($log->created_at));
-                $per_day[] = [
-                    'day' => $day,
-                    'total_survey' => $log->total_survey,
-                    'reports' => $log->total_survey,
-                    'building_color' => $log->building_color,
-                ];
-            }
-            return $this->response($per_day, 'Successfully Retreived!', 200);
-        } catch (\Exception $e) {
-            return response([
-                'message' => $e->getMessage(),
-                'status' => false,
-                'status_code' => 422,
-            ], 422);
-        }
-    }
-    public function getTrendIncidentByDaily(Request $request)
-    {
-        try {
-            $id = session()->get('room_id');
-            $site_id = '';
-            $filters = json_decode($request->filters);
-            if ($filters)
-                $site_id = $filters->site_id;
-            if ($request->site_id)
-                $site_id = $request->site_id;
+		foreach ($logs as $index => $log_created_at) {
+			$day = date("m/d", strtotime($log_created_at->created_at));
+			$created_at[] = $day; 
+		} 
+		
+		foreach ($logs as $index => $log) {
+			$day = date("m/d", strtotime($log->created_at));
+			 foreach($created_at as $v){
+				$data_day[$v] = ($v == $day)? $log->total_survey: '';  
+			 }
+			$per_day[] = [
+				'day' => $day,
+				'total_survey' => $log->total_survey,
+				'reports' => $log->total_survey,
+				'building_name' => $log->building_name,
+				'building_color' => $log->building_color,
+				'data' => $data_day,
+			];
+		} 
 
-            $current_year = date("Y");
+		return $this->response($per_day, 'Successfully Retreived!', 200);
+	} catch (\Exception $e) {
+		return response([
+			'message' => $e->getMessage(),
+			'status' => false,
+			'status_code' => 422,
+		], 422);
+	}
+}
+public function getTrendIncidentByDaily(Request $request)
+{
+	try {
+		$id = session()->get('room_id');
+		$site_id = '';
+		$filters = json_decode($request->filters);
+		if ($filters)
+			$site_id = $filters->site_id;
+		if ($request->site_id)
+			$site_id = $request->site_id;
 
-            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
-                return $query->where('site_id', $site_id);
-            })
-                ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
-                ->where('site_building_room_id', $id)
-                ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
-                ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
-                ->where('Remarks', 'Done')
-                ->groupBy('site_building_id')
-                ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
-                ->orderBy('created_at', 'ASC')
-                ->get();
-            $created_at = [];
-            $per_day = [];
-            foreach ($logs as $index => $log) {
-                $day = date("m/d", strtotime($log->created_at));
-                $per_day[] = [
-                    'day' => $day,
-                    'total_survey' => $log->total_survey,
-                    'reports' => $log->total_survey,
-                    'building_color' => $log->building_color,
-                ];
-            }
-            return $this->response($per_day, 'Successfully Retreived!', 200);
-        } catch (\Exception $e) {
-            return response([
-                'message' => $e->getMessage(),
-                'status' => false,
-                'status_code' => 422,
-            ], 422);
-        }
-    }
+		$current_year = date("Y");
+		
+		$logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+			return $query->where('site_id', $site_id);
+		})
+			->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
+			->where('site_building_room_id', $id)
+			->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
+			->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+			->where('remarks', 'Done')
+			->groupBy('site_building_id')
+			->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
+			->orderBy('created_at', 'ASC')
+			->get();
+		$created_at = array();
+		$data_day = array();
+		$per_day = [];
+
+		foreach ($logs as $index => $log_created_at) {
+			$day = date("m/d", strtotime($log_created_at->created_at));
+			$created_at[] = $day; 
+		} 
+		
+		foreach ($logs as $index => $log) {
+			$day = date("m/d", strtotime($log->created_at));
+			 foreach($created_at as $v){
+				$data_day[$v] = ($v == $day)? $log->total_survey: '';  
+			 }
+			$per_day[] = [
+				'day' => $day,
+				'total_survey' => $log->total_survey,
+				'reports' => $log->total_survey,
+				'building_name' => $log->building_name,
+				'building_color' => $log->building_color,
+				'data' => $data_day,
+			];
+		} 
+
+		return $this->response($per_day, 'Successfully Retreived!', 200);
+	} catch (\Exception $e) {
+		return response([
+			'message' => $e->getMessage(),
+			'status' => false,
+			'status_code' => 422,
+		], 422);
+	}
+}
 
     public function getAverageTimeByDay(Request $request)
     {
@@ -1170,61 +1196,7 @@ class DashboardController extends AppBaseController
             ], 422);
         }
     }
-    // public function getTrendIncidentByMonth(Request $request)
-    // {
-    //     try {
-    //         $id = session()->get('room_id');
-    //         $site_id = '';
-    //         $filters = json_decode($request->filters);
-    //         if ($filters)
-    //             $site_id = $filters->site_id;
-    //         if ($request->site_id)
-    //             $site_id = $request->site_id;
-
-    //         $current_year = date("Y");
-    //         if ($request->by == 3) {
-    //             $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-    //             $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
-    //         } else {
-    //             $start_date = $request->start_date;
-    //             $end_date = $request->end_date;
-    //         }
-    //         $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
-    //             return $query->where('site_id', $site_id);
-    //         })
-    //             ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
-    //             ->whereBetween('created_at', [$start_date, $end_date])
-    //             ->where('site_building_room_id', $id)
-    //             ->where('remarks', 'Done')
-    //             ->groupBy('site_building_id')
-    //             ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
-    //             ->orderBy('created_at', 'ASC')
-    //             ->get();
-
-    //         $per_month = [];
-    //         foreach ($logs as $index => $log) {
-
-    //             $day = date("d", strtotime($log->created_at));
-
-    //             $per_month[] = [
-    //                 'building_name' => $log->building_name,
-    //                 'week_one' => ($day >= '01' && $day <= '07') ? $log->total_survey : '',
-    //                 'week_two' => ($day >= '08' && $day <= '15') ? $log->total_survey : '',
-    //                 'week_three' => ($day >= '16' && $day <= '22') ? $log->total_survey : '',
-    //                 'week_four' => ($day >= '23' && $day <= '31') ? $log->total_survey : '',
-    //                 'reports' => $log->total_survey,
-    //             ];
-    //         }
-
-    //         return $this->response($per_month, 'Successfully Retreived!', 200);
-    //     } catch (\Exception $e) {
-    //         return response([
-    //             'message' => $e->getMessage(),
-    //             'status' => false,
-    //             'status_code' => 422,
-    //         ], 422);
-    //     }
-    // }
+   
     public function getTrendIncidentByMonth(Request $request)
     {
     try {

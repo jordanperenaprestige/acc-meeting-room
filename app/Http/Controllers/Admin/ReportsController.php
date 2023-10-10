@@ -695,7 +695,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
                 //->where('site_building_room_id', $id)
                 ->where('remarks', 'Done')
-                ->groupBy('site_building_id')   
+                ->groupBy('site_building_id')
                 ->groupBy('questionnaire_answer_id')
                 ->orderBy('created_at', 'ASC')
                 ->get();
@@ -759,7 +759,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            //echo '>>'.$site_id;
+            
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -767,21 +767,33 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
                 ->groupBy('site_building_id')
-
                 ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
                 ->orderBy('created_at', 'ASC')
                 ->get();
-            $created_at = [];
+            $created_at = array();
+            $data_day = array();
             $per_day = [];
+
+            foreach ($logs as $index => $log_created_at) {
+                $day = date("m/d", strtotime($log_created_at->created_at));
+                $created_at[] = $day; 
+            } 
+            
             foreach ($logs as $index => $log) {
                 $day = date("m/d", strtotime($log->created_at));
+                 foreach($created_at as $v){
+                    $data_day[$v] = ($v == $day)? $log->total_survey: '';  
+                 }
                 $per_day[] = [
                     'day' => $day,
                     'total_survey' => $log->total_survey,
                     'reports' => $log->total_survey,
+                    'building_name' => $log->building_name,
                     'building_color' => $log->building_color,
+                    'data' => $data_day,
                 ];
-            }
+            } 
+   
             return $this->response($per_day, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -794,7 +806,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
     public function getTrendIncidentByDaily(Request $request)
     {
         try {
-            // $id = session()->get('room_id');
             $site_id = '';
             $filters = json_decode($request->filters);
             if ($filters)
@@ -803,30 +814,42 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-
+            
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
-                //->where('site_building_room_id', $id)
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
-                ->where('Remarks', 'Done')
+                ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
                 ->orderBy('created_at', 'ASC')
                 ->get();
-            $created_at = [];
+            $created_at = array();
+            $data_day = array();
             $per_day = [];
+
+            foreach ($logs as $index => $log_created_at) {
+                $day = date("m/d", strtotime($log_created_at->created_at));
+                $created_at[] = $day; 
+            } 
+            
             foreach ($logs as $index => $log) {
                 $day = date("m/d", strtotime($log->created_at));
+                 foreach($created_at as $v){
+                    $data_day[$v] = ($v == $day)? $log->total_survey: '';  
+                 }
                 $per_day[] = [
                     'day' => $day,
                     'total_survey' => $log->total_survey,
                     'reports' => $log->total_survey,
+                    'building_name' => $log->building_name,
                     'building_color' => $log->building_color,
+                    'data' => $data_day,
                 ];
-            }
+            } 
+   
             return $this->response($per_day, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -1200,7 +1223,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'reports' => $log->total_survey,
                 ];
             }
-            
+
             return $this->response($per_day, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -1259,7 +1282,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'reports' => $log->total_survey,
                 ];
             }
-            
+
             return $this->response($per_day, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -1416,11 +1439,10 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             foreach ($weeks as $weekNumber => $week) {
                 $monday = substr($week[0], 8);
                 $sunday = substr($week[1], 8);
-            
-                $per_range[] = [
-                    str_replace('-', '/', substr($week[0], 5)) .'-'.str_replace('-', '/', substr($week[1], 5)),//str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
-                ];
 
+                $per_range[] = [
+                    str_replace('-', '/', substr($week[0], 5)) . '-' . str_replace('-', '/', substr($week[1], 5)), //str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
+                ];
             }
             $total_per_month[] = $per_month;
             $total_per_month[] = $per_range;
@@ -1456,7 +1478,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->whereBetween('created_at', [$start_date, $end_date])
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
-               // ->groupBy('jordan')
+                // ->groupBy('jordan')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
                 ->get();
             $total_per_month = [];
@@ -1487,11 +1509,10 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             foreach ($weeks as $weekNumber => $week) {
                 $monday = substr($week[0], 8);
                 $sunday = substr($week[1], 8);
-            
-                $per_range[] = [
-                    str_replace('-', '/', substr($week[0], 5)) .'-'.str_replace('-', '/', substr($week[1], 5)),//str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
-                ];
 
+                $per_range[] = [
+                    str_replace('-', '/', substr($week[0], 5)) . '-' . str_replace('-', '/', substr($week[1], 5)), //str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
+                ];
             }
             $total_per_month[] = $per_month;
             $total_per_month[] = $per_range;
@@ -1719,6 +1740,232 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             ], 422);
         }
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public function getAverageTimeByLifetime(Request $request)
+    {
+        try {
+            //$id = session()->get('room_id');
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+            if ($request->by == 3) {
+                $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
+            
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('avg(TIMESTAMPDIFF(minute, created_at,updated_at)) AS minutes')
+                ->whereBetween('created_at', [$start_date, $end_date])
+                //->where('site_building_room_id', $id)
+                ->where('remarks', 'Done')
+                ->groupBy('site_building_id')
+                ->groupBy('questionnaire_answer_id')
+                ->get();
+            $sum = 0;
+            if (count($logs) > 0) {
+                foreach ($logs as $k => $v) {
+                    $sum += $v->minutes;
+                }
+                $avg_time = number_format($sum / count($logs), 2);
+            } else {
+                $avg_time = 0;
+            }
+
+            return $this->response($avg_time, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+    public function getTotalSMSByLifetime(Request $request)
+    {
+        try {
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+
+            $current_year = date("Y");
+
+            if ($request->by == 3) {
+                $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
+
+            $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->whereBetween('created_at', [$start_date, $end_date])
+                ->get()
+                ->count();
+            return $this->response($logs, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+    public function getTrendReportByLifetime(Request $request)
+    {
+        try {
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+            if ($request->by == 3) {
+                $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
+                ->whereBetween('created_at', [$start_date, $end_date])
+                ->groupBy('site_building_id')
+                ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
+                ->get();
+            $total_per_month = [];
+            $per_month = [];
+            $per_range = [];
+            $month = explode("-", $request->month);
+            $monthz = $month[1];
+            $year = $month[0];
+            $lastDayOfWeek = '6'; //1 (for monday) to 7 (for sunday)
+            $weeks = $this->getWeeksInMonth($year, $monthz, $lastDayOfWeek);
+            foreach ($logs as $index => $log) {
+                $day = date("d", strtotime($log->created_at));
+                $set = $index + 1;
+                $bar = array();
+
+                foreach ($weeks as $weekNumber => $week) {
+                    $monday = substr($week[0], 8);
+                    $sunday = substr($week[1], 8);
+                    $bar[] = ($day >= $monday && $day <= $sunday) ? $log->total_survey : '';
+                }
+                $per_month[] = [
+                    'building_name' => $log->building_name,
+                    'bar' => $bar,
+                    'reports' => $log->total_survey,
+                    'building_color' => $log->building_color,
+                ];
+            }
+            foreach ($weeks as $weekNumber => $week) {
+                $monday = substr($week[0], 8);
+                $sunday = substr($week[1], 8);
+
+                $per_range[] = [
+                    str_replace('-', '/', substr($week[0], 5)) . '-' . str_replace('-', '/', substr($week[1], 5)), //str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
+                ];
+            }
+            $total_per_month[] = $per_month;
+            $total_per_month[] = $per_range;
+            return $this->response($total_per_month, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+    public function getTrendIncidentByLifetime(Request $request)
+    {
+        try {
+            $site_id = '';
+            $filters = json_decode($request->filters);
+            if ($filters)
+                $site_id = $filters->site_id;
+            if ($request->site_id)
+                $site_id = $request->site_id;
+            if ($request->by == 3) {
+                $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+            } else {
+                $start_date = $request->start_date;
+                $end_date = $request->end_date;
+            }
+            $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+                return $query->where('site_id', $site_id);
+            })
+                ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
+                ->whereBetween('created_at', [$start_date, $end_date])
+                ->where('remarks', 'Done')
+                ->groupBy('site_building_id')
+                // ->groupBy('jordan')
+                ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
+                ->get();
+            $total_per_month = [];
+            $per_month = [];
+            $per_range = [];
+            $month = explode("-", $request->month);
+            $monthz = $month[1];
+            $year = $month[0];
+            $lastDayOfWeek = '6'; //1 (for monday) to 7 (for sunday)
+            $weeks = $this->getWeeksInMonth($year, $monthz, $lastDayOfWeek);
+            foreach ($logs as $index => $log) {
+                $day = date("d", strtotime($log->created_at));
+                $set = $index + 1;
+                $bar = array();
+
+                foreach ($weeks as $weekNumber => $week) {
+                    $monday = substr($week[0], 8);
+                    $sunday = substr($week[1], 8);
+                    $bar[] = ($day >= $monday && $day <= $sunday) ? $log->total_survey : '';
+                }
+                $per_month[] = [
+                    'building_name' => $log->building_name,
+                    'bar' => $bar,
+                    'reports' => $log->total_survey,
+                    'building_color' => $log->building_color,
+                ];
+            }
+            foreach ($weeks as $weekNumber => $week) {
+                $monday = substr($week[0], 8);
+                $sunday = substr($week[1], 8);
+
+                $per_range[] = [
+                    str_replace('-', '/', substr($week[0], 5)) . '-' . str_replace('-', '/', substr($week[1], 5)), //str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
+                ];
+            }
+            $total_per_month[] = $per_month;
+            $total_per_month[] = $per_range;
+            return $this->response($total_per_month, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     public function getYearlyUsage(Request $request)
     {

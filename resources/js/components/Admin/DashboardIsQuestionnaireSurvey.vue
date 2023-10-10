@@ -47,7 +47,8 @@
 										<div v-show="by_start">
 											<label for="userName" class="col-form-label">Start Date</label>
 											<date-picker v-model="filter.start_date" placeholder="YYYY-MM-DD"
-												:config="options" id="date_from" autocomplete="off"></date-picker>
+												:config="options" id="date_from" autocomplete="off"
+												@dp-change="customizedSelected"></date-picker>
 										</div>
 									</div>
 									<div class="col-sm-2">
@@ -136,6 +137,11 @@
 								</div>
 							</div>
 							<div class="row">
+								<div class="col-sm-12">
+									<div id="report_legend"></div>
+								</div>
+							</div>
+							<div class="row">
 								<div class="col-md-12">
 									<div class="chart-responsive">
 										<canvas id="reportBarChart"
@@ -163,7 +169,7 @@
 								<div class="col-md-6">
 									<div class="chart-responsive">
 										<canvas id="pieChartSurvey"
-										style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -172,7 +178,7 @@
 											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
 									</div>
 								</div>
-							</div>	
+							</div>
 							<div class="row"></div>
 						</div>
 					</div>
@@ -252,19 +258,20 @@ export default {
 		this.getSites();
 		this.filterChart();
 		this.filterBy();
+		//this.jordan();
 
 	},
 
 	methods: {
 		jordan: function () {
-			return 'test';
+			alert('xxxxxxxxxxx');
 		},
 		getSites: function () {
 			axios.get('/admin/site/get-all')
 				.then(response => this.sites = response.data.data);
 		},
 		filterBy: function () {
-			//alert('filter by: ' + this.filter.by);
+			//alert('filter by: ' + this.filter. by);
 			if (this.filter.by == 0) {//lifetime
 				this.by_day = false;
 				this.by_week = false;
@@ -347,7 +354,7 @@ export default {
 				this.filterChartByYear();
 			} else { //customize
 				// this.clear_filter();
-				this.by_day = false; 
+				this.by_day = false;
 				this.by_week = false;
 				this.by_month = false;
 				this.by_year = false;
@@ -415,10 +422,7 @@ export default {
 		},
 
 		filterChartByDaily: function () {
-			//alert(this.filter.start_date +'0000'+ this.filter.end_date);
 			var filter = this.filter;
-			//filter.start_date = '';
-			//filter.end_date = '';
 			filter.day = '';
 			filter.week = '';
 			filter.month = '';
@@ -427,33 +431,36 @@ export default {
 			const currentDay = moment(new Date()).format("YYYY-MM-DD");
 			filter.start_date = (filter.start_date == '') ? firstDayYear : filter.start_date;
 			filter.end_date = (filter.end_date == '') ? currentDay : filter.end_date;
-			//alert(filter.start_date + ' - ' + filter.end_date);
-			//alert('filterChartByDaily D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year + ' Start ' + filter.start_date+ ' End ' + filter.end_date);
 			$.get("/admin/reports/trend-report-by-daily/list", filter, function (data) {
-				var xValues = [];
+				let datasets = [];
 				var yValues = [];
-				var barColors = [];
 
-				let dynamicColors = [
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				];
+				var key_label = [];
 				$.each(data.data, function (key, value) {
-					let background_color = value.building_color;//dynamicColors[key];
-					xValues.push(value.day);
-					yValues.push(value.total_survey);
-					barColors.push(value.building_color);
+					var data_key = [];
+					var data_value = [];
+					var oData = value.data;
+					for (key in oData) {
+						data_key.push(key);
+						data_value.push(oData[key]);
+					}
+					key_label.push(data_key);
+
+					let background_colorz = value.building_color;
+					yValues.push(value.reports);
+					datasets.push({
+						label: value.building_name + '(Report: ' + value.reports + ')',
+						backgroundColor: background_colorz,
+						borderColor: background_colorz,
+						pointRadius: false,
+						pointColor: '#3b8bba',
+						pointStrokeColor: background_colorz,
+						pointHighlightFill: '#fff',
+						pointHighlightStroke: background_colorz,
+						data: data_value,
+					});
 				});
+				
 				let sum_reports_total = 0;
 
 				// calculate sum using forEach() method
@@ -463,8 +470,19 @@ export default {
 
 				this.reports_total = sum_reports_total;
 				$('#reports_total').text(sum_reports_total);
-				var reportBarChartCanvas = $('#reportBarChart').get(0).getContext('2d')
-				var reportBarChartOptions = {
+
+
+				var areaChartDataDay = {
+					labels: key_label[0],
+					datasets: datasets
+				};
+
+				var barChartDataDay = $.extend(true, {}, areaChartDataDay);
+
+				var reportBarChartCanvasDay = $('#reportBarChart').get(0).getContext('2d')
+				var reportBarChartDataDay = $.extend(true, {}, barChartDataDay)
+
+				var reportBarChartOptionsDay = {
 					responsive: true,
 					maintainAspectRatio: false,
 					scales: {
@@ -483,57 +501,123 @@ export default {
 				}
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
-				//if(bar) bar.destroy();
-				window.report_bar = new Chart(reportBarChartCanvas, {
+				window.report_bar = new Chart(reportBarChartCanvasDay, {
+					//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
-					//data: reportBarChartData,
-					data: {
-						labels: xValues,
-						datasets: [{
-							backgroundColor: barColors,
-							data: yValues,
-							label: '(Report(s): ' + yValues + ')',
-							backgroundColor: barColors,
-							borderColor: barColors,
-							pointRadius: false,
-							pointColor: '#3b8bba',
-							pointStrokeColor: barColors,
-							pointHighlightFill: '#fff',
-							pointHighlightStroke: barColors,
-
-						}]
-					},
-					options: reportBarChartOptions
+					data: reportBarChartDataDay,
+					options: reportBarChartOptionsDay
 				})
 
 			});
 
 			$.get("/admin/reports/trend-incident-by-daily/list", filter, function (data) {
-				var xValues = [];
+				// var xValues = [];
+				// var yValues = [];
+				// var barColors = [];
+
+				// let dynamicColors = [
+				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7',
+				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
+				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
+				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
+				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
+				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+				// ];
+				// $.each(data.data, function (key, value) {
+				// 	let background_color = value.building_color;//dynamicColors[key];
+				// 	xValues.push(value.day);
+				// 	yValues.push(value.total_survey);
+				// 	barColors.push(value.building_color);
+				// });
+
+				// let sum_incidents_total = 0;
+
+				// // calculate sum using forEach() method
+				// yValues.forEach(num => {
+				// 	sum_incidents_total += num;
+				// })
+
+				// this.incidents_total = sum_incidents_total;
+				// $('#incidents_total').text(sum_incidents_total);
+
+				// var incidentBarChartCanvas = $('#incidentBarChart').get(0).getContext('2d')
+				// var reportBarChartOptions = {
+				// 	responsive: true,
+				// 	maintainAspectRatio: false,
+				// 	scales: {
+				// 		xAxes: [{
+				// 			stacked: true,
+				// 		}],
+				// 		yAxes: [{
+				// 			stacked: true
+				// 		}]
+				// 	},
+				// 	plugins: {
+				// 		labels: {
+				// 			render: 'value'
+				// 		}
+				// 	}
+				// }
+				// if (window.incident_bar != undefined)
+				// 	window.incident_bar.destroy();
+				// //if(bar) bar.destroy();
+				// window.incident_bar = new Chart(incidentBarChartCanvas, {
+				// 	//new Chart(incidentBarChartCanvas, {
+				// 	type: 'bar',
+				// 	//data: reportBarChartData,
+				// 	data: {
+				// 		labels: xValues,
+				// 		datasets: [{
+				// 			backgroundColor: barColors,
+				// 			data: yValues,
+				// 			label: '(Incident(s): ' + yValues + ')',
+				// 			backgroundColor: barColors,
+				// 			borderColor: barColors,
+				// 			pointRadius: false,
+				// 			pointColor: '#3b8bba',
+				// 			pointStrokeColor: barColors,
+				// 			pointHighlightFill: '#fff',
+				// 			pointHighlightStroke: barColors,
+
+				// 		}]
+				// 	},
+				// 	options: reportBarChartOptions
+				// })
+				let datasets = [];
 				var yValues = [];
-				var barColors = [];
 
-				let dynamicColors = [
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				];
+				var key_label = [];
 				$.each(data.data, function (key, value) {
-					let background_color = value.building_color;//dynamicColors[key];
-					xValues.push(value.day);
-					yValues.push(value.total_survey);
-					barColors.push(value.building_color);
-				});
+					var data_key = [];
+					var data_value = [];
+					var oData = value.data;
+					for (key in oData) {
+						data_key.push(key);
+						data_value.push(oData[key]);
+					}
+					key_label.push(data_key);
 
+					let background_colorz = value.building_color;
+					yValues.push(value.reports);
+					datasets.push({
+						label: value.building_name + '(Incident(s): ' + value.reports + ')',
+						backgroundColor: background_colorz,
+						borderColor: background_colorz,
+						pointRadius: false,
+						pointColor: '#3b8bba',
+						pointStrokeColor: background_colorz,
+						pointHighlightFill: '#fff',
+						pointHighlightStroke: background_colorz,
+						data: data_value,
+					});
+				});
+				
 				let sum_incidents_total = 0;
 
 				// calculate sum using forEach() method
@@ -544,8 +628,18 @@ export default {
 				this.incidents_total = sum_incidents_total;
 				$('#incidents_total').text(sum_incidents_total);
 
-				var incidentBarChartCanvas = $('#incidentBarChart').get(0).getContext('2d')
-				var reportBarChartOptions = {
+
+				var areaChartDataDay = {
+					labels: key_label[0],
+					datasets: datasets
+				};
+
+				var barChartDataDay = $.extend(true, {}, areaChartDataDay);
+
+				var incidentBarChartCanvasDay = $('#incidentBarChart').get(0).getContext('2d')
+				var incidentBarChartDataDay = $.extend(true, {}, barChartDataDay)
+
+				var incidentBarChartOptionsDay = {
 					responsive: true,
 					maintainAspectRatio: false,
 					scales: {
@@ -564,28 +658,11 @@ export default {
 				}
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
-				//if(bar) bar.destroy();
-				window.incident_bar = new Chart(incidentBarChartCanvas, {
-					//new Chart(incidentBarChartCanvas, {
+				window.incident_bar = new Chart(incidentBarChartCanvasDay, {
+					//new Chart(reportBarChartCanvasz, {
 					type: 'bar',
-					//data: reportBarChartData,
-					data: {
-						labels: xValues,
-						datasets: [{
-							backgroundColor: barColors,
-							data: yValues,
-							label: '(Incident(s): ' + yValues + ')',
-							backgroundColor: barColors,
-							borderColor: barColors,
-							pointRadius: false,
-							pointColor: '#3b8bba',
-							pointStrokeColor: barColors,
-							pointHighlightFill: '#fff',
-							pointHighlightStroke: barColors,
-
-						}]
-					},
-					options: reportBarChartOptions
+					data: incidentBarChartDataDay,
+					options: incidentBarChartOptionsDay
 				})
 
 			});
@@ -1098,7 +1175,8 @@ export default {
 					let background_color = value.building_color;//dynamicColors[key];
 					yValues.push(value.reports);
 					datasets.push({
-						label: value.building_name + '(Report(s): ' + value.reports + ')',
+						//label: value.building_name + '(Report(s): ' + value.reports + ')',
+						label: '',
 						backgroundColor: background_color,
 						borderColor: background_color,
 						pointRadius: false,
@@ -1424,16 +1502,17 @@ export default {
 			var filter = this.filter;
 			filter.day = '';
 			filter.week = '';
-			filter.year = ''; 
+			filter.year = '';
 			const currentMonth = moment(new Date()).format("YYYY-MM");
 			filter.month = (filter.month == '') ? currentMonth : filter.month;
-			
+
 			$.get("/admin/reports/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
 				let week_range = [];
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
-				$.each(data.data[0], function (key, value) {  console.log('>>>>'); console.log(value);
+				$.each(data.data[0], function (key, value) {
+					console.log('>>>>'); console.log(value);
 					let background_color = value.building_color;//dynamicColors[key];
 					yValues.push(value.reports);
 					var bar = value.bar;
@@ -1750,18 +1829,18 @@ export default {
 				$('#total_sms').text(parseFloat(data.data));
 			});
 		},
-		
+
 		filterChartByYear: function () {
 			var filter = this.filter;
 			filter.day = '';
 			filter.week = '';
 			filter.month = '';
-			
+
 			console.log('YEar D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
 			const currentYear = moment().year().toString();
-			filter.year = (filter.year == '' || filter.year == null ) ? currentYear : filter.year;
-			
-			this.filter.year = filter.year; 
+			filter.year = (filter.year == '' || filter.year == null) ? currentYear : filter.year;
+
+			this.filter.year = filter.year;
 			$.get("/admin/reports/trend-report-by-year/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -2070,34 +2149,168 @@ export default {
 			});
 
 		},
-		filterChartByLifetime: function () {
-			//console.log(this.filter);
-			//alert('yearz');
 
-			//alert(this.filter.lifetime);
+		filterChartByLifetime: function () {
 			var filter = this.filter;
-			$.get("admin/reports/donut-report-by-day/list", filter, function (data) {
+			filter.day = '';
+			filter.week = '';
+			filter.month = '';
+
+			console.log('Lifetime D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
+			const currentYear = moment().year().toString();
+			filter.year = (filter.year == '' || filter.year == null) ? currentYear : filter.year;
+
+			this.filter.year = filter.year;
+			$.get("/admin/reports/trend-report-by-year/list", filter, function (data) {
+				let datasets = [];
+				var yValues = [];
+
+				$.each(data.data, function (key, value) {
+					let background_color = value.building_color;//dynamicColors[key];
+					yValues.push(value.reports);
+					datasets.push({
+						label: value.building_name + '(Report(s): ' + value.reports + ')',
+						backgroundColor: background_color,
+						borderColor: background_color,
+						pointRadius: false,
+						pointColor: '#3b8bba',
+						pointStrokeColor: background_color,
+						pointHighlightFill: '#fff',
+						pointHighlightStroke: background_color,
+						data: [value.jan, value.feb, value.mar, value.apr, value.may, value.jun, value.jul, value.aug, value.sep, value.oct, value.nov, value.dec]
+					});
+				});
+				let sum_reports_total = 0;
+
+				// calculate sum using forEach() method
+				yValues.forEach(num => {
+					sum_reports_total += num;
+				})
+				this.reports_total = sum_reports_total;
+				$('#reports_total').text(sum_reports_total);
+
+				var areaChartData = {
+					labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+					datasets: datasets
+				};
+
+				var barChartData = $.extend(true, {}, areaChartData);
+
+				var reportBarChartCanvas = $('#reportBarChart').get(0).getContext('2d')
+				var reportBarChartData = $.extend(true, {}, barChartData)
+
+				var reportBarChartOptions = {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: {
+						xAxes: [{
+							stacked: true,
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					},
+					plugins: {
+						labels: {
+							render: 'value'
+						}
+					}
+				}
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				//if(bar) bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvas, {
+					//new Chart(reportBarChartCanvas, {
+					type: 'bar',
+					data: reportBarChartData,
+					options: reportBarChartOptions
+				})
+			});
+			$.get("/admin/reports/trend-incident-by-year/list", filter, function (data) {
+				let datasets = [];
+				var yValues = [];
+				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#00FF00', '#808000', '#FFA500', '#86608E', '#B666D2', '#F3E8EA', '#F5F5F5'];
+
+
+				$.each(data.data, function (key, value) {
+					let background_color = value.building_color;//dynamicColors[key];
+					yValues.push(value.reports);
+					datasets.push({
+						label: value.building_name + '(Incident(s): ' + value.reports + ')',
+						backgroundColor: background_color,
+						borderColor: background_color,
+						pointRadius: false,
+						pointColor: '#3b8bba',
+						pointStrokeColor: background_color,
+						pointHighlightFill: '#fff',
+						pointHighlightStroke: background_color,
+						data: [value.jan, value.feb, value.mar, value.apr, value.may, value.jun, value.jul, value.aug, value.sep, value.oct, value.nov, value.dec]
+					});
+				});
+
+				let sum_incidents_total = 0;
+
+				// calculate sum using forEach() method
+				yValues.forEach(num => {
+					sum_incidents_total += num;
+				})
+				this.incidents_total = sum_incidents_total;
+				$('#incidents_total').text(sum_incidents_total);
+
+				var areaChartData = {
+					labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+					datasets: datasets
+				};
+
+				var barChartData = $.extend(true, {}, areaChartData);
+
+				var reportBarChartCanvas = $('#incidentBarChart').get(0).getContext('2d')
+				var reportBarChartData = $.extend(true, {}, barChartData)
+
+				var reportBarChartOptions = {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: {
+						xAxes: [{
+							stacked: true,
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					},
+					plugins: {
+						labels: {
+							render: 'value'
+						}
+					}
+				}
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				//if(bar) bar.destroy();
+				window.incident_bar = new Chart(reportBarChartCanvas, {
+					//new Chart(reportBarChartCanvas, {
+					type: 'bar',
+					data: reportBarChartData,
+					options: reportBarChartOptions
+				})
+			});
+			$.get("/admin/reports/donut-report-by-day/list", filter, function (data) {
 				let labels = [];
+				let colors = [];
 				let data_value = [];
 				let incident_report = 0;
-
-				//alert('sss');
-
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
-						//labels.push(value.questionnaire_answer);
 						labels.push(value.questionnaire);
-						//data_value.push(1);
-						// incident_report.push(value.tenant_survey);
+						colors.push(value.questionnaire_color);
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
-						//randomBackgroundColor.push(dynamicColors());
 					});
+					// console.log(labels);
 				}
 				else {
 					labels = ['Empty']
 					data_value = [1];
-					//randomBackgroundColor = ['#d2d6de'];
 				}
 
 				var donutData = {
@@ -2105,23 +2318,23 @@ export default {
 					datasets: [
 						{
 							data: data_value,
-							backgroundColor: ['#728FCE', '#90EE90', '#FED8B1', '#A52A2A', '#a59fa2'],
+							backgroundColor: colors,//['#728FCE', '#90EE90', '#FED8B1'],
 						}
 					]
 				}
+				var cleanliness = '#728FCE';
+				var supplies = '#90EE90';
+				var functionality = '#FED8B1';
 
 				var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
 				var pieData = donutData;
 				var pieOptions = {
 					maintainAspectRatio: false,
 					responsive: true,
+					inGraphDataShow: true,
+					inGraphDataRadiusPosition: 2,
+					inGraphDataFontColor: 'white'
 				}
-
-				// new Chart(pieChartSurveyCanvas, {
-				//     type: 'pie',
-				//     data: pieData,
-				//     options: pieOptions
-				// })
 				if (window.doughnut_chart != undefined)
 					window.doughnut_chart.destroy();
 
@@ -2129,46 +2342,227 @@ export default {
 					//var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
-					plugins: [{ //plugin added for this chart
+					plugins: [{
 						beforeDraw: function (chart) {
 							var width = chart.chart.width,
 								height = chart.chart.height,
 								ctx = chart.chart.ctx;
 
 							ctx.restore();
-							var fontSize = 2.5;
+							var fontSize = 1.5;
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
 							var text = incident_report,
-								textX = 250,//Math.round((width - ctx.measureText(text).width) / 2),
+								textX = Math.round((width - ctx.measureText(text).width) / 2),
 								textY = height / 2;
 
-							ctx.fillText(text, textX + 45, textY);
+							ctx.fillText(text, textX, textY);
 
 							ctx.restore();
-							var fontSize = 2;
+							var fontSize = 1;
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", textX, textY + 45);
+							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
 
 							ctx.save();
 						}
 					}],
-					options: pieOptions
+					options: {
+						pieOptions,
+						events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
+					}
 				});
 			});
-			$.get("/admin/reports/average-time-by-lifetime/list", filter, function (data) {
-				console.log(data.data);
+
+			$.get("/admin/reports/donut-report-by-day-answer/list", filter, function (data) {
+				let labels_answer = [];
+				let color_answers = [];
+				let data_value_answer = [];
+				let incident_report_answer = 0;
+				let randomBackgroundColor = [];
+				var cleanliness = '#728FCE';
+				var supplies = '#90EE90';
+				var functionality = '#FED8B1';
+
+
+				if (data.data.length > 0) {
+					$.each(data.data, function (key, value) {
+						var jordan = value.questionnaire_answer;
+						var color = value.questionnaire_color;
+						labels_answer.push(jordan);
+						color_answers.push(color);
+						//console.log(value.questionnaire);
+						//labels_answer.push(value.questionnaire);
+						//data_value.push(1);
+						// incident_report.push(value.tenant_survey);
+						incident_report_answer += parseInt(value.tenant_survey);
+						data_value_answer.push(value.percentage_share);
+						if (value.questionnaire == 'CLEANLINESS') {
+							randomBackgroundColor.push(cleanliness);
+						} else if (value.questionnaire == 'SUPPLIES') {
+							randomBackgroundColor.push(supplies);
+						} else {
+							randomBackgroundColor.push(functionality);
+						}
+
+					});
+				}
+				else {
+					labels_answer = ['Empty']
+					data_value_answer = [1];
+					randomBackgroundColor = color_answers;//[cleanliness];
+				}
+				//console.log();
+				var donutData_answer = {
+					labels: labels_answer,
+					datasets: [
+						{
+							data: data_value_answer,
+							backgroundColor: randomBackgroundColor,
+						}
+					]
+				}
+
+				var pieChartSurveyCanvas_answer = $('#pieChartSurveyAnswer').get(0).getContext('2d')
+				var pieData_answer = donutData_answer;
+				var pieOptions_answer = {
+					maintainAspectRatio: false,
+					responsive: true,
+					plugins: {
+						labels: [
+							{
+								render: 'label',
+								position: 'outside'
+							},
+							{
+								render: 'percentage'
+							}
+						],
+
+
+					},
+					legend: {
+						display: false,
+					},
+				}
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+					//new Chart(pieChartSurveyCanvas_answer, {
+					type: 'pie',
+					data: pieData_answer,
+					options: pieOptions_answer
+				})
+			});
+			$.get("/admin/reports/average-time-by-year/list", filter, function (data) {
+				//console.log(data.data);
 				$('#average_time').text(parseFloat(data.data));
 			});
-			$.get("/admin/reports/total-sms-by-lifetime/list", filter, function (data) {
+			$.get("/admin/reports/total-sms-by-year/list", filter, function (data) {
 				console.log(data.data);
 				$('#total_sms').text(parseFloat(data.data));
 			});
 
 		},
+
+		// filterChartByLifetime: function () {
+		// 	var filter = this.filter;
+		// 	$.get("admin/reports/donut-report-by-day/list", filter, function (data) {
+		// 		let labels = [];
+		// 		let data_value = [];
+		// 		let incident_report = 0;
+
+		// 		//alert('sss');
+
+		// 		if (data.data.length > 0) {
+		// 			$.each(data.data, function (key, value) {
+		// 				//labels.push(value.questionnaire_answer);
+		// 				labels.push(value.questionnaire);
+		// 				//data_value.push(1);
+		// 				// incident_report.push(value.tenant_survey);
+		// 				incident_report += parseInt(value.tenant_survey);
+		// 				data_value.push(value.percentage_share);
+		// 				//randomBackgroundColor.push(dynamicColors());
+		// 			});
+		// 		}
+		// 		else {
+		// 			labels = ['Empty']
+		// 			data_value = [1];
+		// 			//randomBackgroundColor = ['#d2d6de'];
+		// 		}
+
+		// 		var donutData = {
+		// 			labels: labels,
+		// 			datasets: [
+		// 				{
+		// 					data: data_value,
+		// 					backgroundColor: ['#728FCE', '#90EE90', '#FED8B1', '#A52A2A', '#a59fa2'],
+		// 				}
+		// 			]
+		// 		}
+
+		// 		var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
+		// 		var pieData = donutData;
+		// 		var pieOptions = {
+		// 			maintainAspectRatio: false,
+		// 			responsive: true,
+		// 		}
+
+		// 		// new Chart(pieChartSurveyCanvas, {
+		// 		//     type: 'pie',
+		// 		//     data: pieData,
+		// 		//     options: pieOptions
+		// 		// })
+		// 		if (window.doughnut_chart != undefined)
+		// 			window.doughnut_chart.destroy();
+
+		// 		window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+		// 			//var myChart = new Chart(pieChartSurveyCanvas, {
+		// 			type: 'doughnut',
+		// 			data: pieData,
+		// 			plugins: [{ //plugin added for this chart
+		// 				beforeDraw: function (chart) {
+		// 					var width = chart.chart.width,
+		// 						height = chart.chart.height,
+		// 						ctx = chart.chart.ctx;
+
+		// 					ctx.restore();
+		// 					var fontSize = 2.5;
+		// 					ctx.font = fontSize + "em sans-serif";
+		// 					ctx.textBaseline = "middle";
+
+		// 					var text = incident_report,
+		// 						textX = 250,//Math.round((width - ctx.measureText(text).width) / 2),
+		// 						textY = height / 2;
+
+		// 					ctx.fillText(text, textX + 45, textY);
+
+		// 					ctx.restore();
+		// 					var fontSize = 2;
+		// 					ctx.font = fontSize + "em sans-serif";
+		// 					ctx.textBaseline = "middle";
+
+		// 					ctx.fillText("INCIDENTS", textX, textY + 45);
+
+		// 					ctx.save();
+		// 				}
+		// 			}],
+		// 			options: pieOptions
+		// 		});
+		// 	});
+		// 	$.get("/admin/reports/average-time-by-lifetime/list", filter, function (data) {
+		// 		console.log(data.data);
+		// 		$('#average_time').text(parseFloat(data.data));
+		// 	});
+		// 	$.get("/admin/reports/total-sms-by-lifetime/list", filter, function (data) {
+		// 		console.log(data.data);
+		// 		$('#total_sms').text(parseFloat(data.data));
+		// 	});
+
+		// },
 		dateSelected: function (e) {
 			console.log(filter.day);
 			//this.$nextTick(() => console.log(filter.day))
@@ -2190,16 +2584,16 @@ export default {
 			}
 		},
 		monthSelected: function (e) {
-			
+
 			//alert('Site:' + this.filter.site_id);
-			
-			if (this.filter.month != null) { 
+
+			if (this.filter.month != null) {
 				this.filterChartByMonth();// nakukuha sa filterChartByDaily
 			}
 		},
 		yearSelected: function (e) {
-			
-			
+
+
 			if (this.filter.year != null) {
 				console.log('ys');
 				console.log(e);
@@ -2207,7 +2601,7 @@ export default {
 			}
 		},
 		customizedSelected: function (e) {
-console.log('sa customizedSelected');console.log(this.filter);
+			console.log('sa customizedSelected'); console.log(this.filter);
 			var d_start = new Date(this.filter.start_date);
 			var d_end = new Date(this.filter.end_date);
 			var m_start = d_start.getMonth();
@@ -2222,55 +2616,60 @@ console.log('sa customizedSelected');console.log(this.filter);
 			var difference_in_time = d_end.getTime() - d_start.getTime();
 			var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
 			// // Difference_In_Days; 
-			if (difference_in_days == 0) { 
-				//alert(difference_in_days + 'day for hour');// 01 - 23 hour
-				this.filter.day = d_end; console.log('>>>>>>>>if'+difference_in_days);console.log(this.filter+'<<<<<<');
-				this.filterChartByDay();
-			} else if (difference_in_days >= 1 && difference_in_days <= 7) { 
-				console.log('>>>>>>>>else if' + difference_in_days);
-				console.log('difference_in_days >= 1 && difference_in_days <= 7');
-				console.log(this.filter);
-				var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);	
-				var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
-				if (y_start == y_end) { 
-					console.log(y_start +'== '+y_end+'y_start == y_end<<<<');
-					if (week_of_month_start == week_of_month_end) { 
-						console.log('if'+week_of_month_start +'=='+ week_of_month_end + 'week_of_month_start == week_of_month_end<<<<');  
-						//this.filterChartByWeek();
-						this.filterChartByDaily();
-					} else { 
-						console.log('else'+week_of_month_start +'!='+ week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
-					//	alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
-						this.filterChartByDaily();
-					}
-				} else {
-					// wishlist
-				}
-			}
-			else if (difference_in_days >= 0 && difference_in_days <= 31) { 
-				var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
-				var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
-				//alert(m_start + '== ' + m_end);
-				//alert(y_start + '== ' + y_end);
-				//this.filterChartByMonth();
-				if (y_start == y_end) { 
-					if (week_of_month_start == week_of_month_end) {
-						this.filterChartByDaily();
-					}else{ 
-						//this.filterChartByWeek();
-						//this.filterChartByDaily();
-						//this.filterChartByMonth();
-						this.filterChartByDaily();
-					}	
-				} else {
-					if (m_start == m_start) {
-						this.filterChartByMonth();
+			if (y_start == y_end) {
+
+				if (difference_in_days == 0) {
+					//alert(difference_in_days + 'day for hour');// 01 - 23 hour
+					this.filter.day = d_end; console.log('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
+					this.filterChartByDay();
+				} else if (difference_in_days >= 1 && difference_in_days <= 7) {
+					console.log('>>>>>>>>else if' + difference_in_days);
+					console.log('difference_in_days >= 1 && difference_in_days <= 7');
+					console.log(this.filter);
+					var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+					var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+					if (y_start == y_end) {
+						console.log(y_start + '== ' + y_end + 'y_start == y_end<<<<');
+						if (week_of_month_start == week_of_month_end) {
+							console.log('if' + week_of_month_start + '==' + week_of_month_end + 'week_of_month_start == week_of_month_end<<<<');
+							//this.filterChartByWeek();
+							this.filterChartByDaily();
+						} else {
+							console.log('else' + week_of_month_start + '!=' + week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
+							//	alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
+							this.filterChartByDaily();
+						}
 					} else {
-						this.filterChartByYear();
+						// wishlist
 					}
+				}
+				else if (difference_in_days >= 0 && difference_in_days <= 31) {
+					var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+					var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+					//alert(m_start + '== ' + m_end);
+					//alert(y_start + '== ' + y_end);
+					//this.filterChartByMonth();
+					if (y_start == y_end) {
+						if (week_of_month_start == week_of_month_end) {
+							this.filterChartByDaily();
+						} else {
+							//this.filterChartByWeek();
+							//this.filterChartByDaily();
+							//this.filterChartByMonth();
+							this.filterChartByDaily();
+						}
+					} else {
+						if (m_start == m_start) {
+							this.filterChartByMonth();
+						} else {
+							this.filterChartByYear();
+						}
+					}
+				} else {
+					this.filterChartByYear();
 				}
 			} else {
-				this.filterChartByYear();
+
 			}
 			// else if(difference_in_days){
 			// 	alert();
@@ -2286,10 +2685,10 @@ console.log('sa customizedSelected');console.log(this.filter);
 		},
 		setToDate: function (date, day_num) {
 			var day = date.getDay() || 7;
-			if (day !== 1) {
+			//if (day !== 1) {
 
-				date.setHours(-24 * (day - day_num));
-			}
+			date.setHours(-24 * (day - day_num));
+			//}
 			var myDate = new Date(date);
 			var month_day = myDate.toLocaleString('en-PH', {
 				day: '2-digit',
