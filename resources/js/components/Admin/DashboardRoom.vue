@@ -144,7 +144,7 @@
 								<div class="col-md-6">
 									<div class="chart-responsive">
 										<canvas id="pieChartSurvey"
-										style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -384,7 +384,7 @@ export default {
 				this.by_end = false;
 				//const currentYear = moment(new Date()).format("YYYY");
 				//console.log(currentYear);
-				
+
 				// this.filter.year = currentYear; (this.filter.year == '') ? currentYear : this.filter.year;
 				// this.filterChartByYear();
 				const currentYear = moment().year().toString();
@@ -398,14 +398,79 @@ export default {
 				this.by_year = false;
 				this.by_start = true;
 				this.by_end = true;
-				//alert(this.start_date + '--' + this.end_data);
+				var d_start = new Date(this.filter.start_date);
+				var d_end = new Date(this.filter.end_date);
+				var m_start = d_start.getMonth();
+				var m_end = d_end.getMonth();
+				var y_start = d_start.getFullYear();
+				var y_end = d_end.getFullYear();
+				var date_start = d_start.getDate();
+				var day_start = d_start.getDay();
+				var date_end = d_end.getDate();
+				var day_end = d_end.getDay();
+				// To calculate the no. of days between two dates
+				var difference_in_time = d_end.getTime() - d_start.getTime();
+				var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
+				// // Difference_In_Days; 
+				if (y_start == y_end) {
 
-				// const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
-				// const currentDay = moment(new Date()).format("YYYY-MM-DD");
-				// this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
-				// this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
-				// //lert(this.filter.start_date +'--'+this.filter.end_date);
-				// this.filterChartByDaily();
+					if (difference_in_days == 0) {
+						//alert(difference_in_days + 'day for hour');// 01 - 23 hour
+						this.filter.day = d_end; console.log('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
+						this.filterChartByDay();
+					} else if (difference_in_days >= 1 && difference_in_days <= 7) {
+						console.log('>>>>>>>>else if' + difference_in_days);
+						console.log('difference_in_days >= 1 && difference_in_days <= 7');
+						console.log(this.filter);
+						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+						if (y_start == y_end) {
+							console.log(y_start + '== ' + y_end + 'y_start == y_end<<<<');
+							if (week_of_month_start == week_of_month_end) {
+								//alert('if' + week_of_month_start + '==' + week_of_month_end + 'week_of_month_start == week_of_month_end<<<<');
+								//this.filterChartByWeek();
+								this.filterChartByDailyAll();
+							} else {
+								//alert('else' + week_of_month_start + '!=' + week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
+								//	alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
+								this.filterChartByWeek();
+							}
+						} else {
+							// wishlist
+						}
+					}
+					else if (difference_in_days >= 8 && difference_in_days <= 31) {
+						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+						//alert(m_start + '== ' + m_end);
+						//alert(y_start + '== ' + y_end);
+						//this.filterChartByMonth();
+						if (y_start == y_end) {
+							if (week_of_month_start == week_of_month_end) {
+								alert(week_of_month_start + '==' + week_of_month_end);
+								this.filterChartByDaily();
+							} else {
+								alert('week_of_month_start != week_of_month_end' + week_of_month_start + '!=' + week_of_month_end);
+								//this.filterChartByWeek();
+								//this.filterChartByDaily();
+								this.filterChartByYear();
+								//this.filterChartByDaily();
+							}
+						} else {
+							if (m_start == m_start) {
+								alert(m_start + '==' + m_start);
+								this.filterChartByMonth();
+							} else {
+								alert(m_start + '!=' + m_start);
+								this.filterChartByYear();
+							}
+						}
+					} else {
+						this.filterChartByYear();
+					}
+				} else {
+					this.filterChartByYears();
+				}
 			}
 		},
 
@@ -452,19 +517,10 @@ export default {
 			this.filter.year = '';
 
 		},
-
-		// filterChartFirstLast: function () {
-		// 	var obj = this;
-		// 	var filter = this.filter;
-		// 	axios.get('/admin/dashboard/filter-survey-first-last')
-		// 		.then(response => {
-		// 			this.survey_number_day = response.data.data;
-		// 			//alert(this.survey_number_day);
-		// 		});
-		// },
+		
 		filterChartByDaily: function () {
 			var filter = this.filter;
-			//alert('hello filter by lifetime'); console.log(filter);
+			
 			$.get("/admin/dashboard/trend-report-by-daily/list", filter, function (data) {
 				var xValues = [];
 				var yValues = [];
@@ -484,7 +540,7 @@ export default {
 					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
 					'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
 				];
-				$.each(data.data, function (key, value) { 
+				$.each(data.data, function (key, value) {
 					let background_color = value.building_color;
 					xValues.push(value.day);
 					yValues.push(value.total_survey);
@@ -649,7 +705,7 @@ export default {
 					datasets: [
 						{
 							data: data_value,
-							backgroundColor: colors,
+							backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
 						}
 					]
 				}
@@ -793,6 +849,14 @@ export default {
 
 		filterChartByDay: function () { //alert('hellop');
 			var filter = this.filter;
+			filter.week = '';
+			filter.month = '';
+			filter.year = '';
+			const currentDay = moment(new Date()).format("YYYY-MM-DD");
+			filter.day = (filter.day == '' || filter.day == null) ? currentDay : filter.day;
+
+			this.filter.day = filter.day; //alert(this.filter.day);
+			console.log('filterChartByDay D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
 			$.get("/admin/dashboard/trend-report-by-day/list", filter, function (data) {
 				let datasetsz = [];
 				var yValues = [];
@@ -801,7 +865,7 @@ export default {
 
 
 				$.each(data.data, function (key, value) {
-					let background_colorz = dynamicColorsz[key];
+					let background_colorz = value.building_color;
 					yValues.push(value.reports);
 					datasetsz.push({
 						label: value.building_name + '(Report: ' + value.reports + ')',
@@ -872,7 +936,7 @@ export default {
 
 
 				$.each(data.data, function (key, value) {
-					let background_colorz = dynamicColorsz[key];
+					let background_colorz = value.building_color;
 					yValues.push(value.reports);
 					datasetsz.push({
 						label: value.building_name + '(Incident: ' + value.reports + ')',
@@ -1111,7 +1175,7 @@ export default {
 		filterChartByWeek: function () {
 			var obj = this;
 			var filter = this.filter;
-			
+
 			$.get("/admin/dashboard/trend-report-by-week/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -1139,14 +1203,14 @@ export default {
 				})
 				this.reports_total = sum_reports_total;
 				$('#reports_total').text(sum_reports_total);
-				var sun = obj.setToDate(new Date(obj.filter.week), 0); 
+				var sun = obj.setToDate(new Date(obj.filter.week), 0);
 				var mon = obj.setToDate(new Date(obj.filter.week), 1);
 				var tue = obj.setToDate(new Date(obj.filter.week), 2);
 				var wed = obj.setToDate(new Date(obj.filter.week), 3);
 				var thu = obj.setToDate(new Date(obj.filter.week), 4);
 				var fri = obj.setToDate(new Date(obj.filter.week), 5);
 				var sat = obj.setToDate(new Date(obj.filter.week), 6);
-				
+
 				let aLabels = [sun, mon, tue, wed, thu, fri, sat];
 
 				var areaChartData = {
@@ -1218,14 +1282,14 @@ export default {
 				})
 				this.reports_total = sum_incidents_total;
 				$('#incidents_total').text(sum_incidents_total);
-				var sun = obj.setToDate(new Date(obj.filter.week), 0); 
+				var sun = obj.setToDate(new Date(obj.filter.week), 0);
 				var mon = obj.setToDate(new Date(obj.filter.week), 1);
 				var tue = obj.setToDate(new Date(obj.filter.week), 2);
 				var wed = obj.setToDate(new Date(obj.filter.week), 3);
 				var thu = obj.setToDate(new Date(obj.filter.week), 4);
 				var fri = obj.setToDate(new Date(obj.filter.week), 5);
 				var sat = obj.setToDate(new Date(obj.filter.week), 6);
-				
+
 				let aLabels = [sun, mon, tue, wed, thu, fri, sat];
 
 				var areaChartDataz = {
@@ -1442,18 +1506,18 @@ export default {
 		},
 
 		filterChartByMonth: function () {
-			
+
 			var filter = this.filter;
 			filter.day = '';
 			filter.week = '';
-			filter.year = ''; 
+			filter.year = '';
 			const currentMonth = moment(new Date()).format("YYYY-MM");
 			filter.month = (filter.month == '') ? currentMonth : filter.month;
 			$.get("/admin/dashboard/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
 				let week_range = [];
 				var yValues = [];
-				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8','#ff00cc', '#ff0000'];
+				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
 
 
 				$.each(data.data[0], function (key, value) {  ///console.log('>>>>'); console.log(value);
@@ -1474,10 +1538,10 @@ export default {
 					});
 					//week_range.push(week);
 				});
-				$.each(data.data[1], function (key, value) {  
-					week_range.push(value); 
+				$.each(data.data[1], function (key, value) {
+					week_range.push(value);
 				});
-				
+
 				let sum_reports_total = 0;
 
 				// calculate sum using forEach() method
@@ -1528,9 +1592,9 @@ export default {
 				let datasets = [];
 				let week_range = [];
 				var yValues = [];
-				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8','#ff00cc', '#ff0000']; 
-//console.log('>>>>data');  console.log(data.data); 
-				$.each(data.data[0], function (key, value) { 
+				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
+				//console.log('>>>>data');  console.log(data.data); 
+				$.each(data.data[0], function (key, value) {
 					let background_color = value.building_color;
 					yValues.push(value.reports);
 					var bar = value.bar;
@@ -1547,12 +1611,12 @@ export default {
 						data: bar
 						//data: [value.week_one, value.week_two, value.week_three, value.week_four]
 					});
-					
-					console.log('range:');console.log(week_range);
+
+					console.log('range:'); console.log(week_range);
 					console.log(datasets);
 				});
-				$.each(data.data[1], function (key, value) {  
-					week_range.push(value); 
+				$.each(data.data[1], function (key, value) {
+					week_range.push(value);
 				});
 				let sum_incidents_total = 0;
 				yValues.forEach(num => {
@@ -1778,13 +1842,13 @@ export default {
 			filter.day = '';
 			filter.week = '';
 			filter.month = '';
-			
+
 			console.log('YEar D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
 			const currentYear = moment().year().toString();
-			filter.year = (filter.year == '' || filter.year == null ) ? currentYear : filter.year;
-			
+			filter.year = (filter.year == '' || filter.year == null) ? currentYear : filter.year;
+
 			this.filter.year = filter.year;
-			
+
 			$.get("/admin/dashboard/trend-report-by-year/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
@@ -2187,6 +2251,338 @@ export default {
 
 
 		},
+
+		filterChartByYears: function () {
+			var filter = this.filter;
+			filter.day = '';
+			filter.week = '';
+			filter.month = '';
+			filter.year = '';
+			const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
+			const currentDay = moment(new Date()).format("YYYY-MM-DD");
+			filter.start_date = (filter.start_date == '') ? firstDayYear : filter.start_date;
+			filter.end_date = (filter.end_date == '') ? currentDay : filter.end_date;
+			$.get("/admin/dashboard/trend-report-by-years/list", filter, function (data) {
+				let datasets = [];
+				var yValues = [];
+
+				var key_label = [];
+				$.each(data.data, function (key, value) {
+					var data_key = [];
+					var data_value = [];
+					var oData = value.data;
+					for (key in oData) {
+						data_key.push(key);
+						data_value.push(oData[key]);
+					}
+					key_label.push(data_key);
+
+					let background_colorz = value.building_color;
+					yValues.push(value.reports);
+					datasets.push({
+						label: value.building_name + '(Report: ' + value.reports + ')',
+						backgroundColor: background_colorz,
+						borderColor: background_colorz,
+						pointRadius: false,
+						pointColor: '#3b8bba',
+						pointStrokeColor: background_colorz,
+						pointHighlightFill: '#fff',
+						pointHighlightStroke: background_colorz,
+						data: data_value,
+					});
+				});
+
+				let sum_reports_total = 0;
+
+				// calculate sum using forEach() method
+				yValues.forEach(num => {
+					sum_reports_total += num;
+				})
+
+				this.reports_total = sum_reports_total;
+				$('#reports_total').text(sum_reports_total);
+
+
+				var areaChartDataDay = {
+					labels: key_label[0],
+					datasets: datasets
+				};
+
+				var barChartDataDay = $.extend(true, {}, areaChartDataDay);
+
+				var reportBarChartCanvasDay = $('#reportBarChart').get(0).getContext('2d')
+				var reportBarChartDataDay = $.extend(true, {}, barChartDataDay)
+
+				var reportBarChartOptionsDay = {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: {
+						xAxes: [{
+							stacked: true,
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					},
+					plugins: {
+						labels: {
+							render: 'value'
+						}
+					}
+				}
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvasDay, {
+					type: 'bar',
+					data: reportBarChartDataDay,
+					options: reportBarChartOptionsDay
+				})
+
+			});
+
+			$.get("/admin/dashboard/trend-incident-by-years/list", filter, function (data) {
+				let datasets = [];
+				var yValues = [];
+
+				var key_label = [];
+				$.each(data.data, function (key, value) {
+					var data_key = [];
+					var data_value = [];
+					var oData = value.data;
+					for (key in oData) {
+						data_key.push(key);
+						data_value.push(oData[key]);
+					}
+					key_label.push(data_key);
+
+					let background_colorz = value.building_color;
+					yValues.push(value.reports);
+					datasets.push({
+						label: value.building_name + '(Incident(s): ' + value.reports + ')',
+						backgroundColor: background_colorz,
+						borderColor: background_colorz,
+						pointRadius: false,
+						pointColor: '#3b8bba',
+						pointStrokeColor: background_colorz,
+						pointHighlightFill: '#fff',
+						pointHighlightStroke: background_colorz,
+						data: data_value,
+					});
+				});
+
+				let sum_incidents_total = 0;
+
+				// calculate sum using forEach() method
+				yValues.forEach(num => {
+					sum_incidents_total += num;
+				})
+
+				this.incidents_total = sum_incidents_total;
+				$('#incidents_total').text(sum_incidents_total);
+
+
+				var areaChartDataDay = {
+					labels: key_label[0],
+					datasets: datasets
+				};
+
+				var barChartDataDay = $.extend(true, {}, areaChartDataDay);
+
+				var incidentBarChartCanvasDay = $('#incidentBarChart').get(0).getContext('2d')
+				var incidentBarChartDataDay = $.extend(true, {}, barChartDataDay)
+
+				var incidentBarChartOptionsDay = {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: {
+						xAxes: [{
+							stacked: true,
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					},
+					plugins: {
+						labels: {
+							render: 'value'
+						}
+					}
+				}
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				window.incident_bar = new Chart(incidentBarChartCanvasDay, {
+					//new Chart(reportBarChartCanvasz, {
+					type: 'bar',
+					data: incidentBarChartDataDay,
+					options: incidentBarChartOptionsDay
+				})
+
+			});
+
+			$.get("/admin/dashboard/donut-report-by-daily/list", filter, function (data) {
+				let labels = [];
+				let data_value = [];
+				let incident_report = 0;
+				if (data.data.length > 0) {
+					$.each(data.data, function (key, value) {
+						labels.push(value.questionnaire);
+						incident_report += parseInt(value.tenant_survey);
+						data_value.push(value.percentage_share);
+					});
+					// console.log(labels);
+				}
+				else {
+					labels = ['Empty']
+					data_value = [1];
+				}
+
+				var donutData = {
+					labels: labels,
+					datasets: [
+						{
+							data: data_value,
+							backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
+						}
+					]
+				}
+				var cleanliness = '#728FCE';
+				var supplies = '#90EE90';
+				var functionality = '#FED8B1';
+
+				var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
+				var pieData = donutData;
+				var pieOptions = {
+					maintainAspectRatio: false,
+					responsive: true,
+					inGraphDataShow: true,
+					inGraphDataRadiusPosition: 2,
+					inGraphDataFontColor: 'white'
+				}
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+					//var myChart = new Chart(pieChartSurveyCanvas, {
+					type: 'doughnut',
+					data: pieData,
+					plugins: [{
+						beforeDraw: function (chart) {
+							var width = chart.chart.width,
+								height = chart.chart.height,
+								ctx = chart.chart.ctx;
+
+							ctx.restore();
+							var fontSize = 1.5;
+							ctx.font = fontSize + "em sans-serif";
+							ctx.textBaseline = "middle";
+
+							var text = incident_report,
+								textX = Math.round((width - ctx.measureText(text).width) / 2),
+								textY = height / 2;
+
+							ctx.fillText(text, textX, textY);
+
+							ctx.restore();
+							var fontSize = 1;
+							ctx.font = fontSize + "em sans-serif";
+							ctx.textBaseline = "middle";
+
+							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+
+							ctx.save();
+						}
+					}],
+					options: {
+						pieOptions,
+						events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
+					}
+				});
+			});
+
+			$.get("/admin/dashboard/donut-report-by-daily-answer/list", filter, function (data) {
+				let labels_answer = [];
+				let data_value_answer = [];
+				let incident_report_answer = 0;
+				let randomBackgroundColor = [];
+				var cleanliness = '#728FCE';
+				var supplies = '#90EE90';
+				var functionality = '#FED8B1';
+
+
+				if (data.data.length > 0) {
+					$.each(data.data, function (key, value) {
+						var jordan = value.questionnaire_answer;
+						labels_answer.push(jordan);
+						incident_report_answer += parseInt(value.tenant_survey);
+						data_value_answer.push(value.percentage_share);
+						if (value.questionnaire == 'CLEANLINESS') {
+							randomBackgroundColor.push(cleanliness);
+						} else if (value.questionnaire == 'SUPPLIES') {
+							randomBackgroundColor.push(supplies);
+						} else {
+							randomBackgroundColor.push(functionality);
+						}
+
+					});
+				}
+				else {
+					labels_answer = ['Empty']
+					data_value_answer = [1];
+					randomBackgroundColor = [cleanliness];
+				}
+
+				var donutData_answer = {
+					labels: labels_answer,
+					datasets: [
+						{
+							data: data_value_answer,
+							backgroundColor: randomBackgroundColor,
+						}
+					]
+				}
+
+				var pieChartSurveyCanvas_answer = $('#pieChartSurveyAnswer').get(0).getContext('2d')
+				var pieData_answer = donutData_answer;
+				var pieOptions_answer = {
+					maintainAspectRatio: false,
+					responsive: true,
+					plugins: {
+						labels: [
+							{
+								render: 'label',
+								position: 'outside'
+							},
+							{
+								render: 'percentage'
+							}
+						],
+
+
+					},
+					legend: {
+						display: false,
+					},
+				}
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+					//new Chart(pieChartSurveyCanvas_answer, {
+					type: 'pie',
+					data: pieData_answer,
+					options: pieOptions_answer
+				})
+			});
+			$.get("/admin/dashboard/average-time-by-years/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(data.data);
+			});
+			$.get("/admin/dashboard/total-sms-by-years/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(data.data);
+			});
+		},
+
 		dateSelected: function (e) {
 			//console.log(filter.day);
 			//this.$nextTick(() => console.log(filter.day))
@@ -2231,7 +2627,7 @@ export default {
 		monthSelected: function (e) {
 			//alert(this.filter.month + 'monthSelected');
 			//alert('Site:' + this.filter.site_id);
-			
+
 			if (this.filter.month != null) {
 				this.filterChartByMonth();// nakukuha sa filterChartByDaily
 			}
@@ -2239,7 +2635,7 @@ export default {
 		yearSelected: function (e) {
 			//alert(this.filter.year + 'yearSelected');
 			//alert('Site:' + this.filter.site_id);
-			
+
 			if (this.filter.year != null) {
 				console.log('ys');
 				console.log(e);
@@ -2247,7 +2643,7 @@ export default {
 			}
 		},
 		customizedSelected: function (e) {
-console.log('sa customizedSelected');console.log(this.filter);
+			console.log('sa customizedSelected'); console.log(this.filter);
 			var d_start = new Date(this.filter.start_date);
 			var d_end = new Date(this.filter.end_date);
 			var m_start = d_start.getMonth();
@@ -2262,67 +2658,65 @@ console.log('sa customizedSelected');console.log(this.filter);
 			var difference_in_time = d_end.getTime() - d_start.getTime();
 			var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
 			// // Difference_In_Days; 
-			if (difference_in_days == 0) { //alert('if0'); //ok
-				//alert(difference_in_days + 'day for hour');// 01 - 23 hour
-				this.filter.day = d_end; console.log('>>>>>>>>if'+difference_in_days);console.log(this.filter+'<<<<<<');
-				this.filterChartByDay();
-			} else if (difference_in_days >= 1 && difference_in_days <= 7) { 
-				console.log('>>>>>>>>else if' + difference_in_days);
-				console.log('difference_in_days >= 1 && difference_in_days <= 7');
-				console.log(this.filter);
-				var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);	
-				var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
-				if (y_start == y_end) { 
-					console.log(y_start +'== '+y_end+'y_start == y_end<<<<');
-					if (week_of_month_start == week_of_month_end) { 
-						console.log('if'+week_of_month_start +'=='+ week_of_month_end + 'week_of_month_start == week_of_month_end<<<<');  
-						
-						this.filterChartByDaily();
-					} else { 
-						console.log('else'+week_of_month_start +'!='+ week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
-					
-						this.filterChartByDaily();
-					}
-				} else {
-					// wishlist
-				}
-			}
-			else if (difference_in_days >= 0 && difference_in_days <= 31) { 
-				var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
-				var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
-				//alert(m_start + '== ' + m_end);
-				//alert(y_start + '== ' + y_end);
-				//this.filterChartByMonth();
-				if (y_start == y_end) { 
-					if (week_of_month_start == week_of_month_end) {
-						this.filterChartByDaily();
-					}else{ 
-						//this.filterChartByWeek();
-						//this.filterChartByDaily();
-						//this.filterChartByMonth();
-						this.filterChartByDaily();
-					}	
-				} else {
-					if (m_start == m_start) {
-						this.filterChartByMonth();
+			if (y_start == y_end) {
+
+				if (difference_in_days == 0) {
+					//alert(difference_in_days + 'day for hour');// 01 - 23 hour
+					this.filter.day = d_end; console.log('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
+					this.filterChartByDay();
+				} else if (difference_in_days >= 1 && difference_in_days <= 7) {
+					console.log('>>>>>>>>else if' + difference_in_days);
+					console.log('difference_in_days >= 1 && difference_in_days <= 7');
+					console.log(this.filter);
+					var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+					var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+					if (y_start == y_end) {
+						console.log(y_start + '== ' + y_end + 'y_start == y_end<<<<');
+						if (week_of_month_start == week_of_month_end) {
+							//alert('if' + week_of_month_start + '==' + week_of_month_end + 'week_of_month_start == week_of_month_end<<<<');
+							//this.filterChartByWeek();
+							this.filterChartByDailyAll();
+						} else {
+							//alert('else' + week_of_month_start + '!=' + week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
+							//	alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
+							this.filterChartByWeek();
+						}
 					} else {
-						this.filterChartByYear();
+						// wishlist
 					}
+				}
+				else if (difference_in_days >= 8 && difference_in_days <= 31) {
+					var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+					var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+					//alert(m_start + '== ' + m_end);
+					//alert(y_start + '== ' + y_end);
+					//this.filterChartByMonth();
+					if (y_start == y_end) {
+						if (week_of_month_start == week_of_month_end) {
+							alert(week_of_month_start + '==' + week_of_month_end);
+							this.filterChartByDaily();
+						} else {
+							alert('week_of_month_start != week_of_month_end' + week_of_month_start + '!=' + week_of_month_end);
+							//this.filterChartByWeek();
+							//this.filterChartByDaily();
+							this.filterChartByYear();
+							//this.filterChartByDaily();
+						}
+					} else {
+						if (m_start == m_start) {
+							alert(m_start + '==' + m_start);
+							this.filterChartByMonth();
+						} else {
+							alert(m_start + '!=' + m_start);
+							this.filterChartByYear();
+						}
+					}
+				} else {
+					this.filterChartByYear();
 				}
 			} else {
-				this.filterChartByYear();
+				this.filterChartByYears();
 			}
-			// else if(difference_in_days){
-			// 	alert();
-			// }
-
-			// // var d_from = this.filter.start_date;
-			// // var d_to = this.filter.end_date; alert(d_to); d_to.getTime()
-			// // var Difference_In_Time = d_to.getTime() - d_from.getTime();
-
-			// // // To calculate the no. of days between two dates
-			// // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-			// // alert(Difference_In_Days);
 		},
 		diff_weeks: function (dt2, dt1) {
 
@@ -2331,7 +2725,7 @@ console.log('sa customizedSelected');console.log(this.filter);
 			return Math.abs(Math.round(diff));
 
 		},
-		setToDate: function (date, day_num) { 
+		setToDate: function (date, day_num) {
 			var day = date.getDay() || 7;
 			if (day !== 1) {
 
@@ -2344,7 +2738,7 @@ console.log('sa customizedSelected');console.log(this.filter);
 				month: '2-digit',
 				year: 'numeric',
 			}).substring(0, 5);
-			
+
 			return month_day;
 		},
 
