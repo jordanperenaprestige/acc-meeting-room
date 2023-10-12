@@ -467,10 +467,10 @@ export default {
 						//this.filterChartByMonth();
 						if (y_start == y_end) {
 							if (week_of_month_start == week_of_month_end) {
-								alert(week_of_month_start + '==' + week_of_month_end);
+								//alert(week_of_month_start + '==' + week_of_month_end);
 								this.filterChartByDaily();
 							} else {
-								alert('week_of_month_start != week_of_month_end' + week_of_month_start + '!=' + week_of_month_end);
+								//alert('week_of_month_start != week_of_month_end' + week_of_month_start + '!=' + week_of_month_end);
 								//this.filterChartByWeek();
 								//this.filterChartByDaily();
 								this.filterChartByYear();
@@ -3697,10 +3697,10 @@ export default {
 					//this.filterChartByMonth();
 					if (y_start == y_end) {
 						if (week_of_month_start == week_of_month_end) {
-							alert(week_of_month_start + '==' + week_of_month_end);
+							//alert(week_of_month_start + '==' + week_of_month_end);
 							this.filterChartByDaily();
 						} else {
-							alert('week_of_month_start != week_of_month_end' + week_of_month_start + '!=' + week_of_month_end);
+							//alert('week_of_month_start != week_of_month_end' + week_of_month_start + '!=' + week_of_month_end);
 							//this.filterChartByWeek();
 							//this.filterChartByDaily();
 							this.filterChartByYear();
