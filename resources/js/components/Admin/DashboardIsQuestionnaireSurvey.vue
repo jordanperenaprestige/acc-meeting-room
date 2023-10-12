@@ -364,7 +364,7 @@ export default {
 								this.filterChartByDailyAll();
 							} else {
 								//alert('else' + week_of_month_start + '!=' + week_of_month_end + 'week_of_month_start != week_of_month_end<<<<');
-								//	alert('zzzzzzzzzzzzzzzzzzzzzzzz'+this.filter.start_date +' '+this.filter.end_date);
+								alert('zzzzzzzzzzzzzzzzzzzzzzzz' + this.filter.start_date + ' ' + this.filter.end_date);
 								this.filterChartByWeek();
 							}
 						} else {
@@ -385,7 +385,7 @@ export default {
 								//alert('week_of_month_start != week_of_month_end' + week_of_month_start + '!=' + week_of_month_end);
 								//this.filterChartByWeek();
 								//this.filterChartByDaily();
-								this.filterChartByYear();
+								this.filterChartByYear();//////////////////////	
 								//this.filterChartByDaily();
 							}
 						} else {
@@ -494,7 +494,7 @@ export default {
 								//alert(week_of_month_start + '==' + week_of_month_end);
 								this.filterChartByDaily();
 							} else {
-							//	alert('week_of_month_start != week_of_month_end' + week_of_month_start + '!=' + week_of_month_end);
+								//	alert('week_of_month_start != week_of_month_end' + week_of_month_start + '!=' + week_of_month_end);
 								//this.filterChartByWeek();
 								//this.filterChartByDaily();
 								this.filterChartByYear();
@@ -974,29 +974,32 @@ export default {
 				var yValues = [];
 
 				var key_label = [];
+				$('#incident_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
-					var data_key = [];
-					var data_value = [];
-					var oData = value.data;
-					for (key in oData) {
-						data_key.push(key);
-						data_value.push(oData[key]);
-					}
-					key_label.push(data_key);
+					if (key != 'legend') {
+						var data_key = [];
+						var data_value = [];
+						var oData = value.data;
+						for (key in oData) {
+							data_key.push(key);
+							data_value.push(oData[key]);
+						}
+						key_label.push(data_key);
 
-					let background_colorz = value.building_color;
-					yValues.push(value.reports);
-					datasets.push({
-						label: value.building_name + '(Incident(s): ' + value.reports + ')',
-						backgroundColor: background_colorz,
-						borderColor: background_colorz,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_colorz,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_colorz,
-						data: data_value,
-					});
+						let background_colorz = value.building_color;
+						yValues.push(value.reports);
+						datasets.push({
+							label: value.building_name + '(Incident(s): ' + value.reports + ')',
+							backgroundColor: background_colorz,
+							borderColor: background_colorz,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_colorz,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_colorz,
+							data: data_value,
+						});
+					}
 				});
 
 				let sum_incidents_total = 0;
@@ -1919,7 +1922,7 @@ export default {
 				let datasets = [];
 				let week_range = [];
 				var yValues = [];
-				
+
 				$('#report_legend').html(data.data[0].legend);
 				$.each(data.data[0], function (key, value) {
 					if (key != 'legend') {
@@ -2002,7 +2005,7 @@ export default {
 				//console.log('>>>>data');  console.log(data.data); 
 				//$('#incident_legend').html('');
 				$('#incident_legend').html(data.data[0].legend);
-				
+
 				$.each(data.data[0], function (key, value) {
 					if (key != 'legend') {
 						let background_color = value.building_color;//dynamicColors[key];
@@ -3842,7 +3845,7 @@ export default {
 							//alert(week_of_month_start + '==' + week_of_month_end);
 							this.filterChartByDaily();
 						} else {
-						//	alert('week_of_month_start != week_of_month_end' + week_of_month_start + '!=' + week_of_month_end);
+							//	alert('week_of_month_start != week_of_month_end' + week_of_month_start + '!=' + week_of_month_end);
 							//this.filterChartByWeek();
 							//this.filterChartByDaily();
 							this.filterChartByYear();
