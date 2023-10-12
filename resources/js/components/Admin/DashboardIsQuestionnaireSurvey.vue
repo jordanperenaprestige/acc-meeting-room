@@ -85,50 +85,6 @@
 							<!-- </div> -->
 						</div>
 						<div class="card-body">
-							<!-- <div class="row">
-								<div class="col-sm-4">
-									<label for="" class="col-form-label">Reports Total: <span id="reports_total">{{
-										reports_total }}</span></label>
-									<div>The chart below provides a breakdown of total reported concern.</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-12">
-									<div class="chart-responsive">
-										<canvas id="reportBarChart"
-											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-4">
-									<label for="" class="col-form-label">Incidents Total: <span id="incidents_total">{{
-										incidents_total }}</span></label>
-									<div>The chart below provides a breakdown of RESOLVED concerns only.</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-12">
-									<div class="chart-responsive">
-										<canvas id="incidentBarChart"
-											style="min-height: 250px; height: 250px; max-height: 280px; max-width: 100%;"></canvas>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="chart-responsive">
-										<canvas id="pieChartSurvey"
-											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="chart-responsive">
-										<canvas id="pieChartSurveyAnswer"
-											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-									</div>
-								</div>
-							</div> -->
 							<div class="row">
 								<div class="col-sm-12">
 									<label for="" class="col-form-label">Reports Total: <span id="reports_total">{{
@@ -137,9 +93,13 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-sm-12">
+								<div class="col-sm-1">
+								</div>
+								<div class="col-sm-10">
 									<div id="report_legend"></div>
 								</div>
+								<div class="col-sm-1">
+								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-12">
@@ -156,6 +116,16 @@
 									<div>The chart below provides a breakdown of RESOLVED concerns only.</div>
 								</div>
 							</div>
+							<div class="row">
+								<div class="col-sm-1">
+								</div>
+								<div class="col-sm-10">
+									<div id="incident_legend"></div>
+								</div>
+								<div class="col-sm-1">
+								</div>
+							</div>
+
 							<div class="row">
 								<div class="col-md-12">
 									<div class="chart-responsive">
@@ -573,29 +543,32 @@ export default {
 				var yValues = [];
 
 				var key_label = [];
+				$('#report_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
-					var data_key = [];
-					var data_value = [];
-					var oData = value.data;
-					for (key in oData) {
-						data_key.push(key);
-						data_value.push(oData[key]);
-					}
-					key_label.push(data_key);
+					if (key != 'legend') {
+						var data_key = [];
+						var data_value = [];
+						var oData = value.data;
+						for (key in oData) {
+							data_key.push(key);
+							data_value.push(oData[key]);
+						}
+						key_label.push(data_key);
 
-					let background_colorz = value.building_color;
-					yValues.push(value.reports);
-					datasets.push({
-						label: value.building_name + '(Report: ' + value.reports + ')',
-						backgroundColor: background_colorz,
-						borderColor: background_colorz,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_colorz,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_colorz,
-						data: data_value,
-					});
+						let background_colorz = value.building_color;
+						yValues.push(value.reports);
+						datasets.push({
+							label: value.building_name + '(Report: ' + value.reports + ')',
+							backgroundColor: background_colorz,
+							borderColor: background_colorz,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_colorz,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_colorz,
+							data: data_value,
+						});
+					}
 				});
 
 				let sum_reports_total = 0;
@@ -634,7 +607,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
@@ -648,111 +624,37 @@ export default {
 			});
 
 			$.get("/admin/reports/trend-incident-by-daily/list", filter, function (data) {
-				// var xValues = [];
-				// var yValues = [];
-				// var barColors = [];
 
-				// let dynamicColors = [
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// ];
-				// $.each(data.data, function (key, value) {
-				// 	let background_color = value.building_color;//dynamicColors[key];
-				// 	xValues.push(value.day);
-				// 	yValues.push(value.total_survey);
-				// 	barColors.push(value.building_color);
-				// });
-
-				// let sum_incidents_total = 0;
-
-				// // calculate sum using forEach() method
-				// yValues.forEach(num => {
-				// 	sum_incidents_total += num;
-				// })
-
-				// this.incidents_total = sum_incidents_total;
-				// $('#incidents_total').text(sum_incidents_total);
-
-				// var incidentBarChartCanvas = $('#incidentBarChart').get(0).getContext('2d')
-				// var reportBarChartOptions = {
-				// 	responsive: true,
-				// 	maintainAspectRatio: false,
-				// 	scales: {
-				// 		xAxes: [{
-				// 			stacked: true,
-				// 		}],
-				// 		yAxes: [{
-				// 			stacked: true
-				// 		}]
-				// 	},
-				// 	plugins: {
-				// 		labels: {
-				// 			render: 'value'
-				// 		}
-				// 	}
-				// }
-				// if (window.incident_bar != undefined)
-				// 	window.incident_bar.destroy();
-				// //if(bar) bar.destroy();
-				// window.incident_bar = new Chart(incidentBarChartCanvas, {
-				// 	//new Chart(incidentBarChartCanvas, {
-				// 	type: 'bar',
-				// 	//data: reportBarChartData,
-				// 	data: {
-				// 		labels: xValues,
-				// 		datasets: [{
-				// 			backgroundColor: barColors,
-				// 			data: yValues,
-				// 			label: '(Incident(s): ' + yValues + ')',
-				// 			backgroundColor: barColors,
-				// 			borderColor: barColors,
-				// 			pointRadius: false,
-				// 			pointColor: '#3b8bba',
-				// 			pointStrokeColor: barColors,
-				// 			pointHighlightFill: '#fff',
-				// 			pointHighlightStroke: barColors,
-
-				// 		}]
-				// 	},
-				// 	options: reportBarChartOptions
-				// })
 				let datasets = [];
 				var yValues = [];
 
 				var key_label = [];
+				$('#incident_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
-					var data_key = [];
-					var data_value = [];
-					var oData = value.data;
-					for (key in oData) {
-						data_key.push(key);
-						data_value.push(oData[key]);
-					}
-					key_label.push(data_key);
+					if (key != 'legend') {
+						var data_key = [];
+						var data_value = [];
+						var oData = value.data;
+						for (key in oData) {
+							data_key.push(key);
+							data_value.push(oData[key]);
+						}
+						key_label.push(data_key);
 
-					let background_colorz = value.building_color;
-					yValues.push(value.reports);
-					datasets.push({
-						label: value.building_name + '(Incident(s): ' + value.reports + ')',
-						backgroundColor: background_colorz,
-						borderColor: background_colorz,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_colorz,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_colorz,
-						data: data_value,
-					});
+						let background_colorz = value.building_color;
+						yValues.push(value.reports);
+						datasets.push({
+							label: value.building_name + '(Incident(s): ' + value.reports + ')',
+							backgroundColor: background_colorz,
+							borderColor: background_colorz,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_colorz,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_colorz,
+							data: data_value,
+						});
+					}
 				});
 
 				let sum_incidents_total = 0;
@@ -791,7 +693,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
@@ -983,29 +888,32 @@ export default {
 				var yValues = [];
 
 				var key_label = [];
+				$('#report_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
-					var data_key = [];
-					var data_value = [];
-					var oData = value.data;
-					for (key in oData) {
-						data_key.push(key);
-						data_value.push(oData[key]);
-					}
-					key_label.push(data_key);
+					if (key != 'legend') {
+						var data_key = [];
+						var data_value = [];
+						var oData = value.data;
+						for (key in oData) {
+							data_key.push(key);
+							data_value.push(oData[key]);
+						}
+						key_label.push(data_key);
 
-					let background_colorz = value.building_color;
-					yValues.push(value.reports);
-					datasets.push({
-						label: value.building_name + '(Report: ' + value.reports + ')',
-						backgroundColor: background_colorz,
-						borderColor: background_colorz,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_colorz,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_colorz,
-						data: data_value,
-					});
+						let background_colorz = value.building_color;
+						yValues.push(value.reports);
+						datasets.push({
+							label: value.building_name + '(Report: ' + value.reports + ')',
+							backgroundColor: background_colorz,
+							borderColor: background_colorz,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_colorz,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_colorz,
+							data: data_value,
+						});
+					}
 				});
 
 				let sum_reports_total = 0;
@@ -1044,7 +952,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
@@ -1058,84 +969,7 @@ export default {
 			});
 
 			$.get("/admin/reports/trend-incident-by-daily-all/list", filter, function (data) {
-				// var xValues = [];
-				// var yValues = [];
-				// var barColors = [];
 
-				// let dynamicColors = [
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// ];
-				// $.each(data.data, function (key, value) {
-				// 	let background_color = value.building_color;//dynamicColors[key];
-				// 	xValues.push(value.day);
-				// 	yValues.push(value.total_survey);
-				// 	barColors.push(value.building_color);
-				// });
-
-				// let sum_incidents_total = 0;
-
-				// // calculate sum using forEach() method
-				// yValues.forEach(num => {
-				// 	sum_incidents_total += num;
-				// })
-
-				// this.incidents_total = sum_incidents_total;
-				// $('#incidents_total').text(sum_incidents_total);
-
-				// var incidentBarChartCanvas = $('#incidentBarChart').get(0).getContext('2d')
-				// var reportBarChartOptions = {
-				// 	responsive: true,
-				// 	maintainAspectRatio: false,
-				// 	scales: {
-				// 		xAxes: [{
-				// 			stacked: true,
-				// 		}],
-				// 		yAxes: [{
-				// 			stacked: true
-				// 		}]
-				// 	},
-				// 	plugins: {
-				// 		labels: {
-				// 			render: 'value'
-				// 		}
-				// 	}
-				// }
-				// if (window.incident_bar != undefined)
-				// 	window.incident_bar.destroy();
-				// //if(bar) bar.destroy();
-				// window.incident_bar = new Chart(incidentBarChartCanvas, {
-				// 	//new Chart(incidentBarChartCanvas, {
-				// 	type: 'bar',
-				// 	//data: reportBarChartData,
-				// 	data: {
-				// 		labels: xValues,
-				// 		datasets: [{
-				// 			backgroundColor: barColors,
-				// 			data: yValues,
-				// 			label: '(Incident(s): ' + yValues + ')',
-				// 			backgroundColor: barColors,
-				// 			borderColor: barColors,
-				// 			pointRadius: false,
-				// 			pointColor: '#3b8bba',
-				// 			pointStrokeColor: barColors,
-				// 			pointHighlightFill: '#fff',
-				// 			pointHighlightStroke: barColors,
-
-				// 		}]
-				// 	},
-				// 	options: reportBarChartOptions
-				// })
 				let datasets = [];
 				var yValues = [];
 
@@ -1392,22 +1226,26 @@ export default {
 				let datasets_day = [];
 				var yValues = [];
 
-				let dynamicColorsz = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
-
+				//let dynamicColorsz = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
+				console.log(data.data.legend);
+				//$('#report_legend').html('aaaaaaaaaaaaaaaaaaaaaa	');
+				$('#report_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
-					let background_colorz = value.building_color;//dynamicColorsz[key];
-					yValues.push(value.reports);
-					datasets_day.push({
-						label: value.building_name + '(Report: ' + value.reports + ')',
-						backgroundColor: background_colorz,
-						borderColor: background_colorz,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_colorz,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_colorz,
-						data: [value.twentyfour, value.one, value.two, value.three, value.four, value.five, value.six, value.seven, value.eight, value.nine, value.ten, value.eleven, value.twelve, value.thirteen, value.forteen, value.fifteen, value.sixteen, value.seventeen, value.eighteen, value.nineteen, value.twenty, value.twentyone, value.twentytwo, value.twentythree]
-					});
+					if (key != 'legend') {
+						let background_colorz = value.building_color;//dynamicColorsz[key];
+						yValues.push(value.reports);
+						datasets_day.push({
+							label: value.building_name + '(Report: ' + value.reports + ')',
+							backgroundColor: background_colorz,
+							borderColor: background_colorz,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_colorz,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_colorz,
+							data: [value.twentyfour, value.one, value.two, value.three, value.four, value.five, value.six, value.seven, value.eight, value.nine, value.ten, value.eleven, value.twelve, value.thirteen, value.forteen, value.fifteen, value.sixteen, value.seventeen, value.eighteen, value.nineteen, value.twenty, value.twentyone, value.twentytwo, value.twentythree]
+						});
+					}
 				});
 				let sum_reports_total = 0;
 
@@ -1445,7 +1283,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
@@ -1464,21 +1305,23 @@ export default {
 
 				let dynamicColorsz = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272', '#191970', '#A0CFEC', '#D5D6EA', '#50C878', '#6B8E23', '#556B2F', '#FFFFC2', '#B5A642', '#513B1C', '#CB6D51', '#CC7A8B', '#FFDFDD', '#B048B5', '#F8F0E3', '#EAEEE9', '#D891EF'];
 
-
+				$('#incident_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
-					let background_colorz = value.building_color;//dynamicColorsz[key];
-					yValues.push(value.reports);
-					datasetsz.push({
-						label: value.building_name + '(Incident: ' + value.reports + ')',
-						backgroundColor: background_colorz,
-						borderColor: background_colorz,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_colorz,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_colorz,
-						data: [value.twentyfour, value.one, value.two, value.three, value.four, value.five, value.six, value.seven, value.eight, value.nine, value.ten, value.eleven, value.twelve, value.thirteen, value.forteen, value.fifteen, value.sixteen, value.seventeen, value.eighteen, value.nineteen, value.twenty, value.twentyone, value.twentytwo, value.twentythree]
-					});
+					if (key != 'legend') {
+						let background_colorz = value.building_color;//dynamicColorsz[key];
+						yValues.push(value.reports);
+						datasetsz.push({
+							label: value.building_name + '(Incident: ' + value.reports + ')',
+							backgroundColor: background_colorz,
+							borderColor: background_colorz,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_colorz,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_colorz,
+							data: [value.twentyfour, value.one, value.two, value.three, value.four, value.five, value.six, value.seven, value.eight, value.nine, value.ten, value.eleven, value.twelve, value.thirteen, value.forteen, value.fifteen, value.sixteen, value.seventeen, value.eighteen, value.nineteen, value.twenty, value.twentyone, value.twentytwo, value.twentythree]
+						});
+					}
 				});
 				let sum_incidents_total = 0;
 
@@ -1515,7 +1358,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
@@ -1717,22 +1563,27 @@ export default {
 				console.log('trend-report-by-week');
 				let datasets = [];
 				var yValues = [];
-				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272'];
-				$.each(data.data, function (key, value) { 
-					let background_color = value.building_color;//dynamicColors[key];
-					yValues.push(value.reports);
-					datasets.push({
-						label: value.building_name + '(Report(s): ' + value.reports + ')',
-						//label: '',
-						backgroundColor: background_color,
-						borderColor: background_color,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_color,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_color,
-						data: [value.sun, value.mon, value.tue, value.wed, value.thu, value.fri, value.sat]
-					});
+				//let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272'];
+				console.log('>>>>>xxxxxx>>>>>>>'); console.log(data.data.legend); console.log('<<<<<<vvvvvv<<<<<');
+				$('#report_legend').html(data.data.legend);
+				$.each(data.data, function (key, value) {
+					if (key != 'legend') {
+						let background_color = value.building_color;//dynamicColors[key];
+						yValues.push(value.reports);
+						datasets.push({
+							label: value.building_name + '(Report(s): ' + value.reports + ')',
+							//label: '',
+							backgroundColor: background_color,
+							borderColor: background_color,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_color,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_color,
+							data: [value.sun, value.mon, value.tue, value.wed, value.thu, value.fri, value.sat]
+						});
+					}
+
 				});
 				let sum_reports_total = 0;
 
@@ -1776,7 +1627,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
@@ -1797,20 +1651,25 @@ export default {
 				let dynamicColorsz = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#a59fa2', '#f79fba', '#727272'];
 
 
+				$('#incident_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
-					let background_colorz = value.building_color;//dynamicColorsz[key];
-					yValues.push(value.reports);
-					datasetsz.push({
-						label: value.building_name + '(Incident: ' + value.reports + ')',
-						backgroundColor: background_colorz,
-						borderColor: background_colorz,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_colorz,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_colorz,
-						data: [value.sun, value.mon, value.tue, value.wed, value.thu, value.fri, value.sat]
-					});
+					if (key != 'legend') {
+						let background_color = value.building_color;//dynamicColors[key];
+						yValues.push(value.reports);
+						datasetsz.push({
+							label: value.building_name + '(Incident(s): ' + value.reports + ')',
+							//label: '',
+							backgroundColor: background_color,
+							borderColor: background_color,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_color,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_color,
+							data: [value.sun, value.mon, value.tue, value.wed, value.thu, value.fri, value.sat]
+						});
+					}
+
 				});
 				let sum_incidents_total = 0;
 
@@ -1857,7 +1716,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
@@ -2057,24 +1919,27 @@ export default {
 				let datasets = [];
 				let week_range = [];
 				var yValues = [];
-				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
+				//let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
+				$('#report_legend').html(data.data.legend);
 				$.each(data.data[0], function (key, value) {
 					console.log('>>>>'); console.log(value);
-					let background_color = value.building_color;//dynamicColors[key];
-					yValues.push(value.reports);
-					var bar = value.bar;
-					//var week = value.week_range;
-					datasets.push({
-						label: value.building_name + '(Reports: ' + value.reports + ')',
-						backgroundColor: background_color,
-						borderColor: background_color,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_color,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_color,
-						data: bar
-					});
+					if (key != 'legend') {
+						let background_color = value.building_color;//dynamicColors[key];
+						yValues.push(value.reports);
+						var bar = value.bar;
+						//var week = value.week_range;
+						datasets.push({
+							label: value.building_name + '(Reports: ' + value.reports + ')',
+							backgroundColor: background_color,
+							borderColor: background_color,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_color,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_color,
+							data: bar
+						});
+					}
 					//week_range.push(week);
 				});
 				$.each(data.data[1], function (key, value) {
@@ -2115,7 +1980,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
@@ -2133,23 +2001,26 @@ export default {
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
 				//console.log('>>>>data');  console.log(data.data); 
+				$('#incident_legend').html(data.data.legend);
 				$.each(data.data[0], function (key, value) {
-					let background_color = value.building_color;//dynamicColors[key];
-					yValues.push(value.reports);
-					var bar = value.bar;
-					var week = value.week_range;
-					datasets.push({
-						label: value.building_name + '(Incident(s): ' + value.reports + ')',
-						backgroundColor: background_color,
-						borderColor: background_color,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_color,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_color,
-						data: bar
-						//data: [value.week_one, value.week_two, value.week_three, value.week_four]
-					});
+					if (key != 'legend') {
+						let background_color = value.building_color;//dynamicColors[key];
+						yValues.push(value.reports);
+						var bar = value.bar;
+						var week = value.week_range;
+						datasets.push({
+							label: value.building_name + '(Incident(s): ' + value.reports + ')',
+							backgroundColor: background_color,
+							borderColor: background_color,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_color,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_color,
+							data: bar
+							//data: [value.week_one, value.week_two, value.week_three, value.week_four]
+						});
+					}
 
 					//console.log('range:'); console.log(week_range);
 					//console.log(datasets);
@@ -2190,7 +2061,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
@@ -2388,26 +2262,30 @@ export default {
 			filter.year = (filter.year == '' || filter.year == null) ? currentYear : filter.year;
 
 			this.filter.year = filter.year;
+
+
 			$.get("/admin/reports/trend-report-by-year/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#00FF00', '#808000', '#FFA500', '#86608E', '#B666D2', '#F3E8EA', '#F5F5F5'];
-
-
+				$('#report_legend').html('');
+				$('#report_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
-					let background_color = value.building_color;//dynamicColors[key];
-					yValues.push(value.reports);
-					datasets.push({
-						label: value.building_name + '(Report(s): ' + value.reports + ')',
-						backgroundColor: background_color,
-						borderColor: background_color,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_color,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_color,
-						data: [value.jan, value.feb, value.mar, value.apr, value.may, value.jun, value.jul, value.aug, value.sep, value.oct, value.nov, value.dec]
-					});
+					if (key != 'legend') {
+						let background_color = value.building_color;//dynamicColors[key];
+						yValues.push(value.reports);
+						datasets.push({
+							label: value.building_name + '(Report(s): ' + value.reports + ')',
+							backgroundColor: background_color,
+							borderColor: background_color,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_color,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_color,
+							data: [value.jan, value.feb, value.mar, value.apr, value.may, value.jun, value.jul, value.aug, value.sep, value.oct, value.nov, value.dec]
+						});
+					}
 				});
 				let sum_reports_total = 0;
 
@@ -2443,7 +2321,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
@@ -2459,22 +2340,24 @@ export default {
 				let datasets = [];
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#00FF00', '#808000', '#FFA500', '#86608E', '#B666D2', '#F3E8EA', '#F5F5F5'];
-
-
+				$('#incident_legend').html('');
+				$('#incident_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
-					let background_color = value.building_color;//dynamicColors[key];
-					yValues.push(value.reports);
-					datasets.push({
-						label: value.building_name + '(Incident(s): ' + value.reports + ')',
-						backgroundColor: background_color,
-						borderColor: background_color,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_color,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_color,
-						data: [value.jan, value.feb, value.mar, value.apr, value.may, value.jun, value.jul, value.aug, value.sep, value.oct, value.nov, value.dec]
-					});
+					if (key != 'legend') {
+						let background_color = value.building_color;//dynamicColors[key];
+						yValues.push(value.reports);
+						datasets.push({
+							label: value.building_name + '(Incident(s): ' + value.reports + ')',
+							backgroundColor: background_color,
+							borderColor: background_color,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_color,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_color,
+							data: [value.jan, value.feb, value.mar, value.apr, value.may, value.jun, value.jul, value.aug, value.sep, value.oct, value.nov, value.dec]
+						});
+					}
 				});
 
 				let sum_incidents_total = 0;
@@ -2511,7 +2394,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
@@ -3014,8 +2900,6 @@ export default {
 			});
 
 		},
-
-
 		filterChartByYears: function () {
 			var filter = this.filter;
 			filter.day = '';
@@ -3031,29 +2915,32 @@ export default {
 				var yValues = [];
 
 				var key_label = [];
+				$('#report_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
-					var data_key = [];
-					var data_value = [];
-					var oData = value.data;
-					for (key in oData) {
-						data_key.push(key);
-						data_value.push(oData[key]);
-					}
-					key_label.push(data_key);
+					if (key != 'legend') {
+						var data_key = [];
+						var data_value = [];
+						var oData = value.data;
+						for (key in oData) {
+							data_key.push(key);
+							data_value.push(oData[key]);
+						}
+						key_label.push(data_key);
 
-					let background_colorz = value.building_color;
-					yValues.push(value.reports);
-					datasets.push({
-						label: value.building_name + '(Report: ' + value.reports + ')',
-						backgroundColor: background_colorz,
-						borderColor: background_colorz,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_colorz,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_colorz,
-						data: data_value,
-					});
+						let background_colorz = value.building_color;
+						yValues.push(value.reports);
+						datasets.push({
+							label: value.building_name + '(Report: ' + value.reports + ')',
+							backgroundColor: background_colorz,
+							borderColor: background_colorz,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_colorz,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_colorz,
+							data: data_value,
+						});
+					}
 				});
 
 				let sum_reports_total = 0;
@@ -3092,7 +2979,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
@@ -3106,111 +2996,37 @@ export default {
 			});
 
 			$.get("/admin/reports/trend-incident-by-years/list", filter, function (data) {
-				// var xValues = [];
-				// var yValues = [];
-				// var barColors = [];
 
-				// let dynamicColors = [
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
-				// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
-				// ];
-				// $.each(data.data, function (key, value) {
-				// 	let background_color = value.building_color;//dynamicColors[key];
-				// 	xValues.push(value.day);
-				// 	yValues.push(value.total_survey);
-				// 	barColors.push(value.building_color);
-				// });
-
-				// let sum_incidents_total = 0;
-
-				// // calculate sum using forEach() method
-				// yValues.forEach(num => {
-				// 	sum_incidents_total += num;
-				// })
-
-				// this.incidents_total = sum_incidents_total;
-				// $('#incidents_total').text(sum_incidents_total);
-
-				// var incidentBarChartCanvas = $('#incidentBarChart').get(0).getContext('2d')
-				// var reportBarChartOptions = {
-				// 	responsive: true,
-				// 	maintainAspectRatio: false,
-				// 	scales: {
-				// 		xAxes: [{
-				// 			stacked: true,
-				// 		}],
-				// 		yAxes: [{
-				// 			stacked: true
-				// 		}]
-				// 	},
-				// 	plugins: {
-				// 		labels: {
-				// 			render: 'value'
-				// 		}
-				// 	}
-				// }
-				// if (window.incident_bar != undefined)
-				// 	window.incident_bar.destroy();
-				// //if(bar) bar.destroy();
-				// window.incident_bar = new Chart(incidentBarChartCanvas, {
-				// 	//new Chart(incidentBarChartCanvas, {
-				// 	type: 'bar',
-				// 	//data: reportBarChartData,
-				// 	data: {
-				// 		labels: xValues,
-				// 		datasets: [{
-				// 			backgroundColor: barColors,
-				// 			data: yValues,
-				// 			label: '(Incident(s): ' + yValues + ')',
-				// 			backgroundColor: barColors,
-				// 			borderColor: barColors,
-				// 			pointRadius: false,
-				// 			pointColor: '#3b8bba',
-				// 			pointStrokeColor: barColors,
-				// 			pointHighlightFill: '#fff',
-				// 			pointHighlightStroke: barColors,
-
-				// 		}]
-				// 	},
-				// 	options: reportBarChartOptions
-				// })
 				let datasets = [];
 				var yValues = [];
 
 				var key_label = [];
+				$('#incident_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
-					var data_key = [];
-					var data_value = [];
-					var oData = value.data;
-					for (key in oData) {
-						data_key.push(key);
-						data_value.push(oData[key]);
-					}
-					key_label.push(data_key);
+					if (key != 'legend') {
+						var data_key = [];
+						var data_value = [];
+						var oData = value.data;
+						for (key in oData) {
+							data_key.push(key);
+							data_value.push(oData[key]);
+						}
+						key_label.push(data_key);
 
-					let background_colorz = value.building_color;
-					yValues.push(value.reports);
-					datasets.push({
-						label: value.building_name + '(Incident(s): ' + value.reports + ')',
-						backgroundColor: background_colorz,
-						borderColor: background_colorz,
-						pointRadius: false,
-						pointColor: '#3b8bba',
-						pointStrokeColor: background_colorz,
-						pointHighlightFill: '#fff',
-						pointHighlightStroke: background_colorz,
-						data: data_value,
-					});
+						let background_colorz = value.building_color;
+						yValues.push(value.reports);
+						datasets.push({
+							label: value.building_name + '(Incident(s): ' + value.reports + ')',
+							backgroundColor: background_colorz,
+							borderColor: background_colorz,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_colorz,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_colorz,
+							data: data_value,
+						});
+					}
 				});
 
 				let sum_incidents_total = 0;
@@ -3249,7 +3065,10 @@ export default {
 						labels: {
 							render: 'value'
 						}
-					}
+					},
+					legend: {
+						display: false
+					},
 				}
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
@@ -3425,6 +3244,416 @@ export default {
 				$('#total_sms').text(data.data);
 			});
 		},
+
+		// filterChartByYears: function () {
+		// 	var filter = this.filter;
+		// 	filter.day = '';
+		// 	filter.week = '';
+		// 	filter.month = '';
+		// 	filter.year = '';
+		// 	const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
+		// 	const currentDay = moment(new Date()).format("YYYY-MM-DD");
+		// 	filter.start_date = (filter.start_date == '') ? firstDayYear : filter.start_date;
+		// 	filter.end_date = (filter.end_date == '') ? currentDay : filter.end_date;
+		// 	$.get("/admin/reports/trend-report-by-years/list", filter, function (data) {
+		// 		let datasets = [];
+		// 		var yValues = [];
+
+		// 		var key_label = [];
+		// 		$.each(data.data, function (key, value) {
+		// 			var data_key = [];
+		// 			var data_value = [];
+		// 			var oData = value.data;
+		// 			for (key in oData) {
+		// 				data_key.push(key);
+		// 				data_value.push(oData[key]);
+		// 			}
+		// 			key_label.push(data_key);
+
+		// 			let background_colorz = value.building_color;
+		// 			yValues.push(value.reports);
+		// 			datasets.push({
+		// 				label: value.building_name + '(Report: ' + value.reports + ')',
+		// 				backgroundColor: background_colorz,
+		// 				borderColor: background_colorz,
+		// 				pointRadius: false,
+		// 				pointColor: '#3b8bba',
+		// 				pointStrokeColor: background_colorz,
+		// 				pointHighlightFill: '#fff',
+		// 				pointHighlightStroke: background_colorz,
+		// 				data: data_value,
+		// 			});
+		// 		});
+
+		// 		let sum_reports_total = 0;
+
+		// 		// calculate sum using forEach() method
+		// 		yValues.forEach(num => {
+		// 			sum_reports_total += num;
+		// 		})
+
+		// 		this.reports_total = sum_reports_total;
+		// 		$('#reports_total').text(sum_reports_total);
+
+
+		// 		var areaChartDataDay = {
+		// 			labels: key_label[0],
+		// 			datasets: datasets
+		// 		};
+
+		// 		var barChartDataDay = $.extend(true, {}, areaChartDataDay);
+
+		// 		var reportBarChartCanvasDay = $('#reportBarChart').get(0).getContext('2d')
+		// 		var reportBarChartDataDay = $.extend(true, {}, barChartDataDay)
+
+		// 		var reportBarChartOptionsDay = {
+		// 			responsive: true,
+		// 			maintainAspectRatio: false,
+		// 			scales: {
+		// 				xAxes: [{
+		// 					stacked: true,
+		// 				}],
+		// 				yAxes: [{
+		// 					stacked: true
+		// 				}]
+		// 			},
+		// 			plugins: {
+		// 				labels: {
+		// 					render: 'value'
+		// 				}
+		// 			}
+		// 		}
+		// 		if (window.report_bar != undefined)
+		// 			window.report_bar.destroy();
+		// 		window.report_bar = new Chart(reportBarChartCanvasDay, {
+		// 			//new Chart(reportBarChartCanvasz, {
+		// 			type: 'bar',
+		// 			data: reportBarChartDataDay,
+		// 			options: reportBarChartOptionsDay
+		// 		})
+
+		// 	});
+
+		// 	$.get("/admin/reports/trend-incident-by-years/list", filter, function (data) {
+		// 		// var xValues = [];
+		// 		// var yValues = [];
+		// 		// var barColors = [];
+
+		// 		// let dynamicColors = [
+		// 		// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+		// 		// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7',
+		// 		// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+		// 		// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
+		// 		// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+		// 		// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
+		// 		// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+		// 		// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+		// 		// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
+		// 		// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+		// 		// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7',
+		// 		// 	'#ffe1bc', '#eca855', '#e3645e', '#417c42', '#782020', '#c70000', '#7a0012', '#9d0000', '#ccff66', '#f1dc81', '#717480', '#5b668f', '#ea4363', '#794913', '#e57395', '#ae743a', '#df9404', '#179443', '#1db954', '#f7df47', '#fac04e', '#6ab8b3', '#94aba1', '#ff6a46', '#84bd9b', '#e1f9ca', '#80a4b7', '#b4d9d7', '#9e1b32', '#6dc6e7', '#747679',
+		// 		// ];
+		// 		// $.each(data.data, function (key, value) {
+		// 		// 	let background_color = value.building_color;//dynamicColors[key];
+		// 		// 	xValues.push(value.day);
+		// 		// 	yValues.push(value.total_survey);
+		// 		// 	barColors.push(value.building_color);
+		// 		// });
+
+		// 		// let sum_incidents_total = 0;
+
+		// 		// // calculate sum using forEach() method
+		// 		// yValues.forEach(num => {
+		// 		// 	sum_incidents_total += num;
+		// 		// })
+
+		// 		// this.incidents_total = sum_incidents_total;
+		// 		// $('#incidents_total').text(sum_incidents_total);
+
+		// 		// var incidentBarChartCanvas = $('#incidentBarChart').get(0).getContext('2d')
+		// 		// var reportBarChartOptions = {
+		// 		// 	responsive: true,
+		// 		// 	maintainAspectRatio: false,
+		// 		// 	scales: {
+		// 		// 		xAxes: [{
+		// 		// 			stacked: true,
+		// 		// 		}],
+		// 		// 		yAxes: [{
+		// 		// 			stacked: true
+		// 		// 		}]
+		// 		// 	},
+		// 		// 	plugins: {
+		// 		// 		labels: {
+		// 		// 			render: 'value'
+		// 		// 		}
+		// 		// 	}
+		// 		// }
+		// 		// if (window.incident_bar != undefined)
+		// 		// 	window.incident_bar.destroy();
+		// 		// //if(bar) bar.destroy();
+		// 		// window.incident_bar = new Chart(incidentBarChartCanvas, {
+		// 		// 	//new Chart(incidentBarChartCanvas, {
+		// 		// 	type: 'bar',
+		// 		// 	//data: reportBarChartData,
+		// 		// 	data: {
+		// 		// 		labels: xValues,
+		// 		// 		datasets: [{
+		// 		// 			backgroundColor: barColors,
+		// 		// 			data: yValues,
+		// 		// 			label: '(Incident(s): ' + yValues + ')',
+		// 		// 			backgroundColor: barColors,
+		// 		// 			borderColor: barColors,
+		// 		// 			pointRadius: false,
+		// 		// 			pointColor: '#3b8bba',
+		// 		// 			pointStrokeColor: barColors,
+		// 		// 			pointHighlightFill: '#fff',
+		// 		// 			pointHighlightStroke: barColors,
+
+		// 		// 		}]
+		// 		// 	},
+		// 		// 	options: reportBarChartOptions
+		// 		// })
+		// 		let datasets = [];
+		// 		var yValues = [];
+
+		// 		var key_label = [];
+		// 		$.each(data.data, function (key, value) {
+		// 			var data_key = [];
+		// 			var data_value = [];
+		// 			var oData = value.data;
+		// 			for (key in oData) {
+		// 				data_key.push(key);
+		// 				data_value.push(oData[key]);
+		// 			}
+		// 			key_label.push(data_key);
+
+		// 			let background_colorz = value.building_color;
+		// 			yValues.push(value.reports);
+		// 			datasets.push({
+		// 				label: value.building_name + '(Incident(s): ' + value.reports + ')',
+		// 				backgroundColor: background_colorz,
+		// 				borderColor: background_colorz,
+		// 				pointRadius: false,
+		// 				pointColor: '#3b8bba',
+		// 				pointStrokeColor: background_colorz,
+		// 				pointHighlightFill: '#fff',
+		// 				pointHighlightStroke: background_colorz,
+		// 				data: data_value,
+		// 			});
+		// 		});
+
+		// 		let sum_incidents_total = 0;
+
+		// 		// calculate sum using forEach() method
+		// 		yValues.forEach(num => {
+		// 			sum_incidents_total += num;
+		// 		})
+
+		// 		this.incidents_total = sum_incidents_total;
+		// 		$('#incidents_total').text(sum_incidents_total);
+
+
+		// 		var areaChartDataDay = {
+		// 			labels: key_label[0],
+		// 			datasets: datasets
+		// 		};
+
+		// 		var barChartDataDay = $.extend(true, {}, areaChartDataDay);
+
+		// 		var incidentBarChartCanvasDay = $('#incidentBarChart').get(0).getContext('2d')
+		// 		var incidentBarChartDataDay = $.extend(true, {}, barChartDataDay)
+
+		// 		var incidentBarChartOptionsDay = {
+		// 			responsive: true,
+		// 			maintainAspectRatio: false,
+		// 			scales: {
+		// 				xAxes: [{
+		// 					stacked: true,
+		// 				}],
+		// 				yAxes: [{
+		// 					stacked: true
+		// 				}]
+		// 			},
+		// 			plugins: {
+		// 				labels: {
+		// 					render: 'value'
+		// 				}
+		// 			}
+		// 		}
+		// 		if (window.incident_bar != undefined)
+		// 			window.incident_bar.destroy();
+		// 		window.incident_bar = new Chart(incidentBarChartCanvasDay, {
+		// 			//new Chart(reportBarChartCanvasz, {
+		// 			type: 'bar',
+		// 			data: incidentBarChartDataDay,
+		// 			options: incidentBarChartOptionsDay
+		// 		})
+
+		// 	});
+
+		// 	$.get("/admin/reports/donut-report-by-daily/list", filter, function (data) {
+		// 		let labels = [];
+		// 		let data_value = [];
+		// 		let incident_report = 0;
+		// 		if (data.data.length > 0) {
+		// 			$.each(data.data, function (key, value) {
+		// 				labels.push(value.questionnaire);
+		// 				incident_report += parseInt(value.tenant_survey);
+		// 				data_value.push(value.percentage_share);
+		// 			});
+		// 			// console.log(labels);
+		// 		}
+		// 		else {
+		// 			labels = ['Empty']
+		// 			data_value = [1];
+		// 		}
+
+		// 		var donutData = {
+		// 			labels: labels,
+		// 			datasets: [
+		// 				{
+		// 					data: data_value,
+		// 					backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
+		// 				}
+		// 			]
+		// 		}
+		// 		var cleanliness = '#728FCE';
+		// 		var supplies = '#90EE90';
+		// 		var functionality = '#FED8B1';
+
+		// 		var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
+		// 		var pieData = donutData;
+		// 		var pieOptions = {
+		// 			maintainAspectRatio: false,
+		// 			responsive: true,
+		// 			inGraphDataShow: true,
+		// 			inGraphDataRadiusPosition: 2,
+		// 			inGraphDataFontColor: 'white'
+		// 		}
+		// 		if (window.doughnut_chart != undefined)
+		// 			window.doughnut_chart.destroy();
+
+		// 		window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+		// 			//var myChart = new Chart(pieChartSurveyCanvas, {
+		// 			type: 'doughnut',
+		// 			data: pieData,
+		// 			plugins: [{
+		// 				beforeDraw: function (chart) {
+		// 					var width = chart.chart.width,
+		// 						height = chart.chart.height,
+		// 						ctx = chart.chart.ctx;
+
+		// 					ctx.restore();
+		// 					var fontSize = 1.5;
+		// 					ctx.font = fontSize + "em sans-serif";
+		// 					ctx.textBaseline = "middle";
+
+		// 					var text = incident_report,
+		// 						textX = Math.round((width - ctx.measureText(text).width) / 2),
+		// 						textY = height / 2;
+
+		// 					ctx.fillText(text, textX, textY);
+
+		// 					ctx.restore();
+		// 					var fontSize = 1;
+		// 					ctx.font = fontSize + "em sans-serif";
+		// 					ctx.textBaseline = "middle";
+
+		// 					ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+
+		// 					ctx.save();
+		// 				}
+		// 			}],
+		// 			options: {
+		// 				pieOptions,
+		// 				events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
+		// 			}
+		// 		});
+		// 	});
+
+		// 	$.get("/admin/reports/donut-report-by-daily-answer/list", filter, function (data) {
+		// 		let labels_answer = [];
+		// 		let data_value_answer = [];
+		// 		let incident_report_answer = 0;
+		// 		let randomBackgroundColor = [];
+		// 		var cleanliness = '#728FCE';
+		// 		var supplies = '#90EE90';
+		// 		var functionality = '#FED8B1';
+
+
+		// 		if (data.data.length > 0) {
+		// 			$.each(data.data, function (key, value) {
+		// 				var jordan = value.questionnaire_answer;
+		// 				labels_answer.push(jordan);
+		// 				incident_report_answer += parseInt(value.tenant_survey);
+		// 				data_value_answer.push(value.percentage_share);
+		// 				if (value.questionnaire == 'CLEANLINESS') {
+		// 					randomBackgroundColor.push(cleanliness);
+		// 				} else if (value.questionnaire == 'SUPPLIES') {
+		// 					randomBackgroundColor.push(supplies);
+		// 				} else {
+		// 					randomBackgroundColor.push(functionality);
+		// 				}
+
+		// 			});
+		// 		}
+		// 		else {
+		// 			labels_answer = ['Empty']
+		// 			data_value_answer = [1];
+		// 			randomBackgroundColor = [cleanliness];
+		// 		}
+
+		// 		var donutData_answer = {
+		// 			labels: labels_answer,
+		// 			datasets: [
+		// 				{
+		// 					data: data_value_answer,
+		// 					backgroundColor: randomBackgroundColor,
+		// 				}
+		// 			]
+		// 		}
+
+		// 		var pieChartSurveyCanvas_answer = $('#pieChartSurveyAnswer').get(0).getContext('2d')
+		// 		var pieData_answer = donutData_answer;
+		// 		var pieOptions_answer = {
+		// 			maintainAspectRatio: false,
+		// 			responsive: true,
+		// 			plugins: {
+		// 				labels: [
+		// 					{
+		// 						render: 'label',
+		// 						position: 'outside'
+		// 					},
+		// 					{
+		// 						render: 'percentage'
+		// 					}
+		// 				],
+
+
+		// 			},
+		// 			legend: {
+		// 				display: false,
+		// 			},
+		// 		}
+		// 		if (window.doughnut_chart_answer != undefined)
+		// 			window.doughnut_chart_answer.destroy();
+
+		// 		window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+		// 			//new Chart(pieChartSurveyCanvas_answer, {
+		// 			type: 'pie',
+		// 			data: pieData_answer,
+		// 			options: pieOptions_answer
+		// 		})
+		// 	});
+		// 	$.get("/admin/reports/average-time-by-years/list", filter, function (data) {
+		// 		console.log(data.data);
+		// 		$('#average_time').text(data.data);
+		// 	});
+		// 	$.get("/admin/reports/total-sms-by-years/list", filter, function (data) {
+		// 		console.log(data.data);
+		// 		$('#total_sms').text(data.data);
+		// 	});
+		// },
 
 		// filterChartByLifetime: function () {
 		// 	var filter = this.filter;
