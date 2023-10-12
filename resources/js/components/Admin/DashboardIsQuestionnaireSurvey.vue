@@ -3853,7 +3853,7 @@ export default {
 						}
 					} else {
 						if (m_start == m_start) {
-							alert(m_start + '==' + m_start);
+							//alert(m_start + '==' + m_start);
 							this.filterChartByMonth();
 						} else {
 							alert(m_start + '!=' + m_start);
