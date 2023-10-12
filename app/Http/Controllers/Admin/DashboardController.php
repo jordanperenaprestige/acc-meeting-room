@@ -1766,6 +1766,7 @@ class DashboardController extends AppBaseController
     public function getTotalSMSByYears(Request $request)
     {
         try {
+            //$id = session()->get('room_id');
             $site_id = '';
             $filters = json_decode($request->filters);
             if ($filters)
@@ -1780,7 +1781,7 @@ class DashboardController extends AppBaseController
             })
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
-                ->where('site_building_room_id', $id)
+                //->where('site_building_room_id', $id)
                 ->orderBy('created_at', 'ASC')
                 ->get()
                 ->count();
@@ -1796,6 +1797,7 @@ class DashboardController extends AppBaseController
     public function getTrendReportByYears(Request $request)
     {
         try {
+            $id = session()->get('room_id');
             $site_id = '';
             $filters = json_decode($request->filters);
             if ($filters)
@@ -1811,6 +1813,7 @@ class DashboardController extends AppBaseController
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
+                ->where('site_building_room_id', $id)
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('year(created_at)'))
                 ->orderBy('created_at', 'ASC')
@@ -1821,14 +1824,13 @@ class DashboardController extends AppBaseController
             $per_building = [];
 
             foreach ($this->createDateRangeArray($request->start_date, $request->end_date, 'year') as $vDateRange) {
-                $year = date("Y", strtotime($vDateRange));
-                $created_at[] = $year;
-            }
+                $created_at[] = $vDateRange;
+            } 
             
             foreach ($logs as $index => $log) {
-                $year = date("Y", strtotime($log->created_at));
+                $year = date("Y", strtotime($log->created_at)); 
                 foreach ($created_at as $v) {
-                    $data_year[$v] = ($v == $year) ? $log->total_survey : '';
+                    $data_year[$v] = ($v == $year) ? $log->total_survey : ''; //echo '>>>>'; echo $v;
                 }
                 $per_year[] = [
                     'year' => $year,
@@ -1837,13 +1839,14 @@ class DashboardController extends AppBaseController
                     'building_name' => $log->building_name,
                     'building_color' => $log->building_color,
                     'data' => $data_year,
-                ];
+                ]; 
                 $per_building[] = [
                     'building_name' => $log->building_name . ',color' . $log->building_color,
                     'reports' => $log->total_survey,
                 ];
-            }
+            } 
             $per_year['legend'] = $this->sortWeek($per_building);
+          //  echo '<pre>'; print_r($per_year); echo '</pre>';
             return $this->response($per_year, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -1856,6 +1859,7 @@ class DashboardController extends AppBaseController
     public function getTrendIncidentByYears(Request $request)
     {
         try {
+            $id = session()->get('room_id');
             $site_id = '';
             $filters = json_decode($request->filters);
             if ($filters)
@@ -1869,6 +1873,7 @@ class DashboardController extends AppBaseController
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
+                ->where('site_building_room_id', $id)
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
 				->where('remarks', 'Done')
@@ -1882,8 +1887,7 @@ class DashboardController extends AppBaseController
             $per_building = [];
 
             foreach ($this->createDateRangeArray($request->start_date, $request->end_date, 'year') as $vDateRange) {
-                $year = date("Y", strtotime($vDateRange));
-                $created_at[] = $year;
+                $created_at[] = $vDateRange;
             }
     
             foreach ($logs as $index => $log) {

@@ -2002,7 +2002,7 @@ export default {
 				//console.log('>>>>data');  console.log(data.data); 
 				//$('#incident_legend').html('');
 				$('#incident_legend').html(data.data[0].legend);
-
+				
 				$.each(data.data[0], function (key, value) {
 					if (key != 'legend') {
 						let background_color = value.building_color;//dynamicColors[key];

@@ -38,6 +38,9 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/dashboard/donut-report-by-day/list', 'Admin\DashboardController@getDonutReportByDay')->name('admin.dashboard.donut-by-day-answer.list');
     Route::get('/admin/dashboard/donut-report-by-day-answer/list', 'Admin\DashboardController@getDonutReportByDayAnswer')->name('admin.dashboard.donut-by-day.list');
 
+    Route::get('/admin/dashboard/trend-report-by-daily-all/list', 'Admin\DashboardController@getTrendReportByDailyAll')->where('id', '[0-9]+')->name('admin.dashboard.trend-report-by-daily-all.list');
+    Route::get('/admin/dashboard/trend-incident-by-daily-all/list', 'Admin\DashboardController@getTrendIncidentByDailyAll')->where('id', '[0-9]+')->name('admin.dashboard.trend-incident-by-daily-all.list');
+
     Route::get('/admin/dashboard/average-time-by-week/list', 'Admin\DashboardController@getAverageTimeByWeek')->name('admin.dashboard.average-time-by-week.list');
     Route::get('/admin/dashboard/total-sms-by-week/list', 'Admin\DashboardController@getTotalSMSByWeek')->name('admin.dashboard.total-sms-by-week.list');
     Route::get('/admin/dashboard/trend-report-by-week/list', 'Admin\DashboardController@getTrendReportByWeek')->where('id', '[0-9]+')->name('admin.dashboard.trend-report-by-week.list');

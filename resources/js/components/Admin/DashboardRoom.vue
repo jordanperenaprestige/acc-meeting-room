@@ -82,7 +82,9 @@
 											<div v-show="by_start">
 												<label for="userName" class="col-form-label">Start Date</label>
 												<date-picker v-model="filter.start_date" placeholder="YYYY-MM-DD"
-													:config="options" id="date_from" autocomplete="off"></date-picker>
+													:config="options" id="date_from" autocomplete="off"
+													@dp-change="customizedSelected"
+													></date-picker>
 											</div>
 										</div>
 										<div class="col-sm-2">
@@ -861,6 +863,344 @@ export default {
 					legend: {
 						display: false
 					},
+				}
+				if (window.incident_bar != undefined)
+					window.incident_bar.destroy();
+				window.incident_bar = new Chart(incidentBarChartCanvasDay, {
+					//new Chart(reportBarChartCanvasz, {
+					type: 'bar',
+					data: incidentBarChartDataDay,
+					options: incidentBarChartOptionsDay
+				})
+
+			});
+
+			$.get("/admin/dashboard/donut-report-by-daily/list", filter, function (data) {
+				let labels = [];
+				let data_value = [];
+				let incident_report = 0;
+				if (data.data.length > 0) {
+					$.each(data.data, function (key, value) {
+						labels.push(value.questionnaire);
+						incident_report += parseInt(value.tenant_survey);
+						data_value.push(value.percentage_share);
+					});
+					// console.log(labels);
+				}
+				else {
+					labels = ['Empty']
+					data_value = [1];
+				}
+
+				var donutData = {
+					labels: labels,
+					datasets: [
+						{
+							data: data_value,
+							backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
+						}
+					]
+				}
+				var cleanliness = '#728FCE';
+				var supplies = '#90EE90';
+				var functionality = '#FED8B1';
+
+				var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
+				var pieData = donutData;
+				var pieOptions = {
+					maintainAspectRatio: false,
+					responsive: true,
+					inGraphDataShow: true,
+					inGraphDataRadiusPosition: 2,
+					inGraphDataFontColor: 'white'
+				}
+				if (window.doughnut_chart != undefined)
+					window.doughnut_chart.destroy();
+
+				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
+					//var myChart = new Chart(pieChartSurveyCanvas, {
+					type: 'doughnut',
+					data: pieData,
+					plugins: [{
+						beforeDraw: function (chart) {
+							var width = chart.chart.width,
+								height = chart.chart.height,
+								ctx = chart.chart.ctx;
+
+							ctx.restore();
+							var fontSize = 1.5;
+							ctx.font = fontSize + "em sans-serif";
+							ctx.textBaseline = "middle";
+
+							var text = incident_report,
+								textX = Math.round((width - ctx.measureText(text).width) / 2),
+								textY = height / 2;
+
+							ctx.fillText(text, textX, textY);
+
+							ctx.restore();
+							var fontSize = 1;
+							ctx.font = fontSize + "em sans-serif";
+							ctx.textBaseline = "middle";
+
+							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+
+							ctx.save();
+						}
+					}],
+					options: {
+						pieOptions,
+						events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
+					}
+				});
+			});
+
+			$.get("/admin/dashboard/donut-report-by-daily-answer/list", filter, function (data) {
+				let labels_answer = [];
+				let data_value_answer = [];
+				let incident_report_answer = 0;
+				let randomBackgroundColor = [];
+				var cleanliness = '#728FCE';
+				var supplies = '#90EE90';
+				var functionality = '#FED8B1';
+
+
+				if (data.data.length > 0) {
+					$.each(data.data, function (key, value) {
+						var jordan = value.questionnaire_answer;
+						labels_answer.push(jordan);
+						incident_report_answer += parseInt(value.tenant_survey);
+						data_value_answer.push(value.percentage_share);
+						if (value.questionnaire == 'CLEANLINESS') {
+							randomBackgroundColor.push(cleanliness);
+						} else if (value.questionnaire == 'SUPPLIES') {
+							randomBackgroundColor.push(supplies);
+						} else {
+							randomBackgroundColor.push(functionality);
+						}
+
+					});
+				}
+				else {
+					labels_answer = ['Empty']
+					data_value_answer = [1];
+					randomBackgroundColor = [cleanliness];
+				}
+
+				var donutData_answer = {
+					labels: labels_answer,
+					datasets: [
+						{
+							data: data_value_answer,
+							backgroundColor: randomBackgroundColor,
+						}
+					]
+				}
+
+				var pieChartSurveyCanvas_answer = $('#pieChartSurveyAnswer').get(0).getContext('2d')
+				var pieData_answer = donutData_answer;
+				var pieOptions_answer = {
+					maintainAspectRatio: false,
+					responsive: true,
+					plugins: {
+						labels: [
+							{
+								render: 'label',
+								position: 'outside'
+							},
+							{
+								render: 'percentage'
+							}
+						],
+
+
+					},
+					legend: {
+						display: false,
+					},
+				}
+				if (window.doughnut_chart_answer != undefined)
+					window.doughnut_chart_answer.destroy();
+
+				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
+					//new Chart(pieChartSurveyCanvas_answer, {
+					type: 'pie',
+					data: pieData_answer,
+					options: pieOptions_answer
+				})
+			});
+			$.get("/admin/dashboard/average-time-by-daily/list", filter, function (data) {
+				console.log(data.data);
+				$('#average_time').text(data.data);
+			});
+			$.get("/admin/dashboard/total-sms-by-daily/list", filter, function (data) {
+				console.log(data.data);
+				$('#total_sms').text(data.data);
+			});
+		},
+		filterChartByDailyAll: function () {
+			var filter = this.filter;
+			filter.day = '';
+			filter.week = '';
+			filter.month = '';
+			filter.year = '';
+			const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
+			const currentDay = moment(new Date()).format("YYYY-MM-DD");
+			filter.start_date = (filter.start_date == '') ? firstDayYear : filter.start_date;
+			filter.end_date = (filter.end_date == '') ? currentDay : filter.end_date;
+			$.get("/admin/dashboard/trend-report-by-daily-all/list", filter, function (data) {
+				let datasets = [];
+				var yValues = [];
+
+				var key_label = [];
+				$('#report_legend').html(data.data.legend);
+				$.each(data.data, function (key, value) {
+					if (key != 'legend') {
+						var data_key = [];
+						var data_value = [];
+						var oData = value.data;
+						for (key in oData) {
+							data_key.push(key);
+							data_value.push(oData[key]);
+						}
+						key_label.push(data_key);
+
+						let background_colorz = value.building_color;
+						yValues.push(value.reports);
+						datasets.push({
+							label: value.building_name + '(Report: ' + value.reports + ')',
+							backgroundColor: background_colorz,
+							borderColor: background_colorz,
+							pointRadius: false,
+							pointColor: '#3b8bba',
+							pointStrokeColor: background_colorz,
+							pointHighlightFill: '#fff',
+							pointHighlightStroke: background_colorz,
+							data: data_value,
+						});
+					}
+				});
+
+				let sum_reports_total = 0;
+
+				// calculate sum using forEach() method
+				yValues.forEach(num => {
+					sum_reports_total += num;
+				})
+
+				this.reports_total = sum_reports_total;
+				$('#reports_total').text(sum_reports_total);
+
+
+				var areaChartDataDay = {
+					labels: key_label[0],
+					datasets: datasets
+				};
+
+				var barChartDataDay = $.extend(true, {}, areaChartDataDay);
+
+				var reportBarChartCanvasDay = $('#reportBarChart').get(0).getContext('2d')
+				var reportBarChartDataDay = $.extend(true, {}, barChartDataDay)
+
+				var reportBarChartOptionsDay = {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: {
+						xAxes: [{
+							stacked: true,
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					},
+					plugins: {
+						labels: {
+							render: 'value'
+						}
+					},
+					legend: {
+						display: false
+					},
+				}
+				if (window.report_bar != undefined)
+					window.report_bar.destroy();
+				window.report_bar = new Chart(reportBarChartCanvasDay, {
+					//new Chart(reportBarChartCanvasz, {
+					type: 'bar',
+					data: reportBarChartDataDay,
+					options: reportBarChartOptionsDay
+				})
+
+			});
+
+			$.get("/admin/dashboard/trend-incident-by-daily-all/list", filter, function (data) {
+
+				let datasets = [];
+				var yValues = [];
+
+				var key_label = [];
+				$.each(data.data, function (key, value) {
+					var data_key = [];
+					var data_value = [];
+					var oData = value.data;
+					for (key in oData) {
+						data_key.push(key);
+						data_value.push(oData[key]);
+					}
+					key_label.push(data_key);
+
+					let background_colorz = value.building_color;
+					yValues.push(value.reports);
+					datasets.push({
+						label: value.building_name + '(Incident(s): ' + value.reports + ')',
+						backgroundColor: background_colorz,
+						borderColor: background_colorz,
+						pointRadius: false,
+						pointColor: '#3b8bba',
+						pointStrokeColor: background_colorz,
+						pointHighlightFill: '#fff',
+						pointHighlightStroke: background_colorz,
+						data: data_value,
+					});
+				});
+
+				let sum_incidents_total = 0;
+
+				// calculate sum using forEach() method
+				yValues.forEach(num => {
+					sum_incidents_total += num;
+				})
+
+				this.incidents_total = sum_incidents_total;
+				$('#incidents_total').text(sum_incidents_total);
+
+
+				var areaChartDataDay = {
+					labels: key_label[0],
+					datasets: datasets
+				};
+
+				var barChartDataDay = $.extend(true, {}, areaChartDataDay);
+
+				var incidentBarChartCanvasDay = $('#incidentBarChart').get(0).getContext('2d')
+				var incidentBarChartDataDay = $.extend(true, {}, barChartDataDay)
+
+				var incidentBarChartOptionsDay = {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: {
+						xAxes: [{
+							stacked: true,
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					},
+					plugins: {
+						labels: {
+							render: 'value'
+						}
+					}
 				}
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
@@ -2073,7 +2413,7 @@ export default {
 				let week_range = [];
 				var yValues = [];
 				//let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
-				$('#report_legend').html(data.data.legend);
+				$('#report_legend').html(data.data[0].legend);
 				$.each(data.data[0], function (key, value) {
 					console.log('>>>>'); console.log(value);
 					if (key != 'legend') {
@@ -2154,7 +2494,7 @@ export default {
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
 				//console.log('>>>>data');  console.log(data.data); 
-				$('#incident_legend').html(data.data.legend);
+				$('#incident_legend').html(data.data[0].legend);
 				$.each(data.data[0], function (key, value) {
 					if (key != 'legend') {
 						let background_color = value.building_color;//dynamicColors[key];
@@ -3306,7 +3646,7 @@ export default {
 		// 		this.filterChartByYears();
 		// 	}
 		// },
-		customizedSelected: function (e) {
+		customizedSelected: function (e) { 
 			console.log('sa customizedSelected'); console.log(this.filter);
 			var d_start = new Date(this.filter.start_date);
 			var d_end = new Date(this.filter.end_date);
@@ -3378,7 +3718,7 @@ export default {
 				} else {
 					this.filterChartByYear();
 				}
-			} else {
+			} else { 
 				this.filterChartByYears();
 			}
 		},
