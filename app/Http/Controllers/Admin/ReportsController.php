@@ -975,7 +975,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             //     $day = date("m/d", strtotime($log_created_at->created_at));
             //     $created_at[] = $day;
             // }
-                
+
             foreach ($logs as $index => $log) {
                 $day = date("m/d", strtotime($log->created_at));
                 foreach ($created_at as $v) {
@@ -1177,7 +1177,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
                 ->get();
-            
+
             $per_hour = [];
             $per_building = [];
             foreach ($logs as $index => $log) {
@@ -1448,7 +1448,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'reports' => $log->total_survey,
                 ];
             }
-             $per_day['legend'] = $this->sortWeek($per_building);
+            $per_day['legend'] = $this->sortWeek($per_building);
             return $this->response($per_day, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -1457,7 +1457,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 'status_code' => 422,
             ], 422);
         }
-    }// hi ma'am for checking  tomorrow morning. need lang mag test para hindi na bumalik yung issue.
+    } // hi ma'am for checking  tomorrow morning. need lang mag test para hindi na bumalik yung issue.
     public function getAverageTimeByMonth(Request $request)
     {
         try {
@@ -1607,8 +1607,9 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'reports' => $log->total_survey,
                 ];
             }
-            $per_month['legend'] = $this->sortWeek($per_building);
 
+            $per_month['legend'] = ($this->sortWeek($per_building)) ? $this->sortWeek($per_building) : '<div></div>';
+ 
             foreach ($weeks as $weekNumber => $week) {
                 $monday = substr($week[0], 8);
                 $sunday = substr($week[1], 8);
@@ -1648,7 +1649,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
-                ->where('remarks','Done')
+                ->where('remarks', 'Done')
                 ->whereBetween('created_at', [$start_date, $end_date])
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
@@ -1683,7 +1684,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'reports' => $log->total_survey,
                 ];
             }
-            $per_month['legend'] = $this->sortWeek($per_building);
+            $per_month['legend'] = ($this->sortWeek($per_building)) ? $this->sortWeek($per_building) : '<div></div>';
 
             foreach ($weeks as $weekNumber => $week) {
                 $monday = substr($week[0], 8);
@@ -2277,7 +2278,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'reports' => $log->total_survey,
                 ];
             }
-            $per_year['legend'] = $this->sortWeek($per_building);
+            $per_day['legend'] = $this->sortWeek($per_building);
             return $this->response($per_year, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -2298,7 +2299,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $site_id = $request->site_id;
 
             $current_year = date("Y");
-            
+
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -3162,14 +3163,14 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             foreach ($vBuilding as $k => $v) {
                 $a[] = $vBuilding[$k]['reports'];
             }
-           
+
             $sort_buildings[] = '<div style=" height: 50px;display:inline;font-size: 0.500em;color: #FF0000;padding-right: 10px;padding-left: 10px;"><di style="background: #4679BD; display: inline;
-            background-color: '.$building_color[1].';
+            background-color: ' . $building_color[1] . ';
             padding-top: .1px;
             padding-right: 35px;
             padding-bottom: .1px;
             
-        "></div>' . $building_color[0] . ' (Reports(s)'.array_sum($a).')</di>';
+        "></div>' . $building_color[0] . ' (Reports(s)' . array_sum($a) . ')</di>';
             //array($building_color[0], $building_color[1], array_sum($a));
             //print_r($sort_buildings);
             //echo '<br>----------------';

@@ -1919,10 +1919,9 @@ export default {
 				let datasets = [];
 				let week_range = [];
 				var yValues = [];
-				//let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
-				$('#report_legend').html(data.data.legend);
+				
+				$('#report_legend').html(data.data[0].legend);
 				$.each(data.data[0], function (key, value) {
-					console.log('>>>>'); console.log(value);
 					if (key != 'legend') {
 						let background_color = value.building_color;//dynamicColors[key];
 						yValues.push(value.reports);
@@ -2001,7 +2000,9 @@ export default {
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
 				//console.log('>>>>data');  console.log(data.data); 
-				$('#incident_legend').html(data.data.legend);
+				//$('#incident_legend').html('');
+				$('#incident_legend').html(data.data[0].legend);
+
 				$.each(data.data[0], function (key, value) {
 					if (key != 'legend') {
 						let background_color = value.building_color;//dynamicColors[key];

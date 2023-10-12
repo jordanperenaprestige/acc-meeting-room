@@ -1347,8 +1347,9 @@ class DashboardController extends AppBaseController
                     'reports' => $log->total_survey,
                 ];
             }
-            $per_month['legend'] = $this->sortWeek($per_building);
-
+            
+            $per_month['legend'] = ($this->sortWeek($per_building)) ? $this->sortWeek($per_building) : '<div></div>';
+ 
             foreach ($weeks as $weekNumber => $week) {
                 $monday = substr($week[0], 8);
                 $sunday = substr($week[1], 8);
@@ -1427,7 +1428,9 @@ class DashboardController extends AppBaseController
                     'reports' => $log->total_survey,
                 ];
             }
-            $per_month['legend'] = $this->sortWeek($per_building);
+            
+            $per_month['legend'] = ($this->sortWeek($per_building)) ? $this->sortWeek($per_building) : '<div></div>';
+ 
             foreach ($weeks as $weekNumber => $week) {
                 $monday = substr($week[0], 8);
                 $sunday = substr($week[1], 8);
