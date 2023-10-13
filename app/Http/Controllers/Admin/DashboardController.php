@@ -944,7 +944,8 @@ class DashboardController extends AppBaseController
     }
 
     public function getTrendIncidentByWeek(Request $request)
-    {
+    {  
+        
         try {
             $id = session()->get('room_id');
             $site_id = '';
@@ -954,8 +955,8 @@ class DashboardController extends AppBaseController
             if ($request->site_id)
                 $site_id = $request->site_id;
 
-            $current_year = date("Y");
             $date = Carbon::parse($request->week);
+            $current_year = date("Y");
             if ($request->by == 2) {
                 $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                 $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
@@ -968,6 +969,7 @@ class DashboardController extends AppBaseController
                     $end_date = $request->end_date;
                 }
             }
+
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -977,7 +979,7 @@ class DashboardController extends AppBaseController
                 ->where('site_building_room_id', $id)
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
-                ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
+                ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
                 ->orderBy('created_at', 'ASC')
                 ->get();
 
@@ -988,13 +990,13 @@ class DashboardController extends AppBaseController
                 $per_day[] = [
                     'building_name' => $log->building_name,
                     'building_color' => $log->building_color,
+                    'sun' => ($day == 'Sun') ? $log->total_survey : '',
                     'mon' => ($day == 'Mon') ? $log->total_survey : '',
                     'tue' => ($day == 'Tue') ? $log->total_survey : '',
                     'wed' => ($day == 'Wed') ? $log->total_survey : '',
                     'thu' => ($day == 'Thu') ? $log->total_survey : '',
                     'fri' => ($day == 'Fri') ? $log->total_survey : '',
                     'sat' => ($day == 'Sat') ? $log->total_survey : '',
-                    'sun' => ($day == 'Sun') ? $log->total_survey : '',
                     'reports' => $log->total_survey,
                 ];
                 $per_building[] = [
