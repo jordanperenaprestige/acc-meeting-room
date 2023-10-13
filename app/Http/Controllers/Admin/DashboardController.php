@@ -702,7 +702,6 @@ class DashboardController extends AppBaseController
                 ->where('site_building_room_id', $id)
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
-                ->groupBy('jordan')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
                 ->orderBy('created_at', 'ASC')
                 ->get();
