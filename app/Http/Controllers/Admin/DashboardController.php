@@ -702,6 +702,7 @@ class DashboardController extends AppBaseController
                 ->where('site_building_room_id', $id)
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
+                ->groupBy('jordan')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
                 ->orderBy('created_at', 'ASC')
                 ->get();
@@ -744,7 +745,7 @@ class DashboardController extends AppBaseController
                     'reports' => $log->total_survey,
                 ];
             }
-            $per_hour['legend'] = $this->sortWeek($per_building); echo '<pre>'; print_r($per_hour);echo '</pre>';
+            $per_hour['legend'] = $this->sortWeek($per_building); 
             return $this->response($per_hour, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
