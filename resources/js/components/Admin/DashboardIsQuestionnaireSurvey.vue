@@ -713,11 +713,13 @@ export default {
 				let labels = [];
 				let data_value = [];
 				let incident_report = 0;
+				let color = [];
 				if (data.data.length > 0) {
-					$.each(data.data, function (key, value) {
+					$.each(data.data, function (key, value) { 
 						labels.push(value.questionnaire);
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
+						color.push(value.questionnaire_color);
 					});
 					// console.log(labels);
 				}
@@ -731,13 +733,13 @@ export default {
 					datasets: [
 						{
 							data: data_value,
-							backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
+							backgroundColor: color//['#728FCE', '#90EE90', '#FED8B1'],
 						}
 					]
 				}
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 				var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
 				var pieData = donutData;
@@ -794,10 +796,10 @@ export default {
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
-
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
+				//let color = [];
 
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
@@ -805,6 +807,7 @@ export default {
 						labels_answer.push(jordan);
 						incident_report_answer += parseInt(value.tenant_survey);
 						data_value_answer.push(value.percentage_share);
+						//randomBackgroundColor.push(value.questionnaire_color);
 						if (value.questionnaire == 'CLEANLINESS') {
 							randomBackgroundColor.push(cleanliness);
 						} else if (value.questionnaire == 'SUPPLIES') {
@@ -1077,9 +1080,9 @@ export default {
 						}
 					]
 				}
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 				var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
 				var pieData = donutData;
@@ -1136,9 +1139,9 @@ export default {
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 
 				if (data.data.length > 0) {
@@ -1406,9 +1409,9 @@ export default {
 						}
 					]
 				}
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 				var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
 				var pieData = donutData;
@@ -1466,9 +1469,9 @@ export default {
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 
 				if (data.data.length > 0) {
@@ -1742,7 +1745,7 @@ export default {
 				let data_value = [];
 				let incident_report = 0;
 				if (data.data.length > 0) {
-					$.each(data.data, function (key, value) {
+					$.each(data.data, function (key, value) { 
 						labels.push(value.questionnaire);
 						colors.push(value.questionnaire_color);
 						incident_report += parseInt(value.tenant_survey);
@@ -1764,9 +1767,9 @@ export default {
 						}
 					]
 				}
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 				var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
 				var pieData = donutData;
@@ -1824,9 +1827,9 @@ export default {
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 
 				if (data.data.length > 0) {
@@ -2109,9 +2112,9 @@ export default {
 						}
 					]
 				}
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 				var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
 				var pieData = donutData;
@@ -2169,9 +2172,9 @@ export default {
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 
 				if (data.data.length > 0) {
@@ -2441,9 +2444,9 @@ export default {
 						}
 					]
 				}
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 				var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
 				var pieData = donutData;
@@ -2501,9 +2504,9 @@ export default {
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 
 				if (data.data.length > 0) {
@@ -2759,9 +2762,9 @@ export default {
 						}
 					]
 				}
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 				var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
 				var pieData = donutData;
@@ -2819,9 +2822,9 @@ export default {
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 
 				if (data.data.length > 0) {
@@ -3111,9 +3114,9 @@ export default {
 						}
 					]
 				}
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 				var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
 				var pieData = donutData;
@@ -3170,9 +3173,9 @@ export default {
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 
 				if (data.data.length > 0) {
@@ -3521,9 +3524,9 @@ export default {
 		// 				}
 		// 			]
 		// 		}
-		// 		var cleanliness = '#728FCE';
-		// 		var supplies = '#90EE90';
-		// 		var functionality = '#FED8B1';
+		// 		var cleanliness = '#90EE90';
+		// 		var supplies = '#808000';
+		// 		var functionality = '#FAF884';
 
 		// 		var pieChartSurveyCanvas = $('#pieChartSurvey').get(0).getContext('2d')
 		// 		var pieData = donutData;
@@ -3580,9 +3583,9 @@ export default {
 		// 		let data_value_answer = [];
 		// 		let incident_report_answer = 0;
 		// 		let randomBackgroundColor = [];
-		// 		var cleanliness = '#728FCE';
-		// 		var supplies = '#90EE90';
-		// 		var functionality = '#FED8B1';
+		// 		var cleanliness = '#90EE90';
+		// 		var supplies = '#808000';
+		// 		var functionality = '#FAF884';
 
 
 		// 		if (data.data.length > 0) {

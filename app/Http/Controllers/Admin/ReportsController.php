@@ -388,6 +388,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             foreach ($logs as $index => $log) {
                 $percentage[] = [
                     'questionnaire' => $log->questionnaire,
+                    'questionnaire_color' => $log->questionnaire_color,
                     'questionnaire_answer' => $log->questionnaire_answer,
                     'tenant_survey' => $log->tenant_survey,
                     //'percentage_share' => round(($log->tenant_survey / $total) * 100, 2) . '%'
