@@ -821,7 +821,7 @@ export default {
 				else {
 					labels_answer = ['Empty']
 					data_value_answer = [1];
-					randomBackgroundColor = [cleanliness];
+					randomBackgroundColor = [];
 				}
 
 				var donutData_answer = {
@@ -1163,7 +1163,7 @@ export default {
 				else {
 					labels_answer = ['Empty']
 					data_value_answer = [1];
-					randomBackgroundColor = [cleanliness];
+					randomBackgroundColor = [];
 				}
 
 				var donutData_answer = {
@@ -3197,7 +3197,7 @@ export default {
 				else {
 					labels_answer = ['Empty']
 					data_value_answer = [1];
-					randomBackgroundColor = [cleanliness];
+					randomBackgroundColor = [];
 				}
 
 				var donutData_answer = {
@@ -3607,7 +3607,7 @@ export default {
 		// 		else {
 		// 			labels_answer = ['Empty']
 		// 			data_value_answer = [1];
-		// 			randomBackgroundColor = [cleanliness];
+		// 			randomBackgroundColor = [];
 		// 		}
 
 		// 		var donutData_answer = {
