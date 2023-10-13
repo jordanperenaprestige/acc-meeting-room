@@ -102,12 +102,18 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
         } else if ($request->week) {
             $date = Carbon::parse($request->week);
+            
             if ($request->by == 2) {
-                $start_date = $date->startOfWeek()->format('Y-m-d');
-                $end_date = $date->endOfWeek()->format('Y-m-d');
+                $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customize == 'week') {
+                    $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                    $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
         } else if ($request->month) {
             if ($request->by == 3) {
@@ -133,36 +139,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $end_date = date("Y-m-d");
         }
 
-        // if ($request->day) {
-        //     $start_date  = date('Y-m-d', strtotime($request->day)) . ' 00:00:00';
-        //     $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
-        // } else if ($request->week) {
-        //     $date = Carbon::parse($request->week);
-        //     $start_date  = date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00';
-        //     $end_date = date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59';
-        // } else if ($request->month) {
-        //     $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-        //     $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
-        // } else if ($request->year) {
-        //     $start_date  = $request->year . '-01-01 00:00:00';
-        //     $end_date = $request->year . '-12-31 23:59:59';
-        // } else if ($request->start_date && $request->start_date) {
-        //     $start_date = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
-        //     $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
-        // } else {
-        //     $start_date = date("Y-m-d", strtotime("-1 months"));
-        //     $end_date = date("Y-m-d");
-        // }
 
-        //->where('created_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
-        //->where('created_at', '<=', date('Y-m-d', s   trtotime($request->day)) . ' 23:59:59')
+
+
         if ($filters)
             $site_id = $filters->site_id;
         if ($request->site_id)
             $site_id = $request->site_id;
-        // $start_date = ($request->start_date) ? $request->start_date : date("Y-m-d", strtotime("-1 months"));
-        //$end_date = ($request->end_date) ? $request->end_date : date("Y-m-d");
-        //  echo $site_id .'...'.$start_date . ' ' .$end_date.'>>>>>>>>>';  
         $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
             return $query->where('site_id', $site_id);
         })
@@ -178,12 +161,12 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         $percentage = [];
         foreach ($logs as $index => $log) {
             $percentage[] = [
-                //'category_parent_name' => $log->category_parent_name,
+
                 'questionnaire' => $log->questionnaire,
                 'questionnaire_color' => $log->questionnaire_color,
                 'questionnaire_answer' => $log->questionnaire_answer,
                 'tenant_survey' => $log->tenant_survey,
-                //'percentage_share' => round(($log->tenant_survey / $total) * 100, 2) . '%'
+
                 'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
             ];
         }
@@ -202,15 +185,20 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         } else if ($request->week) {
             $date = Carbon::parse($request->week);
             if ($request->by == 2) {
-                $start_date = $date->startOfWeek()->format('Y-m-d');
-                $end_date = $date->endOfWeek()->format('Y-m-d');
+                $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customize == 'week') {
+                    $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                    $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
         } else if ($request->month) {
-            //$start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-            //$end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+
+
             if ($request->by == 3) {
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
@@ -234,36 +222,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $end_date = date("Y-m-d");
         }
 
-        // if ($request->day) {
-        //     $start_date  = date('Y-m-d', strtotime($request->day)) . ' 00:00:00';
-        //     $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
-        // } else if ($request->week) {
-        //     $date = Carbon::parse($request->week);
-        //     $start_date  = date('Y-m-d', strtotime($date->startOfWeek()->format('Y-m-d'))) . ' 00:00:00';
-        //     $end_date = date('Y-m-d', strtotime($date->endOfWeek()->format('Y-m-d'))) . ' 23:59:59';
-        // } else if ($request->month) {
-        //     $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-        //     $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
-        // } else if ($request->year) {
-        //     $start_date  = $request->year . '-01-01 00:00:00';
-        //     $end_date = $request->year . '-12-31 23:59:59';
-        // } else if ($request->start_date && $request->start_date) {
-        //     $start_date = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
-        //     $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
-        // } else {
-        //     $start_date = date("Y-m-d", strtotime("-1 months"));
-        //     $end_date = date("Y-m-d");
-        // }
 
-        //->where('created_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
-        //->where('created_at', '<=', date('Y-m-d', s   trtotime($request->day)) . ' 23:59:59')
+
         if ($filters)
             $site_id = $filters->site_id;
         if ($request->site_id)
             $site_id = $request->site_id;
-        // $start_date = ($request->start_date) ? $request->start_date : date("Y-m-d", strtotime("-1 months"));
-        //$end_date = ($request->end_date) ? $request->end_date : date("Y-m-d");
-        //  echo $site_id .'...'.$start_date . ' ' .$end_date.'>>>>>>>>>';  
+
         $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
             return $query->where('site_id', $site_id);
         })
@@ -280,12 +245,12 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         $percentage = [];
         foreach ($logs as $index => $log) {
             $percentage[] = [
-                //'category_parent_name' => $log->category_parent_name,
+
                 'questionnaire' => $log->questionnaire,
                 'questionnaire_color' => $log->questionnaire_color,
                 'questionnaire_answer' => $log->questionnaire_answer,
                 'tenant_survey' => $log->tenant_survey,
-                //'percentage_share' => round(($log->tenant_survey / $total) * 100, 2) . '%'
+
                 'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
             ];
         }
@@ -304,7 +269,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $site_id = $request->site_id;
         $start_date = ($request->start_date) ? $request->start_date : date("Y-m-d", strtotime("-1 months"));;
         $end_date = ($request->end_date) ? $request->end_date : date("Y-m-d");
-        // echo $site_id .'...'.$start_date . ' ' .$end_date.'>>>>>>>>>';  
+
         $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
             return $query->where('site_id', $site_id);
         })
@@ -319,11 +284,11 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         $percentage = [];
         foreach ($logs as $index => $log) {
             $percentage[] = [
-                //'category_parent_name' => $log->category_parent_name,
-                //'questionnaire' => $log->questionnaire,
+
+
                 'questionnaire_answer' => $log->questionnaire_answer,
                 'tenant_survey' => $log->tenant_survey,
-                //'percentage_share' => round(($log->tenant_survey / $total) * 100, 2) . '%'
+
                 'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
             ];
         }
@@ -362,7 +327,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
     public function getDonutReportByDaily(Request $request)
     {
         try {
-            // $id = session()->get('room_id');
+
             $site_id = '';
             $filters = json_decode($request->filters);
 
@@ -374,7 +339,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
-                // ->where('site_building_room_id', $id)
+
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
                 ->where('remarks', 'Done')
@@ -391,12 +356,12 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'questionnaire_color' => $log->questionnaire_color,
                     'questionnaire_answer' => $log->questionnaire_answer,
                     'tenant_survey' => $log->tenant_survey,
-                    //'percentage_share' => round(($log->tenant_survey / $total) * 100, 2) . '%'
+
                     'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
                 ];
             }
 
-            //return $percentage;
+
             return $this->response($percentage, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -410,7 +375,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
     public function getDonutReportByDailyAnswer(Request $request)
     {
         try {
-            // $id = session()->get('room_id');
+
             $site_id = '';
             $filters = json_decode($request->filters);
 
@@ -422,7 +387,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
-                //   ->where('site_building_room_id', $id)
+
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
                 ->where('remarks', 'Done')
@@ -439,12 +404,12 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'questionnaire' => $log->questionnaire,
                     'questionnaire_answer' => $log->questionnaire_answer,
                     'tenant_survey' => $log->tenant_survey,
-                    //'percentage_share' => round(($log->tenant_survey / $total) * 100, 2) . '%'
+
                     'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
                 ];
             }
 
-            //return $percentage;
+
             return $this->response($percentage, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -652,7 +617,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
 
             $current_year = date("Y");
 
-            //QuestionnaireSurveyViewModel::setSiteId($site_id, $current_year);
+
             $start_date = ($request->start_date) ? $request->start_date : date("Y-m-d", strtotime("-1 months"));;
             $end_date = ($request->end_date) ? $request->end_date : date("Y-m-d");
 
@@ -694,7 +659,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->selectRaw('avg(TIMESTAMPDIFF(minute, created_at,updated_at)) AS minutes')
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
-                //->where('site_building_room_id', $id)
+
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
                 ->groupBy('questionnaire_answer_id')
@@ -710,7 +675,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $avg_time = 0;
             }
 
-            // echo '>>>>>>>>>>>>>>'.$avg_time;
+
             return $this->response($avg_time, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -776,10 +741,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $per_day = [];
             $per_building = [];
 
-            // foreach ($this->createDateRangeArray($request->start_date, $request->end_date) as $vDateRange) {
-            //     $day = date("m/d", strtotime($vDateRange));
-            //     $created_at[] = $day;
-            // }
+
             foreach ($logs as $index => $log_created_at) {
                 $day = date("m/d", strtotime($log_created_at->created_at));
                 $created_at[] = $day;
@@ -907,10 +869,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $day = date("m/d", strtotime($vDateRange));
                 $created_at[] = $day;
             }
-            // foreach ($logs as $index => $log_created_at) {
-            //     $day = date("m/d", strtotime($log_created_at->created_at));
-            //     $created_at[] = $day;
-            // }
+
 
             foreach ($logs as $index => $log) {
                 $day = date("m/d", strtotime($log->created_at));
@@ -972,10 +931,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $created_at[] = $day;
             }
 
-            // foreach ($logs as $index => $log_created_at) {
-            //     $day = date("m/d", strtotime($log_created_at->created_at));
-            //     $created_at[] = $day;
-            // }
+
 
             foreach ($logs as $index => $log) {
                 $day = date("m/d", strtotime($log->created_at));
@@ -1026,7 +982,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->selectRaw('avg(TIMESTAMPDIFF(minute, created_at,updated_at)) AS minutes')
                 ->where('updated_at', '>=', date('Y-m-d', strtotime($request->day)) . ' 00:00:00')
                 ->where('updated_at', '<=', date('Y-m-d', strtotime($request->day)) . ' 23:59:59')
-                //->where('site_building_room_id', $id)
+
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
                 ->groupBy('questionnaire_answer_id')
@@ -1100,11 +1056,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
                 ->get();
-            // echo '-----------------------------';
-            // echo '<pre>';
-            // print_r($logs);
-            // echo '</pre>';
-            // echo '-----------------------------';
 
             $per_hour = [];
             $per_building = [];
@@ -1244,8 +1195,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                 $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customize == 'week') {
+                    $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                    $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
             // $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
             //     return $query->where('site_id', $site_id);
@@ -1268,7 +1224,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->selectRaw('avg(TIMESTAMPDIFF(minute, created_at,updated_at)) AS minutes')
                 ->where('created_at', '>=', date('Y-m-d', strtotime($start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($end_date)) . ' 23:59:59')
-                //->where('site_building_room_id', $id)
+
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
                 ->groupBy('questionnaire_answer_id')
@@ -1297,7 +1253,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
     {
         try {
             $site_id = '';
-            $filters = json_decode($request->filters);
+               $filters = json_decode($request->filters);
             if ($filters)
                 $site_id = $filters->site_id;
             if ($request->site_id)
@@ -1309,8 +1265,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                 $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customize == 'week') {
+                    $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                    $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
 
             $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
@@ -1346,8 +1307,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                 $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customize == 'week') {
+                    $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                    $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
 
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
@@ -1412,8 +1378,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                 $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customize == 'week') {
+                    $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+                    $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
 
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
@@ -1495,7 +1466,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             })
                 ->selectRaw('avg(TIMESTAMPDIFF(minute, created_at,updated_at)) AS minutes')
                 ->whereBetween('created_at', [$start_date, $end_date])
-                //->where('site_building_room_id', $id)
+
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
                 ->groupBy('questionnaire_answer_id')
@@ -1610,7 +1581,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             }
 
             $per_month['legend'] = ($this->sortWeek($per_building)) ? $this->sortWeek($per_building) : '<div></div>';
- 
+
             foreach ($weeks as $weekNumber => $week) {
                 $monday = substr($week[0], 8);
                 $sunday = substr($week[1], 8);
@@ -1730,7 +1701,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             })
                 ->selectRaw('avg(TIMESTAMPDIFF(minute, created_at,updated_at)) AS minutes')
                 ->whereBetween('created_at', [$start_date, $end_date])
-                //->where('site_building_room_id', $id)
+
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
                 ->groupBy('questionnaire_answer_id')
@@ -1816,18 +1787,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('month(created_at)'))
                 ->get();
-            // echo '-----------------------------';
-            // echo '<pre>';
-            // print_r($logs);
-            // echo '</pre>';
-            // echo '-----------------------------';
 
             $per_month = [];
             $per_building = [];
             foreach ($logs as $index => $log) {
-                //echo '<<'.$log->created_at .'---'.$log->total_survey.'>>';
+
                 $month = date("m", strtotime($log->created_at));
-                //echo '<<' . $month . '>>';
+
                 $per_month[] = [
                     'building_name' => $log->building_name,
                     'building_color' => $log->building_color,
@@ -1887,18 +1853,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('month(created_at)'))
                 ->get();
-            // echo '-----------------------------';
-            // echo '<pre>';
-            // print_r($logs);
-            // echo '</pre>';
-            // echo '-----------------------------';
 
             $per_month = [];
             $per_building = [];
             foreach ($logs as $index => $log) {
-                //echo '<<'.$log->created_at .'---'.$log->total_survey.'>>';
+
                 $month = date("m", strtotime($log->created_at));
-                //echo '<<' . $month . '>>';
+
                 $per_month[] = [
                     'building_name' => $log->building_name,
                     'building_color' => $log->building_color,
@@ -1958,7 +1919,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             })
                 ->selectRaw('avg(TIMESTAMPDIFF(minute, created_at,updated_at)) AS minutes')
                 ->whereBetween('created_at', [$start_date, $end_date])
-                //->where('site_building_room_id', $id)
+
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
                 ->groupBy('questionnaire_answer_id')
@@ -2176,7 +2137,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->selectRaw('avg(TIMESTAMPDIFF(minute, created_at,updated_at)) AS minutes')
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
-                //->where('site_building_room_id', $id)
+
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
                 ->groupBy('questionnaire_answer_id')
@@ -2399,7 +2360,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             }
 
             $filename = "merchant-population.csv";
-            // Store on default disk
+
             Excel::store(new Export($percentage), $directory . $filename);
 
             $data = [
@@ -2482,7 +2443,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             }
 
             $filename = "top-tenant-search.csv";
-            // Store on default disk
+
             Excel::store(new Export($tenants), $directory . $filename);
 
             $data = [
@@ -2537,7 +2498,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             }
 
             $filename = "top-search-keywords.csv";
-            // Store on default disk
+
             Excel::store(new Export($search_keywords), $directory . $filename);
 
             $data = [
@@ -2624,7 +2585,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             }
 
             $filename = "merchant-usage.csv";
-            // Store on default disk
+
             Excel::store(new Export($search_keywords), $directory . $filename);
 
             $data = [
@@ -2696,7 +2657,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             }
 
             $filename = "monthly-usage.csv";
-            // Store on default disk
+
             Excel::store(new Export($monthly_usage), $directory . $filename);
 
             $data = [
@@ -2758,7 +2719,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             }
 
             $filename = "yearly-usage.csv";
-            // Store on default disk
+
             Excel::store(new Export($yearly_usage), $directory . $filename);
 
             $data = [
@@ -2783,7 +2744,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
     {
         try {
             $total_count = SiteFeedback::get()->count();
-            //  echo $total_count.'>>>>>>>>>';
+
             $is_helpful = SiteFeedback::selectRaw('helpful, count(*) as count, ROUND((count(*)/' . $total_count . ')*100, 2) as percentage')
                 ->groupBy('helpful')
                 ->orderBy('count', 'DESC')
@@ -2859,7 +2820,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
 
 
             $filename = "is_helpful.csv";
-            // Store on default disk
+
             Excel::store(new Export($is_helpful), $directory . $filename);
 
             $data = [
@@ -2960,7 +2921,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             }
 
             $filename = "uptime-history.csv";
-            // Store on default disk
+
             Excel::store(new Export($uptime_history), $directory . $filename);
 
             $data = [
@@ -3054,7 +3015,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             }
 
             $filename = "kiosk-usage.csv";
-            // Store on default disk
+
             Excel::store(new Export($kiosk_usage), $directory . $filename);
 
             $data = [
@@ -3079,7 +3040,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
     {
         try {
             $total_count = QuestionnaireSurvey::get()->count();
-            //  echo $total_count.'>>>>>>>>>';
+
             $pending_done = QuestionnaireSurvey::selectRaw('remarks, count(*) as count, ROUND((count(*)/' . $total_count . ')*100, 2) as percentage')
                 ->groupBy('remarks')
                 ->orderBy('count', 'DESC')
@@ -3098,7 +3059,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
     {
         $aWeeksOfMonth = [];
         $date = new DateTime("{$year}-{$month}-01");
-        //$date = Carbon::create("{$year}-{$month}-01");
+
         $iDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         $aOneWeek = [$date->format('Y-m-d')];
         $weekNumber = 1;
@@ -3153,7 +3114,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
     {
         $buildings = [];
         $sort_buildings = [];
-        //echo '<pre>'; print_r($per_building); echo '</pre>';
+
         foreach ($per_building as $building) {
             $buildings[array_shift($building)][] = $building;
         }
@@ -3172,9 +3133,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             padding-bottom: .1px;
             
         "></div>' . $building_color[0] . ' (Reports(s)' . array_sum($a) . ')</di>';
-            //array($building_color[0], $building_color[1], array_sum($a));
-            //print_r($sort_buildings);
-            //echo '<br>----------------';
         }
         return implode($sort_buildings);
     }
