@@ -744,7 +744,7 @@ class DashboardController extends AppBaseController
                     'reports' => $log->total_survey,
                 ];
             }
-            $per_hour['legend'] = $this->sortWeek($per_building);
+            $per_hour['legend'] = $this->sortWeek($per_building); echo '<pre>'; print_r($per_hour);echo '</pre>';
             return $this->response($per_hour, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([

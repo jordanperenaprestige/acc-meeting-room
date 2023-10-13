@@ -1604,7 +1604,7 @@ export default {
 			});
 
 			$.get("/admin/dashboard/trend-incident-by-week/list", filter, function (data) {
-				console.log('trend-incident-by-week'); console.log(filter);
+				
 				let datasetsz = [];
 				var yValues = [];
 

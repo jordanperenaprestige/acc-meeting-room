@@ -1429,7 +1429,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 'status_code' => 422,
             ], 422);
         }
-    } // hi ma'am for checking  tomorrow morning. need lang mag test para hindi na bumalik yung issue.
+    } 
     public function getAverageTimeByMonth(Request $request)
     {
         try {
