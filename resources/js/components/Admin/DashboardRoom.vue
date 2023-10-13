@@ -3043,15 +3043,18 @@ export default {
 					var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 					if (y_start == y_end) {
 						console.log(y_start + '== ' + y_end + 'y_start == y_end<<<<');
-						if (week_of_month_start == week_of_month_end) {
-								this.filter.by = 2;
+						if (y_start == y_end) {
+							console.log(y_start + '== ' + y_end + 'y_start == y_end<<<<');
+							if (week_of_month_start == week_of_month_end) {
+								this.customize = 'week';
 								this.filter.week = this.filter.end_date;
 								this.filterChartByWeek();
 							} else {
-								
-								
 								this.filterChartByWeek();
 							}
+						} else {
+							// wishlist
+						}
 					} else {
 						// wishlist
 					}

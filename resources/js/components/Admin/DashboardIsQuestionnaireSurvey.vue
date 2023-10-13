@@ -3209,18 +3209,17 @@ export default {
 					var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 					var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 					if (y_start == y_end) {
-						console.log(y_start + '== ' + y_end + 'y_start == y_end<<<<');
-						if (week_of_month_start == week_of_month_end) {
-							this.filter.week = this.filter.end_date;
-							this.filter.start_date;
-							this.filter.end_date;
-							this.filterChartByWeek();
+							console.log(y_start + '== ' + y_end + 'y_start == y_end<<<<');
+							if (week_of_month_start == week_of_month_end) {
+								this.customize = 'week';
+								this.filter.week = this.filter.end_date;
+								this.filterChartByWeek();
+							} else {
+								this.filterChartByWeek();
+							}
 						} else {
-							this.filterChartByMonth();
+							// wishlist
 						}
-					} else {
-						// wishlist
-					}
 				}
 				else if (difference_in_days >= 8 && difference_in_days <= 31) {
 					var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
