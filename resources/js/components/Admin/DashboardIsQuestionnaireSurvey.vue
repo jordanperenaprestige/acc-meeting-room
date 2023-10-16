@@ -1459,7 +1459,6 @@ export default {
 				console.log('trend-report-by-week');
 				let datasets = [];
 				var yValues = [];
-
 				console.log('>>>>>xxxxxx>>>>>>>'); console.log(data.data.legend); console.log('<<<<<<vvvvvv<<<<<');
 				$('#report_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
@@ -1487,15 +1486,26 @@ export default {
 				yValues.forEach(num => {
 					sum_reports_total += num;
 				})
-				this.reports_total = sum_reports_total;
-				$('#reports_total').text(sum_reports_total);
-				var sun = obj.setToDate(new Date(obj.filter.week), 0);
-				var mon = obj.setToDate(new Date(obj.filter.week), 1);
-				var tue = obj.setToDate(new Date(obj.filter.week), 2);
-				var wed = obj.setToDate(new Date(obj.filter.week), 3);
-				var thu = obj.setToDate(new Date(obj.filter.week), 4);
-				var fri = obj.setToDate(new Date(obj.filter.week), 5);
-				var sat = obj.setToDate(new Date(obj.filter.week), 6);
+				this.reports_total = sum_reports_total; 
+				var jordan = obj.filter.week;
+				$('#reports_total').text(sum_reports_total); 
+				var number_day_week = new Date(filter.week); 
+				if(number_day_week.getDay() == 0){ //if sunday
+					
+					var set_week = moment(new Date(number_day_week.setDate(number_day_week.getDate() + 1))).format("YYYY-MM-DD");;
+					
+				}else{
+					var set_week = obj.filter.week;
+				}
+				
+				//date.setDate(date.getDate() + 1);
+				var sun = obj.setToDate(new Date(set_week), 0);
+				var mon = obj.setToDate(new Date(set_week), 1);
+				var tue = obj.setToDate(new Date(set_week), 2);
+				var wed = obj.setToDate(new Date(set_week), 3);
+				var thu = obj.setToDate(new Date(set_week), 4);
+				var fri = obj.setToDate(new Date(set_week), 5);
+				var sat = obj.setToDate(new Date(set_week), 6);
 
 				let aLabels = [sun, mon, tue, wed, thu, fri, sat];
 				var areaChartData = {
@@ -1576,15 +1586,23 @@ export default {
 				this.reports_total = sum_incidents_total;
 				$('#incidents_total').text(sum_incidents_total);
 
-
-				var sun = obj.setToDate(new Date(obj.filter.week), 0);
-				var mon = obj.setToDate(new Date(obj.filter.week), 1);
-				var tue = obj.setToDate(new Date(obj.filter.week), 2);
-				var wed = obj.setToDate(new Date(obj.filter.week), 3);
-				var thu = obj.setToDate(new Date(obj.filter.week), 4);
-				var fri = obj.setToDate(new Date(obj.filter.week), 5);
-				var sat = obj.setToDate(new Date(obj.filter.week), 6);
-
+				var number_day_week = new Date(filter.week); 
+				if(number_day_week.getDay() == 0){ //if sunday
+					
+					var set_week = moment(new Date(number_day_week.setDate(number_day_week.getDate() + 1))).format("YYYY-MM-DD");;
+					
+				}else{
+					var set_week = obj.filter.week;
+				}
+			
+				var sun = obj.setToDate(new Date(set_week), 0);
+				var mon = obj.setToDate(new Date(set_week), 1);
+				var tue = obj.setToDate(new Date(set_week), 2);
+				var wed = obj.setToDate(new Date(set_week), 3);
+				var thu = obj.setToDate(new Date(set_week), 4);
+				var fri = obj.setToDate(new Date(set_week), 5);
+				var sat = obj.setToDate(new Date(set_week), 6);
+				
 				let aLabels = [sun, mon, tue, wed, thu, fri, sat];
 
 				var areaChartDataz = {
@@ -3227,8 +3245,8 @@ export default {
 					if (y_start == y_end) {
 						if (week_of_month_start == week_of_month_end) {
 							this.filterChartByDaily();
-						} else {
-							this.filterChartByYear();
+						} else {alert('month');
+							this.filterChartByMonth();
 						}
 					} else {
 						if (m_start == m_start) {
