@@ -82,6 +82,7 @@ class BuildingsController extends AppBaseController implements BuildingsControll
                 'site_id' => $site_id,
                 'name' => $request->name,
                 'descriptions' => $request->descriptions,
+                'color' => '#'.$request->color,
                 'active' => 1
             ];
 
@@ -100,14 +101,16 @@ class BuildingsController extends AppBaseController implements BuildingsControll
     }
 
     public function update(BuildingRequest $request)
-    {
+    { 
         try
     	{
             $building = SiteBuilding::find($request->id);
-
+echo '';
             $data = [
                 'name' => $request->name,
                 'descriptions' => $request->descriptions,
+                'color' => '#'.$request->color,
+
                 'active' => ($request->active == 'false') ? 0 : 1,
             ];
 

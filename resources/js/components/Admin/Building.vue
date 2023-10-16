@@ -54,6 +54,13 @@
 									<input type="text" class="form-control" v-model="building.descriptions" placeholder="Building Name" required>
 								</div>
 							</div>
+							<div class="form-group row">
+								<label for="firstName" class="col-sm-4 col-form-label">Bar Colors <span class="font-italic text-danger"> *</span></label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" v-model="building.color" placeholder="Building Name" required>
+								</div>
+							</div>
+							
 							<div class="form-group row" v-show="edit_record">
 								<label for="active" class="col-sm-4 col-form-label">Active</label>
 								<div class="col-sm-8">
@@ -88,6 +95,7 @@
                     id: '',
                     name: '',
                     descriptions: '',
+					color: '',
                     active: false,           
                 },
                 add_record: true,
@@ -95,6 +103,7 @@
             	dataFields: {
             		name: "Building Name", 
             		descriptions: "Descriptions", 
+					color:"Bar Colors",
             		active: {
             			name: "Status", 
             			type:"Boolean", 
@@ -146,6 +155,7 @@
 				this.edit_record = false;
                 this.building.name = '';
                 this.building.descriptions = '';
+				this.building.color = '';
                 this.building.active = false;				
               	$('#building-form').modal('show');
             },
@@ -166,6 +176,7 @@
                     this.building.id = id;
                     this.building.name = building.name;
 					this.building.descriptions = building.descriptions;
+					this.building.color = building.color.replace(/^#+/, "");
                     this.building.active = building.active;
 					this.add_record = false;
 					this.edit_record = true;

@@ -18,6 +18,7 @@ class SiteBuilding extends Model
         'site_id',
         'name',
         'descriptions',
+        'color',
         'active',
     ];
 

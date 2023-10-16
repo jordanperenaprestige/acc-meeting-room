@@ -26,6 +26,7 @@ class BuildingRequest extends FormRequest
         return [
             "name" => "required|string",
             "descriptions" => "required|string",
+            "color" => "required|alpha_num:ascii|min:6|max:6",
         ];
     }
 }
