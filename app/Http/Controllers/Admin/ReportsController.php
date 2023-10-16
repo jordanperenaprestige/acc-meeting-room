@@ -120,8 +120,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customized == 'month') { // echo '>>>>>>>>>>'.$request->end_date;
+                    $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+                    $end_date = date('Y-m-t', strtotime($request->end_date)) . ' 23:59:59';
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
         } else if ($request->year) {
             if ($request->by == 4) {
@@ -1538,9 +1543,16 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                 if ($request->customized == 'month') {
+                    $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                    $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
+            
+
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
@@ -1614,8 +1626,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customized == 'month') {
+                    $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                    $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
