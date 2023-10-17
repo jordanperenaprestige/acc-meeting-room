@@ -1094,9 +1094,9 @@ export default {
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 
 				if (data.data.length > 0) {
@@ -1118,7 +1118,7 @@ export default {
 				else {
 					labels_answer = ['Empty']
 					data_value_answer = [1];
-					randomBackgroundColor = [cleanliness];
+					randomBackgroundColor = [];
 				}
 
 				var donutData_answer = {
@@ -2892,9 +2892,9 @@ export default {
 				let data_value_answer = [];
 				let incident_report_answer = 0;
 				let randomBackgroundColor = [];
-				var cleanliness = '#728FCE';
-				var supplies = '#90EE90';
-				var functionality = '#FED8B1';
+				var cleanliness = '#90EE90';
+				var supplies = '#808000';
+				var functionality = '#FAF884';
 
 
 				if (data.data.length > 0) {
@@ -2916,7 +2916,7 @@ export default {
 				else {
 					labels_answer = ['Empty']
 					data_value_answer = [1];
-					randomBackgroundColor = [cleanliness];
+					randomBackgroundColor = [];
 				}
 
 				var donutData_answer = {
