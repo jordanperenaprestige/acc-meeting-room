@@ -201,7 +201,7 @@ export default {
 			concern: [],
 			pending: '',
 			done: '',
-			
+
 			filter: {
 				site_id: '',
 				select_date: '',
@@ -252,6 +252,7 @@ export default {
 			incidents_total: 0,
 			average_time: 0,
 			total_sms: 0,
+			customized: '',
 		}
 	},
 	created() {
@@ -278,7 +279,7 @@ export default {
 
 			var pending_done = event.target.id;
 			var id = pending_done.split("_");
-			
+
 			if (/pending/i.test(pending_done)) {
 
 				$("#" + pending_done).removeClass("btn-outline-danger").addClass("bg-gradient-danger");
@@ -330,10 +331,10 @@ export default {
 					}
 
 				})
-			
+
 			this.filterBy();
 		},
-		
+
 		getSites: function () {
 			axios.get('/admin/site/get-all')
 				.then(response => this.sites = response.data.data);
@@ -353,7 +354,7 @@ export default {
 				this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
 				this.filterChartByDaily();
 			} else if (this.filter.by == 1) {//day
-				
+
 				this.by_day = true;
 				this.by_week = false;
 				this.by_month = false;
@@ -363,7 +364,7 @@ export default {
 
 				const currentDay = moment(new Date()).format("YYYY-MM-DD");
 				this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
-				
+
 				this.filterChartByDay();
 			}
 			else if (this.filter.by == 2) {//week
@@ -380,7 +381,7 @@ export default {
 				this.filterChartByWeek();
 			}
 			else if (this.filter.by == 3) {//month
-				
+
 				this.by_day = false;
 				this.by_week = false;
 				this.by_month = true;
@@ -388,28 +389,28 @@ export default {
 				this.by_start = false;
 				this.by_end = false;
 				const currentMonth = moment(new Date()).format("YYYY-MM");
-				
+
 				this.filter.month = currentMonth; (this.filter.month == '') ? currentMonth : this.filter.month;
-				
+
 				this.filterChartByMonth();
 			} else if (this.filter.by == 4) {//year
-				
+
 				this.by_day = false;
 				this.by_week = false;
 				this.by_month = false;
 				this.by_year = true;
 				this.by_start = false;
 				this.by_end = false;
-				
-				
 
-				
-				
+
+
+
+
 				const currentYear = moment().year().toString();
 				this.filter.year = (this.filter.year == '') ? currentYear : this.filter.year;
 				this.filterChartByYear();
 			} else { //customize
-				
+
 				this.by_day = false;
 				this.by_week = false;
 				this.by_month = false;
@@ -426,20 +427,18 @@ export default {
 				var day_start = d_start.getDay();
 				var date_end = d_end.getDate();
 				var day_end = d_end.getDay();
-				
+
 				var difference_in_time = d_end.getTime() - d_start.getTime();
 				var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
-				 
-				if (y_start == y_end) {
 
+				if (y_start == y_end) {
 					if (difference_in_days == 0) {
-						
 						this.filter.day = d_end; console.log('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
 						this.filterChartByDay();
 					} else if (difference_in_days >= 1 && difference_in_days <= 7) {
-						console.log('>>>>>>>>else if' + difference_in_days);
-						console.log('difference_in_days >= 1 && difference_in_days <= 7');
-						console.log(this.filter);
+						//console.log('>>>>>>>>else if' + difference_in_days);
+						//console.log('difference_in_days >= 1 && difference_in_days <= 7');
+						//console.log(this.filter);
 						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 						if (y_start == y_end) {
@@ -458,26 +457,25 @@ export default {
 					else if (difference_in_days >= 8 && difference_in_days <= 31) {
 						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
-						
-						
-						
 						if (y_start == y_end) {
 							if (week_of_month_start == week_of_month_end) {
-								
 								this.filterChartByDaily();
 							} else {
-								
-								
-								
-								this.filterChartByYear();
-								
+								if (m_start == m_end) {
+									this.filter.customized = 'month';
+									this.filter.month = this.filter.end_date.substring(0, 7);
+									this.filterChartByMonth();
+								} else {
+
+									this.filterChartByYear();
+								}
 							}
 						} else {
-							if (m_start == m_start) {
-								alert(m_start + '==' + m_start);
+							if (m_start == m_end) {
+
 								this.filterChartByMonth();
 							} else {
-								alert(m_start + '!=' + m_start);
+
 								this.filterChartByYear();
 							}
 						}
@@ -490,7 +488,6 @@ export default {
 			}
 		},
 
-		
 		clear_filter: function () {
 			this.filter.select_date = '';
 			this.filter.start_date = '';
@@ -505,7 +502,7 @@ export default {
 		filterChartByDaily: function () {
 			var filter = this.filter;
 
-			
+
 
 			$.get("/admin/dashboard/trend-report-by-daily/list", filter, function (data) {
 				let datasets = [];
@@ -542,7 +539,7 @@ export default {
 
 				let sum_reports_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_reports_total += num;
 				})
@@ -584,7 +581,7 @@ export default {
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
 				window.report_bar = new Chart(reportBarChartCanvasDay, {
-					
+
 					type: 'bar',
 					data: reportBarChartDataDay,
 					options: reportBarChartOptionsDay
@@ -628,7 +625,7 @@ export default {
 
 				let sum_incidents_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_incidents_total += num;
 				})
@@ -670,7 +667,7 @@ export default {
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
 				window.incident_bar = new Chart(incidentBarChartCanvasDay, {
-					
+
 					type: 'bar',
 					data: incidentBarChartDataDay,
 					options: incidentBarChartOptionsDay
@@ -881,7 +878,7 @@ export default {
 
 				let sum_reports_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_reports_total += num;
 				})
@@ -923,7 +920,7 @@ export default {
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
 				window.report_bar = new Chart(reportBarChartCanvasDay, {
-					
+
 					type: 'bar',
 					data: reportBarChartDataDay,
 					options: reportBarChartOptionsDay
@@ -964,7 +961,7 @@ export default {
 
 				let sum_incidents_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_incidents_total += num;
 				})
@@ -1003,7 +1000,7 @@ export default {
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
 				window.incident_bar = new Chart(incidentBarChartCanvasDay, {
-					
+
 					type: 'bar',
 					data: incidentBarChartDataDay,
 					options: incidentBarChartOptionsDay
@@ -1021,7 +1018,7 @@ export default {
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
 					});
-					
+
 				}
 				else {
 					labels = ['Empty']
@@ -1054,7 +1051,7 @@ export default {
 					window.doughnut_chart.destroy();
 
 				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
-					
+
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1159,7 +1156,7 @@ export default {
 					window.doughnut_chart_answer.destroy();
 
 				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
-					
+
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1175,7 +1172,7 @@ export default {
 			});
 		},
 
-		filterChartByDay: function () { 
+		filterChartByDay: function () {
 			var filter = this.filter;
 			filter.week = '';
 			filter.month = '';
@@ -1183,15 +1180,15 @@ export default {
 			const currentDay = moment(new Date()).format("YYYY-MM-DD");
 			filter.day = (filter.day == '' || filter.day == null) ? currentDay : filter.day;
 
-			this.filter.day = filter.day; 
+			this.filter.day = filter.day;
 			console.log('filterChartByDay D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
 			$.get("/admin/dashboard/trend-report-by-day/list", filter, function (data) {
 				let datasets_day = [];
 				var yValues = [];
 
-				
+
 				console.log(data.data.legend);
-				
+
 				$('#report_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
 					if (key != 'legend') {
@@ -1212,7 +1209,7 @@ export default {
 				});
 				let sum_reports_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_reports_total += num;
 				})
@@ -1254,7 +1251,7 @@ export default {
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
 				window.report_bar = new Chart(reportBarChartCanvasDay, {
-					
+
 					type: 'bar',
 					data: reportBarChartDataDay,
 					options: reportBarChartOptionsDay
@@ -1288,7 +1285,7 @@ export default {
 				});
 				let sum_incidents_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_incidents_total += num;
 				})
@@ -1328,9 +1325,9 @@ export default {
 				}
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
-				
+
 				window.incident_bar = new Chart(reportBarChartCanvasz, {
-					
+
 					type: 'bar',
 					data: reportBarChartDataz,
 					options: reportBarChartOptionsz
@@ -1349,7 +1346,7 @@ export default {
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
 					});
-					
+
 				}
 				else {
 					labels = ['Empty']
@@ -1382,7 +1379,7 @@ export default {
 					window.doughnut_chart.destroy();
 
 				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
-					
+
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1436,10 +1433,10 @@ export default {
 						var color = value.questionnaire_color;
 						labels_answer.push(jordan);
 						color_answers.push(color);
-						
-						
-						
-						
+
+
+
+
 						incident_report_answer += parseInt(value.tenant_survey);
 						data_value_answer.push(value.percentage_share);
 						if (value.questionnaire == 'CLEANLINESS') {
@@ -1457,7 +1454,7 @@ export default {
 					data_value_answer = [1];
 					randomBackgroundColor = color_answers;
 				}
-				
+
 				var donutData_answer = {
 					labels: labels_answer,
 					datasets: [
@@ -1494,7 +1491,7 @@ export default {
 					window.doughnut_chart_answer.destroy();
 
 				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
-					
+
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1523,7 +1520,7 @@ export default {
 				console.log('trend-report-by-week');
 				let datasets = [];
 				var yValues = [];
-				
+
 				console.log('>>>>>xxxxxx>>>>>>>'); console.log(data.data.legend); console.log('<<<<<<vvvvvv<<<<<');
 				$('#report_legend').html(data.data.legend);
 				$.each(data.data, function (key, value) {
@@ -1532,7 +1529,7 @@ export default {
 						yValues.push(value.reports);
 						datasets.push({
 							label: value.building_name + '(Report(s): ' + value.reports + ')',
-							
+
 							backgroundColor: background_color,
 							borderColor: background_color,
 							pointRadius: false,
@@ -1547,7 +1544,7 @@ export default {
 				});
 				let sum_reports_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_reports_total += num;
 				})
@@ -1594,9 +1591,9 @@ export default {
 				}
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
-				
+
 				window.report_bar = new Chart(reportBarChartCanvas, {
-					
+
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1604,7 +1601,7 @@ export default {
 			});
 
 			$.get("/admin/dashboard/trend-incident-by-week/list", filter, function (data) {
-				
+
 				let datasetsz = [];
 				var yValues = [];
 
@@ -1618,7 +1615,7 @@ export default {
 						yValues.push(value.reports);
 						datasetsz.push({
 							label: value.building_name + '(Incident(s): ' + value.reports + ')',
-							
+
 							backgroundColor: background_color,
 							borderColor: background_color,
 							pointRadius: false,
@@ -1633,7 +1630,7 @@ export default {
 				});
 				let sum_incidents_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_incidents_total += num;
 				})
@@ -1683,9 +1680,9 @@ export default {
 				}
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
-				
+
 				window.incident_bar = new Chart(reportBarChartCanvasz, {
-					
+
 					type: 'bar',
 					data: reportBarChartDataz,
 					options: reportBarChartOptionsz
@@ -1705,7 +1702,7 @@ export default {
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
 					});
-					
+
 				}
 				else {
 					labels = ['Empty']
@@ -1738,7 +1735,7 @@ export default {
 					window.doughnut_chart.destroy();
 
 				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
-					
+
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -1792,10 +1789,10 @@ export default {
 						var color = value.questionnaire_color;
 						labels_answer.push(jordan);
 						color_answers.push(color);
-						
-						
-						
-						
+
+
+
+
 						incident_report_answer += parseInt(value.tenant_survey);
 						data_value_answer.push(value.percentage_share);
 						if (value.questionnaire == 'CLEANLINESS') {
@@ -1813,7 +1810,7 @@ export default {
 					data_value_answer = [1];
 					randomBackgroundColor = color_answers;
 				}
-				
+
 				var donutData_answer = {
 					labels: labels_answer,
 					datasets: [
@@ -1850,7 +1847,7 @@ export default {
 					window.doughnut_chart_answer.destroy();
 
 				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
-					
+
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -1877,7 +1874,7 @@ export default {
 				let datasets = [];
 				let week_range = [];
 				var yValues = [];
-				
+
 				$('#report_legend').html(data.data[0].legend);
 				$.each(data.data[0], function (key, value) {
 					console.log('>>>>'); console.log(value);
@@ -1885,7 +1882,7 @@ export default {
 						let background_color = value.building_color;
 						yValues.push(value.reports);
 						var bar = value.bar;
-						
+
 						datasets.push({
 							label: value.building_name + '(Reports: ' + value.reports + ')',
 							backgroundColor: background_color,
@@ -1898,7 +1895,7 @@ export default {
 							data: bar
 						});
 					}
-					
+
 				});
 				$.each(data.data[1], function (key, value) {
 					week_range.push(value);
@@ -1906,7 +1903,7 @@ export default {
 
 				let sum_reports_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_reports_total += num;
 				})
@@ -1945,9 +1942,9 @@ export default {
 				}
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
-				
+
 				window.report_bar = new Chart(reportBarChartCanvas, {
-					
+
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -1958,7 +1955,7 @@ export default {
 				let week_range = [];
 				var yValues = [];
 				let dynamicColors = ['#FE5E80', '#899AE8', '#353535', '#a9b7d8', '#ff00cc', '#ff0000'];
-				
+
 				$('#incident_legend').html(data.data[0].legend);
 				$.each(data.data[0], function (key, value) {
 					if (key != 'legend') {
@@ -1976,12 +1973,12 @@ export default {
 							pointHighlightFill: '#fff',
 							pointHighlightStroke: background_color,
 							data: bar
-							
+
 						});
 					}
 
-					
-					
+
+
 				});
 				$.each(data.data[1], function (key, value) {
 					week_range.push(value);
@@ -1995,7 +1992,7 @@ export default {
 
 				var areaChartData = {
 					labels: week_range,
-					
+
 					datasets: datasets
 				};
 
@@ -2026,9 +2023,9 @@ export default {
 				}
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
-				
+
 				window.incident_bar = new Chart(reportBarChartCanvas, {
-					
+
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -2046,7 +2043,7 @@ export default {
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
 					});
-					
+
 				}
 				else {
 					labels = ['Empty']
@@ -2079,7 +2076,7 @@ export default {
 					window.doughnut_chart.destroy();
 
 				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
-					
+
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -2133,10 +2130,10 @@ export default {
 						var color = value.questionnaire_color;
 						labels_answer.push(jordan);
 						color_answers.push(color);
-						
-						
-						
-						
+
+
+
+
 						incident_report_answer += parseInt(value.tenant_survey);
 						data_value_answer.push(value.percentage_share);
 						if (value.questionnaire == 'CLEANLINESS') {
@@ -2154,7 +2151,7 @@ export default {
 					data_value_answer = [1];
 					randomBackgroundColor = color_answers;
 				}
-				
+
 				var donutData_answer = {
 					labels: labels_answer,
 					datasets: [
@@ -2191,7 +2188,7 @@ export default {
 					window.doughnut_chart_answer.destroy();
 
 				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
-					
+
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -2243,7 +2240,7 @@ export default {
 				});
 				let sum_reports_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_reports_total += num;
 				})
@@ -2282,9 +2279,9 @@ export default {
 				}
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
-				
+
 				window.report_bar = new Chart(reportBarChartCanvas, {
-					
+
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -2316,7 +2313,7 @@ export default {
 
 				let sum_incidents_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_incidents_total += num;
 				})
@@ -2355,9 +2352,9 @@ export default {
 				}
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
-				
+
 				window.incident_bar = new Chart(reportBarChartCanvas, {
-					
+
 					type: 'bar',
 					data: reportBarChartData,
 					options: reportBarChartOptions
@@ -2377,7 +2374,7 @@ export default {
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
 					});
-					
+
 				}
 				else {
 					labels = ['Empty']
@@ -2410,7 +2407,7 @@ export default {
 					window.doughnut_chart.destroy();
 
 				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
-					
+
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -2464,10 +2461,10 @@ export default {
 						var color = value.questionnaire_color;
 						labels_answer.push(jordan);
 						color_answers.push(color);
-						
-						
-						
-						
+
+
+
+
 						incident_report_answer += parseInt(value.tenant_survey);
 						data_value_answer.push(value.percentage_share);
 						if (value.questionnaire == 'CLEANLINESS') {
@@ -2485,7 +2482,7 @@ export default {
 					data_value_answer = [1];
 					randomBackgroundColor = color_answers;
 				}
-				
+
 				var donutData_answer = {
 					labels: labels_answer,
 					datasets: [
@@ -2522,7 +2519,7 @@ export default {
 					window.doughnut_chart_answer.destroy();
 
 				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
-					
+
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -2539,33 +2536,33 @@ export default {
 
 		},
 		filterChartByLifetime: function () {
-			
-			
 
-			
+
+
+
 			var filter = this.filter;
 			$.get("admin/dashboard/donut-report-by-day/list", filter, function (data) {
 				let labels = [];
 				let data_value = [];
 				let incident_report = 0;
 
-				
+
 
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
-						
+
 						labels.push(value.questionnaire);
-						
-						
+
+
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
-						
+
 					});
 				}
 				else {
 					labels = ['Empty']
 					data_value = [1];
-					
+
 				}
 
 				var donutData = {
@@ -2585,11 +2582,11 @@ export default {
 					responsive: true,
 				}
 
-				
+
 				var myChart = new Chart(pieChartSurveyCanvas, {
 					type: 'doughnut',
 					data: pieData,
-					plugins: [{ 
+					plugins: [{
 						beforeDraw: function (chart) {
 							var width = chart.chart.width,
 								height = chart.chart.height,
@@ -2672,7 +2669,7 @@ export default {
 
 				let sum_reports_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_reports_total += num;
 				})
@@ -2714,7 +2711,7 @@ export default {
 				if (window.report_bar != undefined)
 					window.report_bar.destroy();
 				window.report_bar = new Chart(reportBarChartCanvasDay, {
-					
+
 					type: 'bar',
 					data: reportBarChartDataDay,
 					options: reportBarChartOptionsDay
@@ -2758,7 +2755,7 @@ export default {
 
 				let sum_incidents_total = 0;
 
-				
+
 				yValues.forEach(num => {
 					sum_incidents_total += num;
 				})
@@ -2800,7 +2797,7 @@ export default {
 				if (window.incident_bar != undefined)
 					window.incident_bar.destroy();
 				window.incident_bar = new Chart(incidentBarChartCanvasDay, {
-					
+
 					type: 'bar',
 					data: incidentBarChartDataDay,
 					options: incidentBarChartOptionsDay
@@ -2818,7 +2815,7 @@ export default {
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
 					});
-					
+
 				}
 				else {
 					labels = ['Empty']
@@ -2851,7 +2848,7 @@ export default {
 					window.doughnut_chart.destroy();
 
 				window.doughnut_chart = new Chart(pieChartSurveyCanvas, {
-					
+
 					type: 'doughnut',
 					data: pieData,
 					plugins: [{
@@ -2956,7 +2953,7 @@ export default {
 					window.doughnut_chart_answer.destroy();
 
 				window.doughnut_chart_answer = new Chart(pieChartSurveyCanvas_answer, {
-					
+
 					type: 'pie',
 					data: pieData_answer,
 					options: pieOptions_answer
@@ -2975,36 +2972,36 @@ export default {
 		dateSelected: function (e) {
 			//console.log(filter.day);
 			//this.$nextTick(() => console.log(filter.day))
-			
+
 		},
 
-		
+
 		daySelected: function (e) {
-			
-			
+
+
 			if (this.filter.day != null) {
 				this.filterChartByDay();
 			}
 
 		},
 		weekSelected: function (e) {
-			
-			
+
+
 			if (this.filter.week != null) {
 				this.filterChartByWeek();
 			}
 		},
 		monthSelected: function (e) {
-			
-			
+
+
 
 			if (this.filter.month != null) {
 				this.filterChartByMonth();
 			}
 		},
 		yearSelected: function (e) {
-			
-			
+
+
 
 			if (this.filter.year != null) {
 				console.log('ys');
@@ -3012,9 +3009,9 @@ export default {
 				this.filterChartByYear();
 			}
 		},
-		
+
 		customizedSelected: function (e) {
-			console.log('sa customizedSelected'); console.log(this.filter);
+			//console.log('sa customizedSelected'); console.log(this.filter);
 			var d_start = new Date(this.filter.start_date);
 			var d_end = new Date(this.filter.end_date);
 			var m_start = d_start.getMonth();
@@ -3025,35 +3022,30 @@ export default {
 			var day_start = d_start.getDay();
 			var date_end = d_end.getDate();
 			var day_end = d_end.getDay();
-			
+
 			var difference_in_time = d_end.getTime() - d_start.getTime();
 			var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
-			 
+
 			if (y_start == y_end) {
 
 				if (difference_in_days == 0) {
-					
-					this.filter.day = d_end; console.log('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
+
+					this.filter.day = d_end; //console.log('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
 					this.filterChartByDay();
 				} else if (difference_in_days >= 1 && difference_in_days <= 7) {
-					console.log('>>>>>>>>else if' + difference_in_days);
-					console.log('difference_in_days >= 1 && difference_in_days <= 7');
-					console.log(this.filter);
+					//console.log('>>>>>>>>else if' + difference_in_days);
+					//console.log('difference_in_days >= 1 && difference_in_days <= 7');
+					//console.log(this.filter);
 					var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 					var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 					if (y_start == y_end) {
 						console.log(y_start + '== ' + y_end + 'y_start == y_end<<<<');
-						if (y_start == y_end) {
-							console.log(y_start + '== ' + y_end + 'y_start == y_end<<<<');
-							if (week_of_month_start == week_of_month_end) {
-								this.customize = 'week';
-								this.filter.week = this.filter.end_date;
-								this.filterChartByWeek();
-							} else {
-								this.filterChartByWeek();
-							}
+						if (week_of_month_start == week_of_month_end) {
+							this.customize = 'week';
+							this.filter.week = this.filter.end_date;
+							this.filterChartByWeek();
 						} else {
-							// wishlist
+							this.filterChartByWeek();
 						}
 					} else {
 						// wishlist
@@ -3062,26 +3054,25 @@ export default {
 				else if (difference_in_days >= 8 && difference_in_days <= 31) {
 					var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 					var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
-					
-					
-					
 					if (y_start == y_end) {
 						if (week_of_month_start == week_of_month_end) {
-							
 							this.filterChartByDaily();
 						} else {
-							
-							
-							
-							this.filterChartByYear();
-							
+							if (m_start == m_end) {
+								this.filter.customized = 'month';
+								this.filter.month = this.filter.end_date.substring(0, 7);
+								this.filterChartByMonth();
+							} else {
+
+								this.filterChartByYear();
+							}
 						}
 					} else {
-						if (m_start == m_start) {
-							alert(m_start + '==' + m_start);
+						if (m_start == m_end) {
+
 							this.filterChartByMonth();
 						} else {
-							alert(m_start + '!=' + m_start);
+
 							this.filterChartByYear();
 						}
 					}

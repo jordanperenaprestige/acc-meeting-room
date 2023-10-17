@@ -339,7 +339,7 @@ export default {
 							}
 						} else {
 							if (m_start == m_end) {
-								this.filter.customized = 'month'; //alert('sa month 2');
+								this.filter.customized = 'month'; 
 								this.filter.month = this.filter.end_date.substring(0, 7);
 								this.filterChartByMonth();
 							} else {
@@ -435,11 +435,10 @@ export default {
 							}
 						} else {
 							if (m_start == m_end) {
-								this.filter.customized = 'month'; //alert('sa month');
+								this.filter.customized = 'month'; 
 								this.filter.month = this.filter.end_date.substring(0, 7);
 								this.filterChartByMonth();
 							} else {
-								//alert('sa year');
 								this.filterChartByYear();
 							}
 						}
@@ -1823,13 +1822,12 @@ export default {
 		},
 
 		filterChartByMonth: function () {
-
 			var filter = this.filter;
 			filter.day = '';
 			filter.week = '';
 			filter.year = '';
 			const currentMonth = moment(new Date()).format("YYYY-MM");
-			filter.month = (filter.month == '') ? currentMonth : filter.month; //alert(filter.month);
+			filter.month = (filter.month == '') ? currentMonth : filter.month; 
 			//filter.customized = this.filter.customized);	
 			$.get("/admin/reports/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
@@ -3185,8 +3183,6 @@ export default {
 		},
 		monthSelected: function (e) {
 
-
-
 			if (this.filter.month != null) {
 				this.filterChartByMonth();
 			}
@@ -3201,7 +3197,7 @@ export default {
 			}
 		},
 		customizedSelected: function (e) {
-			console.log('sa customizedSelected'); console.log(this.filter);
+			//console.log('sa customizedSelected'); console.log(this.filter);
 			var d_start = new Date(this.filter.start_date);
 			var d_end = new Date(this.filter.end_date);
 			var m_start = d_start.getMonth();
@@ -3220,12 +3216,12 @@ export default {
 
 				if (difference_in_days == 0) {
 
-					this.filter.day = d_end; console.log('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
+					this.filter.day = d_end; //console.log('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
 					this.filterChartByDay();
 				} else if (difference_in_days >= 1 && difference_in_days <= 7) {
-					console.log('>>>>>>>>else if' + difference_in_days);
-					console.log('difference_in_days >= 1 && difference_in_days <= 7');
-					console.log(this.filter);
+					//console.log('>>>>>>>>else if' + difference_in_days);
+					//console.log('difference_in_days >= 1 && difference_in_days <= 7');
+					//console.log(this.filter);
 					var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 					var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 					if (y_start == y_end) {
@@ -3249,7 +3245,6 @@ export default {
 							this.filterChartByDaily();
 						} else {
 							if (m_start == m_end) {
-
 								this.filter.customized = 'month'; 
 								this.filter.month = this.filter.end_date.substring(0, 7);
 								this.filterChartByMonth();
@@ -3257,7 +3252,6 @@ export default {
 
 								this.filterChartByYear();
 							}
-
 						}
 					} else {
 						if (m_start == m_end) {
