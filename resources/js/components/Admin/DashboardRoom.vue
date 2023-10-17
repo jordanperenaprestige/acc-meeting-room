@@ -1017,6 +1017,7 @@ export default {
 						labels.push(value.questionnaire);
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
+						color.push(value.questionnaire_color);
 					});
 
 				}
@@ -1030,7 +1031,7 @@ export default {
 					datasets: [
 						{
 							data: data_value,
-							backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
+							backgroundColor: color,
 						}
 					]
 				}
@@ -2814,6 +2815,7 @@ export default {
 						labels.push(value.questionnaire);
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
+						color.push(value.questionnaire_color);
 					});
 
 				}
@@ -2827,7 +2829,7 @@ export default {
 					datasets: [
 						{
 							data: data_value,
-							backgroundColor: ['#728FCE', '#90EE90', '#FED8B1'],
+							backgroundColor: color,
 						}
 					]
 				}
