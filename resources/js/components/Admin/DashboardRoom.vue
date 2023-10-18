@@ -575,7 +575,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.report_bar != undefined)
@@ -661,7 +661,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.incident_bar != undefined)
@@ -914,7 +914,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.report_bar != undefined)
@@ -1246,7 +1246,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.report_bar != undefined)
@@ -1321,7 +1321,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.incident_bar != undefined)
@@ -1587,7 +1587,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.report_bar != undefined)
@@ -1676,7 +1676,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.incident_bar != undefined)
@@ -1938,7 +1938,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.report_bar != undefined)
@@ -2019,7 +2019,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.incident_bar != undefined)
@@ -2275,7 +2275,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.report_bar != undefined)
@@ -2348,7 +2348,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.incident_bar != undefined)
@@ -2706,7 +2706,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.report_bar != undefined)
@@ -2792,7 +2792,7 @@ export default {
 						}
 					},
 					legend: {
-						display: false
+						display: true
 					},
 				}
 				if (window.incident_bar != undefined)

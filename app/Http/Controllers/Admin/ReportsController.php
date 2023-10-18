@@ -2257,7 +2257,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     'reports' => $log->total_survey,
                 ];
             }
-            $per_day['legend'] = $this->sortWeek($per_building);
+            $per_year['legend'] = $this->sortWeek($per_building);
             return $this->response($per_year, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
