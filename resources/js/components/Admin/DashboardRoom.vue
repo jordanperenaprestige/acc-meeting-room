@@ -2810,6 +2810,7 @@ export default {
 				let labels = [];
 				let data_value = [];
 				let incident_report = 0;
+				let color = [];
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
 						labels.push(value.questionnaire);

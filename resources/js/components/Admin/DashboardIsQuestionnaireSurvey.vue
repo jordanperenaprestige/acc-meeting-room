@@ -2817,7 +2817,7 @@ export default {
 			});
 
 		},
-		filterChartByYears: function () {
+		filterChartByYears: function () { 
 			var filter = this.filter;
 			filter.day = '';
 			filter.week = '';
@@ -2998,12 +2998,13 @@ export default {
 
 			});
 
-			$.get("/admin/reports/donut-report-by-daily/list", filter, function (data) {
+			$.get("/admin/reports/donut-report-by-daily/list", filter, function (data) { 
 				let labels = [];
 				let data_value = [];
 				let incident_report = 0;
+				let color = [];
 				if (data.data.length > 0) {
-					$.each(data.data, function (key, value) {
+					$.each(data.data, function (key, value) { console.log(',,,,,,,,'+value.tenant_survey);
 						labels.push(value.questionnaire);
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
@@ -3021,7 +3022,7 @@ export default {
 					datasets: [
 						{
 							data: data_value,
-							backgroundColor: color.push(value.questionnaire_color),
+							backgroundColor: color,
 						}
 					]
 				}
@@ -3079,7 +3080,7 @@ export default {
 				});
 			});
 
-			$.get("/admin/reports/donut-report-by-daily-answer/list", filter, function (data) {
+			$.get("/admin/reports/donut-report-by-daily-answer/list", filter, function (data) { 
 				let labels_answer = [];
 				let data_value_answer = [];
 				let incident_report_answer = 0;
