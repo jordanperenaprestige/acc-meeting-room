@@ -237,6 +237,7 @@ export default {
 				.then(response => this.sites = response.data.data);
 		},
 		filterBy: function () {
+
 			if (this.filter.by == 0) {//lifetime
 				this.by_day = false;
 				this.by_week = false;
@@ -244,6 +245,8 @@ export default {
 				this.by_year = false;
 				this.by_start = false;
 				this.by_end = false;
+				this.filter.start_date = '';
+				this.filter.end_date = '';
 				this.filterChartByDaily();
 			} else if (this.filter.by == 1) {//day
 				// this.clear_filter();
@@ -339,7 +342,7 @@ export default {
 							}
 						} else {
 							if (m_start == m_end) {
-								this.filter.customized = 'month'; 
+								this.filter.customized = 'month';
 								this.filter.month = this.filter.end_date.substring(0, 7);
 								this.filterChartByMonth();
 							} else {
@@ -406,13 +409,13 @@ export default {
 						this.filter.day = d_end; console.log('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
 						this.filterChartByDay();
 					} else if (difference_in_days >= 1 && difference_in_days <= 7) {
-						console.log('>>>>>>>>else if' + difference_in_days);
-						console.log('difference_in_days >= 1 && difference_in_days <= 7');
-						console.log(this.filter);
+						// console.log('>>>>>>>>else if' + difference_in_days);
+						// console.log('difference_in_days >= 1 && difference_in_days <= 7');
+						// console.log(this.filter);
 						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 						if (y_start == y_end) {
-							console.log(y_start + '== ' + y_end + 'y_start == y_end<<<<');
+							(y_start + '== ' + y_end + 'y_start == y_end<<<<');
 							if (week_of_month_start == week_of_month_end) {
 								this.customize = 'week';
 								this.filter.week = this.filter.end_date;
@@ -435,7 +438,7 @@ export default {
 							}
 						} else {
 							if (m_start == m_end) {
-								this.filter.customized = 'month'; 
+								this.filter.customized = 'month';
 								this.filter.month = this.filter.end_date.substring(0, 7);
 								this.filterChartByMonth();
 							} else {
@@ -1829,7 +1832,7 @@ export default {
 			filter.week = '';
 			filter.year = '';
 			const currentMonth = moment(new Date()).format("YYYY-MM");
-			filter.month = (filter.month == '') ? currentMonth : filter.month; 
+			filter.month = (filter.month == '') ? currentMonth : filter.month;
 			//filter.customized = this.filter.customized);	
 			$.get("/admin/reports/trend-report-by-month/list", filter, function (data) {
 				let datasets = [];
@@ -2817,7 +2820,7 @@ export default {
 			});
 
 		},
-		filterChartByYears: function () { 
+		filterChartByYears: function () {
 			var filter = this.filter;
 			filter.day = '';
 			filter.week = '';
@@ -2998,13 +3001,14 @@ export default {
 
 			});
 
-			$.get("/admin/reports/donut-report-by-daily/list", filter, function (data) { 
+			$.get("/admin/reports/donut-report-by-daily/list", filter, function (data) {
 				let labels = [];
 				let data_value = [];
 				let incident_report = 0;
 				let color = [];
 				if (data.data.length > 0) {
-					$.each(data.data, function (key, value) { console.log(',,,,,,,,'+value.tenant_survey);
+					$.each(data.data, function (key, value) {
+						console.log(',,,,,,,,' + value.tenant_survey);
 						labels.push(value.questionnaire);
 						incident_report += parseInt(value.tenant_survey);
 						data_value.push(value.percentage_share);
@@ -3080,7 +3084,7 @@ export default {
 				});
 			});
 
-			$.get("/admin/reports/donut-report-by-daily-answer/list", filter, function (data) { 
+			$.get("/admin/reports/donut-report-by-daily-answer/list", filter, function (data) {
 				let labels_answer = [];
 				let data_value_answer = [];
 				let incident_report_answer = 0;
@@ -3224,18 +3228,20 @@ export default {
 					this.filterChartByDay();
 				} else if (difference_in_days >= 1 && difference_in_days <= 7) {
 					//console.log('>>>>>>>>else if' + difference_in_days);
-					//console.log('difference_in_days >= 1 && difference_in_days <= 7');
+					//alert('difference_in_days >= 1 && difference_in_days <= 7');
 					//console.log(this.filter);
 					var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 					var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 					if (y_start == y_end) {
-						console.log(y_start + '== ' + y_end + 'y_start == y_end<<<<');
-						if (week_of_month_start == week_of_month_end) {
+						//alert(week_of_month_start +'=xxxx='+ week_of_month_end);
+						if (week_of_month_start == week_of_month_end) { //alert(week_of_month_start +'---'+ week_of_month_end); alert('week');
 							this.customize = 'week';
 							this.filter.week = this.filter.end_date;
 							this.filterChartByWeek();
-						} else {
-							this.filterChartByWeek();
+						} else { alert('month');
+							this.filter.customized = 'month';
+							//this.filter.month = this.filter.end_date.substring(0, 7);
+							this.filterChartByMonth();
 						}
 					} else {
 						// wishlist
@@ -3245,11 +3251,12 @@ export default {
 					var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 					var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 					if (y_start == y_end) {
+						alert(week_of_month_start + '---	' + week_of_month_end);
 						if (week_of_month_start == week_of_month_end) {
 							this.filterChartByDaily();
 						} else {
 							if (m_start == m_end) {
-								this.filter.customized = 'month'; 
+								this.filter.customized = 'month';
 								this.filter.month = this.filter.end_date.substring(0, 7);
 								this.filterChartByMonth();
 							} else {
