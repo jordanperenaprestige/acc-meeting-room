@@ -480,7 +480,7 @@ export default {
 			const currentDay = moment(new Date()).format("YYYY-MM-DD");
 			filter.start_date = (filter.start_date == '') ? firstDayYear : filter.start_date;
 			filter.end_date = (filter.end_date == '') ? currentDay : filter.end_date;
-			alert(filter.start_date + 'jordan' + filter.end_date);
+			//alert(filter.start_date + 'jordan' + filter.end_date);
 			$.get("/admin/reports/trend-report-by-daily/list", filter, function (data) {
 				let datasets = [];
 				var yValues = [];
