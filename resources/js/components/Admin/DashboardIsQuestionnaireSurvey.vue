@@ -3213,7 +3213,7 @@ export default {
 			}
 		},
 		customizedSelected: function (e) {
-			if (this.filter.by != 0) { 
+			if (this.filter.by != 0) {
 				var d_start = new Date(this.filter.start_date);
 				var d_end = new Date(this.filter.end_date);
 				var m_start = d_start.getMonth();
@@ -3224,14 +3224,12 @@ export default {
 				var day_start = d_start.getDay();
 				var date_end = d_end.getDate();
 				var day_end = d_end.getDay();
-
+				var lastDay = moment(new Date(d_end.getFullYear(), d_end.getMonth() + 1, 0)).format("DD");
 				var difference_in_time = d_end.getTime() - d_start.getTime();
 				var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
-
+				//alert(difference_in_days +'-'+ lastDay);
 				if (y_start == y_end) {
-
 					if (difference_in_days == 0) {
-
 						this.filter.day = d_end; //console.log('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
 						this.filterChartByDay();
 					} else if (difference_in_days >= 1 && difference_in_days <= 7) {
@@ -3255,20 +3253,23 @@ export default {
 							// wishlist
 						}
 					}
-					else if (difference_in_days >= 8 && difference_in_days <= 31) {
+					else if (difference_in_days >= 8 && difference_in_days <= lastDay) {
 						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 						if (y_start == y_end) {
-							//alert(week_of_month_start + '---	' + week_of_month_end);
-							if (week_of_month_start == week_of_month_end) {
-								this.filterChartByDaily();
+							
+							if (week_of_month_start == week_of_month_end) { 
+								if (m_start == m_end) {
+									this.filterChartByDaily();
+								} else {
+									this.filterChartByYear();
+								}
 							} else {
 								if (m_start == m_end) {
 									this.filter.customized = 'month';
 									this.filter.month = this.filter.end_date.substring(0, 7);
 									this.filterChartByMonth();
 								} else {
-
 									this.filterChartByYear();
 								}
 							}
@@ -3277,7 +3278,6 @@ export default {
 
 								this.filterChartByMonth();
 							} else {
-
 								this.filterChartByYear();
 							}
 						}
