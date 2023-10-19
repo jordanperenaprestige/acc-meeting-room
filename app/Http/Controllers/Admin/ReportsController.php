@@ -1561,6 +1561,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
                 ->whereBetween('created_at', [$start_date, $end_date])
                 ->groupBy('site_building_id')
+                ->groupBy('jordan')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
                 ->get();
             $total_per_month = [];
