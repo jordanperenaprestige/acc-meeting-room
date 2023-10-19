@@ -1553,15 +1553,13 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     $end_date = $request->end_date;
                 }
             }
-            
-
+ 
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })
                 ->selectRaw('questionnaire_surveys.*, site_building_id, count(*) as total_survey')
                 ->whereBetween('created_at', [$start_date, $end_date])
                 ->groupBy('site_building_id')
-                ->groupBy('jordan')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('week(created_at)'))
                 ->get();
             $total_per_month = [];
@@ -1630,8 +1628,8 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
                 if ($request->customized == 'month') {
-                    $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
-                    $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+                    $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 } else {
                     $start_date = $request->start_date;
                     $end_date = $request->end_date;

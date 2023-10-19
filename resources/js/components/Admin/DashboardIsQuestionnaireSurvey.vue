@@ -3234,13 +3234,13 @@ export default {
 					var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 					if (y_start == y_end) {
 						//alert(week_of_month_start +'=xxxx='+ week_of_month_end);
-						if (week_of_month_start == week_of_month_end) { //alert(week_of_month_start +'---'+ week_of_month_end); alert('week');
+						if (week_of_month_start == week_of_month_end) { alert(week_of_month_start +'-weekk--'+ week_of_month_end); alert('week');
 							this.customize = 'week';
 							this.filter.week = this.filter.end_date;
 							this.filterChartByWeek();
 						} else { alert('month');
 							this.filter.customized = 'month';
-							//this.filter.month = this.filter.end_date.substring(0, 7);
+							this.filter.month = this.filter.end_date.substring(0, 7);
 							this.filterChartByMonth();
 						}
 					} else {
