@@ -547,7 +547,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/reports/kiosk-usage', 'Admin\ReportsController@kioskUsage')->name('admin.reports.kiosk-usage');
     Route::get('/admin/reports/kiosk-usage/list', 'Admin\ReportsController@getKioskUsage')->name('admin.reports.kiosk-usage-list');
     Route::get('/admin/reports/kiosk-usage/download-csv', 'Admin\ReportsController@downloadCsvKioskUsage')->name('admin.reports.kiosk-usage.download-csv');
-
+    Route::get('/admin/reports/getFirstLastsurvey', 'Admin\ReportsController@getFirstLastSurvey')->name('admin.reports.first-last-survey');
+    Route::get('/admin/dashboard/getFirstLastsurvey', 'Admin\DashboardController@getFirstLastSurvey')->name('admin.dashboard.first-last-survey');
     /*
     |--------------------------------------------------------------------------
     | Client User Routes

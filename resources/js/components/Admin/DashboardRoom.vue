@@ -244,15 +244,19 @@ export default {
 			},
 			filters_by: ['Lifetime', 'Day', 'Week', 'Month', 'Year', 'Custom date'],
 			by_day: false,
+			by_week: false,
 			by_month: false,
 			by_year: false,
 			by_lifetime: false,
+			by_start:false,
+			by_end:false,
 			survey_number_day: 0,
 			reports_total: 0,
 			incidents_total: 0,
 			average_time: 0,
 			total_sms: 0,
 			customized: '',
+			first_last_survey: '',
 		}
 	},
 	created() {
@@ -262,6 +266,89 @@ export default {
 	},
 
 	methods: {
+		getLifetime: function(){
+			axios.get('/admin/reports/getFirstLastsurvey')
+			.then(response => {
+				this.first_last_survey = response.data.data;                   
+				this.by_day = false; 
+				this.by_week = false;
+				this.by_month = false;
+				this.by_year = false;
+				this.by_start = false;
+				this.by_end = false;
+				this.filter.start_date = ''; 
+				this.filter.end_date = '';
+
+				this.filter.start_date = this.first_last_survey[0]; 
+				this.filter.end_date = this.first_last_survey[1]; //alert(this.filter.start_date +'----'+this.filter.end	_date);
+				var d_start = new Date(this.filter.start_date);
+				var d_end = new Date(this.filter.end_date);
+				var m_start = d_start.getMonth();
+				var m_end = d_end.getMonth();
+				var y_start = d_start.getFullYear();
+				var y_end = d_end.getFullYear();
+				var date_start = d_start.getDate();
+				var day_start = d_start.getDay();
+				var date_end = d_end.getDate();
+				var day_end = d_end.getDay();
+
+				var difference_in_time = d_end.getTime() - d_start.getTime();
+				var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
+
+				if (y_start == y_end) { //alert('1');
+					if (difference_in_days == 0) {
+						this.filter.day = d_end;// alert('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
+						this.filterChartByDay();
+					} else if (difference_in_days >= 1 && difference_in_days <= 7) {
+						//console.log('>>>>>>>>else if' + difference_in_days);
+						//alert('difference_in_days >= 1 && difference_in_days <= 7');
+						//console.log(this.filter);
+						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+						if (y_start == y_end) {
+							//alert(week_of_month_start +'=xxxx='+ week_of_month_end);
+							if (week_of_month_start == week_of_month_end) { //alert(week_of_month_start +'-weekk--'+ week_of_month_end); alert('week');
+								this.customize = 'week';
+								this.filter.week = this.filter.end_date;
+								this.filterChartByWeek();
+							} else { //alert('month');
+								this.filter.customized = 'month';
+								this.filter.month = this.filter.end_date.substring(0, 7);
+								this.filterChartByMonth();
+							}
+						} else {
+							// wishlist
+						}
+					}
+					else if (difference_in_days >= 8 && difference_in_days <= 31) {
+						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+						if (y_start == y_end) {
+							if (week_of_month_start == week_of_month_end) {
+								this.filterChartByDaily();
+							} else {
+								this.filterChartByYear();
+							}
+						} else {
+							if (m_start == m_end) {
+								this.filter.customized = 'month';
+								this.filter.month = this.filter.end_date.substring(0, 7);
+								this.filterChartByMonth();
+							} else {
+
+								this.filterChartByYear();
+							}
+						}
+					} else {
+						this.filterChartByYear();
+					}
+				} else { //alert('2');
+					this.filterChartByYears();
+				}
+				this.filter.start_date = ''; 
+				this.filter.end_date = '';
+			});
+		},
 		getRoom: function () {
 			axios.get('/admin/dashboad/room/get-survey')
 				.then(response => {
@@ -342,17 +429,18 @@ export default {
 		filterBy: function () {
 
 			if (this.filter.by == 0) {//lifetime
-				this.by_day = false;
-				this.by_week = false;
-				this.by_month = false;
-				this.by_year = false;
-				this.by_start = false;
-				this.by_end = false;
-				const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
-				const currentDay = moment(new Date()).format("YYYY-MM-DD");
-				this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
-				this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
-				this.filterChartByDaily();
+				// this.by_day = false;
+				// this.by_week = false;
+				// this.by_month = false;
+				// this.by_year = false;
+				// this.by_start = false;
+				// this.by_end = false;
+				// const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
+				// const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				// this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
+				// this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
+				// this.filterChartByDaily();
+				this.getLifetime();
 			} else if (this.filter.by == 1) {//day
 
 				this.by_day = true;

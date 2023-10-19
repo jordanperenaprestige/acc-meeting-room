@@ -206,7 +206,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                if ($request->customized == 'month') { 
+                if ($request->customized == 'month') {
                     $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
                     $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 } else {
@@ -1610,11 +1610,11 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $sunday = substr($week[1], 8);
 
                 $per_range[] = [
-                    str_replace('-', '/', substr($week[0], 5)) . '-' . str_replace('-', '/', substr($week[1], 5)), //str_replace('-', '/', substr($weeks[$index + 1][0], 5)) . ' - ' . str_replace('-', '/', substr($weeks[$index + 1][1], 5)),
+                    str_replace('-', '/', substr($week[0], 5)) . '-' . str_replace('-', '/', substr($week[1], 5)),
                 ];
             }
             $total_per_month[] = $per_month;
-            $total_per_month[] = $per_range;
+            $total_per_month[] = $per_range; // echo '<pre>'; print_r($total_per_month); echo '</pre>';
             return $this->response($total_per_month, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -3163,5 +3163,33 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         "></div>' . $building_color[0] . ' (Reports(s)' . array_sum($a) . ')</di>';
         }
         return implode($sort_buildings);
+    }
+
+    public function getFirstLastSurvey()
+    {
+
+        try {
+            $total_count = QuestionnaireSurvey::get()->count();
+
+            $first = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
+                ->orderBy('id', 'asc')
+                ->limit(1)
+                ->get();
+            $last = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
+                ->orderBy('id', 'desc')
+                ->limit(1)
+                ->get();
+            $first_last = array();
+            $first_last[] =  date('Y-m-d', strtotime($first[0]->created_at));
+            $first_last[] = date('Y-m-d', strtotime($last[0]->created_at));
+
+            return $this->response($first_last, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
     }
 }

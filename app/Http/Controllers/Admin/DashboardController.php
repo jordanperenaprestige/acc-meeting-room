@@ -2176,4 +2176,30 @@ class DashboardController extends AppBaseController
         }
         return implode($sort_buildings);
     }
+    public function getFirstLastSurvey()
+    {
+        try {
+            $total_count = QuestionnaireSurvey::get()->count();
+
+            $first = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
+                ->orderBy('id', 'asc')
+                ->limit(1)
+                ->get();
+            $last = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
+                ->orderBy('id', 'desc')
+                ->limit(1)
+                ->get();
+            $first_last = array();
+            $first_last[] =  date('Y-m-d', strtotime($first[0]->created_at));
+            $first_last[] = date('Y-m-d', strtotime($last[0]->created_at));
+
+            return $this->response($first_last, 'Successfully Retreived!', 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+                'status' => false,
+                'status_code' => 422,
+            ], 422);
+        }
+    }
 }
