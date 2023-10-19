@@ -102,7 +102,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
         } else if ($request->week) {
             $date = Carbon::parse($request->week);
-            
+
             if ($request->by == 2) {
                 $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                 $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
@@ -122,7 +122,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             } else {
                 if ($request->customized == 'month') { // echo '>>>>>>>>>>'.$request->end_date;
                     $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
-                    $end_date = date('Y-m-t', strtotime($request->end_date)) . ' 23:59:59';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 } else {
                     $start_date = $request->start_date;
                     $end_date = $request->end_date;
@@ -202,14 +202,17 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 }
             }
         } else if ($request->month) {
-
-
             if ($request->by == 3) {
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customized == 'month') { 
+                    $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
         } else if ($request->year) {
             if ($request->by == 4) {
@@ -1258,7 +1261,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
     {
         try {
             $site_id = '';
-               $filters = json_decode($request->filters);
+            $filters = json_decode($request->filters);
             if ($filters)
                 $site_id = $filters->site_id;
             if ($request->site_id)
@@ -1434,7 +1437,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 'status_code' => 422,
             ], 422);
         }
-    } 
+    }
     public function getAverageTimeByMonth(Request $request)
     {
         try {
@@ -1511,8 +1514,15 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customized == 'month') {
+                    //$start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                    //$end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+                    $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
 
             $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
@@ -1542,8 +1552,8 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             if ($request->by == 3) {
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
-            } else { 
-                 if ($request->customized == 'month') {
+            } else {
+                if ($request->customized == 'month') {
                     //$start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                     //$end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
                     $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
@@ -1553,7 +1563,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     $end_date = $request->end_date;
                 }
             }
- 
+
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
             })

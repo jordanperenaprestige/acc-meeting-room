@@ -1143,6 +1143,7 @@ class DashboardController extends AppBaseController
     {
         try {
             $id = session()->get('room_id');
+           
             $site_id = '';
             $filters = json_decode($request->filters);
             if ($filters)
@@ -1156,8 +1157,15 @@ class DashboardController extends AppBaseController
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customized == 'month') {
+                    //$start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                    //$end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+                    $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
 
             // $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
@@ -1218,8 +1226,15 @@ class DashboardController extends AppBaseController
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customized == 'month') {
+                    //$start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                    //$end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+                    $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
 
             $logs = SendSMS::when($site_id, function ($query) use ($site_id) {
@@ -1249,12 +1264,22 @@ class DashboardController extends AppBaseController
                 $site_id = $filters->site_id;
             if ($request->site_id)
                 $site_id = $request->site_id;
+
+            $current_year = date("Y");
+
             if ($request->by == 3) {
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customized == 'month') {
+                    //$start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                    //$end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+                    $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
@@ -1329,12 +1354,22 @@ class DashboardController extends AppBaseController
                 $site_id = $filters->site_id;
             if ($request->site_id)
                 $site_id = $request->site_id;
+
+            $current_year = date("Y");
+
             if ($request->by == 3) {
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                $start_date = $request->start_date;
-                $end_date = $request->end_date;
+                if ($request->customized == 'month') {
+                    //$start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+                    //$end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+                    $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
+                } else {
+                    $start_date = $request->start_date;
+                    $end_date = $request->end_date;
+                }
             }
             $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
                 return $query->where('site_id', $site_id);
@@ -1887,9 +1922,9 @@ class DashboardController extends AppBaseController
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                if ($request->customized == 'month') { // echo '>>>>>>>>>>'.$request->end_date;
+                if ($request->customized == 'month') { 
                     $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
-                    $end_date = date('Y-m-t', strtotime($request->end_date)) . ' 23:59:59';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 } else {
                     $start_date = $request->start_date;
                     $end_date = $request->end_date;
@@ -1972,15 +2007,13 @@ class DashboardController extends AppBaseController
                 }
             }
         } else if ($request->month) {
-           
-            
             if ($request->by == 3) {
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                if ($request->customized == 'month') { // echo '>>>>>>>>>>'.$request->end_date;
+                if ($request->customized == 'month') { 
                     $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
-                    $end_date = date('Y-m-t', strtotime($request->end_date)) . ' 23:59:59';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 } else {
                     $start_date = $request->start_date;
                     $end_date = $request->end_date;
