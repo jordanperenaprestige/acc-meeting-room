@@ -2179,7 +2179,7 @@ export default {
 		},
 
 		filterChartByYear: function () {
-			alert('year');
+			//alert('year');
 			var filter = this.filter;
 			filter.day = '';
 			filter.week = '';
