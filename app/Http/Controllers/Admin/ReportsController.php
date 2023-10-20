@@ -3167,7 +3167,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
 
     public function getFirstLastSurvey()
     {
-
         try {
             $total_count = QuestionnaireSurvey::get()->count();
 

@@ -267,9 +267,9 @@ export default {
 
 	methods: {
 		getLifetime: function(){
-			axios.get('/admin/reports/getFirstLastsurvey')
-			.then(response => {
-				this.first_last_survey = response.data.data;                   
+			axios.get('/admin/dashboard/getFirstLastsurvey')
+			.then(response => { 
+				this.first_last_survey = response.data.data;               
 				this.by_day = false; 
 				this.by_week = false;
 				this.by_month = false;
@@ -280,7 +280,7 @@ export default {
 				this.filter.end_date = '';
 
 				this.filter.start_date = this.first_last_survey[0]; 
-				this.filter.end_date = this.first_last_survey[1]; //alert(this.filter.start_date +'----'+this.filter.end	_date);
+				this.filter.end_date = this.first_last_survey[1]; 
 				var d_start = new Date(this.filter.start_date);
 				var d_end = new Date(this.filter.end_date);
 				var m_start = d_start.getMonth();
@@ -295,23 +295,19 @@ export default {
 				var difference_in_time = d_end.getTime() - d_start.getTime();
 				var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
 
-				if (y_start == y_end) { //alert('1');
+				if (y_start == y_end) { 
 					if (difference_in_days == 0) {
-						this.filter.day = d_end;// alert('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
+						this.filter.day = d_end;
 						this.filterChartByDay();
 					} else if (difference_in_days >= 1 && difference_in_days <= 7) {
-						//console.log('>>>>>>>>else if' + difference_in_days);
-						//alert('difference_in_days >= 1 && difference_in_days <= 7');
-						//console.log(this.filter);
 						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 						if (y_start == y_end) {
-							//alert(week_of_month_start +'=xxxx='+ week_of_month_end);
-							if (week_of_month_start == week_of_month_end) { //alert(week_of_month_start +'-weekk--'+ week_of_month_end); alert('week');
+							if (week_of_month_start == week_of_month_end) { 
 								this.customize = 'week';
 								this.filter.week = this.filter.end_date;
 								this.filterChartByWeek();
-							} else { //alert('month');
+							} else { 
 								this.filter.customized = 'month';
 								this.filter.month = this.filter.end_date.substring(0, 7);
 								this.filterChartByMonth();
@@ -342,11 +338,9 @@ export default {
 					} else {
 						this.filterChartByYear();
 					}
-				} else { //alert('2');
+				} else { 
 					this.filterChartByYears();
 				}
-				this.filter.start_date = ''; 
-				this.filter.end_date = '';
 			});
 		},
 		getRoom: function () {
@@ -429,18 +423,7 @@ export default {
 		filterBy: function () {
 
 			if (this.filter.by == 0) {//lifetime
-				// this.by_day = false;
-				// this.by_week = false;
-				// this.by_month = false;
-				// this.by_year = false;
-				// this.by_start = false;
-				// this.by_end = false;
-				// const firstDayYear = moment().startOf('year').format('YYYY-MM-DD');
-				// const currentDay = moment(new Date()).format("YYYY-MM-DD");
-				// this.filter.start_date = (this.filter.start_date == '') ? firstDayYear : this.filter.start_date;
-				// this.filter.end_date = (this.filter.end_date == '') ? currentDay : this.filter.end_date;
-				// this.filterChartByDaily();
-				this.getLifetime();
+				this.getLifetime(); 
 			} else if (this.filter.by == 1) {//day
 
 				this.by_day = true;
@@ -489,11 +472,6 @@ export default {
 				this.by_year = true;
 				this.by_start = false;
 				this.by_end = false;
-
-
-
-
-
 				const currentYear = moment().year().toString();
 				this.filter.year = (this.filter.year == '') ? currentYear : this.filter.year;
 				this.filterChartByYear();
@@ -524,18 +502,14 @@ export default {
 						this.filter.day = d_end; console.log('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
 						this.filterChartByDay();
 					} else if (difference_in_days >= 1 && difference_in_days <= 7) {
-						//console.log('>>>>>>>>else if' + difference_in_days);
-						//alert('difference_in_days >= 1 && difference_in_days <= 7');
-						//console.log(this.filter);
 						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 						if (y_start == y_end) {
-							//alert(week_of_month_start +'=xxxx='+ week_of_month_end);
-							if (week_of_month_start == week_of_month_end) { //alert(week_of_month_start +'-weekk--'+ week_of_month_end); alert('week');
+							if (week_of_month_start == week_of_month_end) { 
 								this.customize = 'week';
 								this.filter.week = this.filter.end_date;
 								this.filterChartByWeek();
-							} else { //alert('month');
+							} else { 
 								this.filter.customized = 'month';
 								this.filter.month = this.filter.end_date.substring(0, 7);
 								this.filterChartByMonth();
@@ -852,14 +826,14 @@ export default {
 				var cleanliness = '#90EE90';
 				var supplies = '#808000';
 				var functionality = '#FAF884';
-				//let color = [];
+			
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
 						var jordan = value.questionnaire_answer;
 						labels_answer.push(jordan);
 						incident_report_answer += parseInt(value.tenant_survey);
 						data_value_answer.push(value.percentage_share);
-						//randomBackgroundColor.push(value.questionnaire_color);
+						
 						if (value.questionnaire == 'CLEANLINESS') {
 							randomBackgroundColor.push(cleanliness);
 						} else if (value.questionnaire == 'SUPPLIES') {
@@ -3104,7 +3078,7 @@ export default {
 		},
 
 		customizedSelected: function (e) {
-			//console.log('sa customizedSelected'); console.log(this.filter);
+			
 			if (this.filter.by != 0) {
 				var d_start = new Date(this.filter.start_date);
 				var d_end = new Date(this.filter.end_date);
@@ -3119,24 +3093,20 @@ export default {
 				var lastDay = moment(new Date(d_end.getFullYear(), d_end.getMonth() + 1, 0)).format("DD");
 				var difference_in_time = d_end.getTime() - d_start.getTime();
 				var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
-				//alert(difference_in_days +'-'+ lastDay);
+				
 				if (y_start == y_end) {
 					if (difference_in_days == 0) {
-						this.filter.day = d_end; //console.log('>>>>>>>>if' + difference_in_days); console.log(this.filter + '<<<<<<');
+						this.filter.day = d_end;
 						this.filterChartByDay();
 					} else if (difference_in_days >= 1 && difference_in_days <= 7) {
-						//console.log('>>>>>>>>else if' + difference_in_days);
-						//alert('difference_in_days >= 1 && difference_in_days <= 7');
-						//console.log(this.filter);
 						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 						if (y_start == y_end) {
-							//alert(week_of_month_start +'=xxxx='+ week_of_month_end);
-							if (week_of_month_start == week_of_month_end) { //alert(week_of_month_start +'-weekk--'+ week_of_month_end); alert('week');
+							if (week_of_month_start == week_of_month_end) { 
 								this.customize = 'week';
 								this.filter.week = this.filter.end_date;
 								this.filterChartByWeek();
-							} else { //alert('month');
+							} else { 
 								this.filter.customized = 'month';
 								this.filter.month = this.filter.end_date.substring(0, 7);
 								this.filterChartByMonth();
