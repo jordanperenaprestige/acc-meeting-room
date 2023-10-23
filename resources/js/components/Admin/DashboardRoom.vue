@@ -55,6 +55,10 @@
 											</select>
 										</div>
 										<div class="col-sm-2">
+											<div v-show="by_lifetime">
+												<div id ="by_lifetime"></div>
+												
+											</div>
 											<div v-show="by_day">
 												<!-- v-show="show_concerns" -->
 												<label for="day" class="col-form-label">Day</label>
@@ -294,11 +298,12 @@ export default {
 
 				var difference_in_time = d_end.getTime() - d_start.getTime();
 				var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
-
+				
 				if (y_start == y_end) { 
 					if (difference_in_days == 0) {
 						this.filter.day = d_end;
 						this.filterChartByDay();
+						$('#by_lifetime').text(this.filter.end_date);
 					} else if (difference_in_days >= 1 && difference_in_days <= 7) {
 						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
@@ -423,6 +428,13 @@ export default {
 		filterBy: function () {
 
 			if (this.filter.by == 0) {//lifetime
+				this.by_day = false;
+				this.by_week = false;
+				this.by_month = false;
+				this.by_year = false;
+				this.by_start = false;
+				this.by_end = false;
+				this.by_lifetime = true;
 				this.getLifetime(); 
 			} else if (this.filter.by == 1) {//day
 

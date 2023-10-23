@@ -2179,13 +2179,16 @@ class DashboardController extends AppBaseController
     public function getFirstLastSurvey()
     {
         try {
+            $id = session()->get('room_id');
             $total_count = QuestionnaireSurvey::get()->count();
 
             $first = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
+            ->where('site_building_room_id', $id)
                 ->orderBy('id', 'asc')
                 ->limit(1)
                 ->get();
             $last = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
+            ->where('site_building_room_id', $id)
                 ->orderBy('id', 'desc')
                 ->limit(1)
                 ->get();
