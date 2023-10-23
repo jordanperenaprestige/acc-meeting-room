@@ -92,8 +92,182 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         return view('admin.report_kiosk_usage');
     }
 
+    // public function getPercentage($request)
+    // {
+    //     $site_id = '';
+    //     $filters = json_decode($request->filters);
+
+    //     if ($request->day) {
+    //         $start_date  = date('Y-m-d', strtotime($request->day)) . ' 00:00:00';
+    //         $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
+    //     } else if ($request->week) {
+    //         $date = Carbon::parse($request->week);
+
+    //         if ($request->by == 2) {
+    //             $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+    //             $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
+    //         } else {
+    //             if ($request->customize == 'week') {
+    //                 $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+    //                 $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
+    //             } else {
+    //                 $start_date = $request->start_date;
+    //                 $end_date = $request->end_date;
+    //             }
+    //         }
+    //     } else if ($request->month) {
+    //         if ($request->by == 3) {
+    //             $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+    //             $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+    //         } else {
+    //             if ($request->customized == 'month') { // echo '>>>>>>>>>>'.$request->end_date;
+    //                 $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+    //                 $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
+    //             } else {
+    //                 $start_date = $request->start_date;
+    //                 $end_date = $request->end_date;
+    //             }
+    //         }
+    //     } else if ($request->year) {
+    //         if ($request->by == 4) {
+    //             $start_date  = $request->year . '-01-01 00:00:00';
+    //             $end_date = $request->year . '-12-31 23:59:59';
+    //         } else {
+    //             $start_date = $request->start_date;
+    //             $end_date = $request->end_date;
+    //         }
+    //     } else if ($request->start_date && $request->start_date) {
+    //         $start_date = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+    //         $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
+    //     } else {
+    //         $start_date = date("Y-m-d", strtotime("-1 months"));
+    //         $end_date = date("Y-m-d");
+    //     }
+
+
+
+
+    //     if ($filters)
+    //         $site_id = $filters->site_id;
+    //     if ($request->site_id)
+    //         $site_id = $request->site_id;
+    //     $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+    //         return $query->where('site_id', $site_id);
+    //     })
+    //         ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
+    //         ->whereBetween('created_at', [$start_date, $end_date])
+    //         ->where('Remarks', 'Done')
+    //         ->groupBy('questionnaire_id')
+    //         ->orderBy('questionnaire_id', 'ASC')
+    //         ->get();
+
+    //     $total = $logs->sum('tenant_survey');
+
+    //     $percentage = [];
+    //     foreach ($logs as $index => $log) {
+    //         $percentage[] = [
+
+    //             'questionnaire' => $log->questionnaire,
+    //             'questionnaire_color' => $log->questionnaire_color,
+    //             'questionnaire_answer' => $log->questionnaire_answer,
+    //             'tenant_survey' => $log->tenant_survey,
+
+    //             'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
+    //         ];
+    //     }
+
+    //     return $percentage;
+    // }
+
+    // public function getPercentageAnswer($request)
+    // {
+    //     $site_id = '';
+    //     $filters = json_decode($request->filters);
+
+    //     if ($request->day) {
+    //         $start_date  = date('Y-m-d', strtotime($request->day)) . ' 00:00:00';
+    //         $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
+    //     } else if ($request->week) {
+    //         $date = Carbon::parse($request->week);
+    //         if ($request->by == 2) {
+    //             $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+    //             $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
+    //         } else {
+    //             if ($request->customize == 'week') {
+    //                 $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+    //                 $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
+    //             } else {
+    //                 $start_date = $request->start_date;
+    //                 $end_date = $request->end_date;
+    //             }
+    //         }
+    //     } else if ($request->month) {
+    //         if ($request->by == 3) {
+    //             $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
+    //             $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
+    //         } else {
+    //             if ($request->customized == 'month') {
+    //                 $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+    //                 $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
+    //             } else {
+    //                 $start_date = $request->start_date;
+    //                 $end_date = $request->end_date;
+    //             }
+    //         }
+    //     } else if ($request->year) {
+    //         if ($request->by == 4) {
+    //             $start_date  = $request->year . '-01-01 00:00:00';
+    //             $end_date = $request->year . '-12-31 23:59:59';
+    //         } else {
+    //             $start_date = $request->start_date;
+    //             $end_date = $request->end_date;
+    //         }
+    //     } else if ($request->start_date && $request->start_date) {
+    //         $start_date = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+    //         $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
+    //     } else {
+    //         $start_date = date("Y-m-d", strtotime("-1 months"));
+    //         $end_date = date("Y-m-d");
+    //     }
+
+
+
+    //     if ($filters)
+    //         $site_id = $filters->site_id;
+    //     if ($request->site_id)
+    //         $site_id = $request->site_id;
+
+    //     $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
+    //         return $query->where('site_id', $site_id);
+    //     })
+    //         ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
+    //         ->whereBetween('created_at', [$start_date, $end_date])
+    //         ->where('Remarks', 'Done')
+    //         ->groupBy('questionnaire_id')
+    //         ->groupBy('questionnaire_answer_id')
+    //         ->orderBy('questionnaire_id', 'ASC')
+    //         ->get();
+
+    //     $total = $logs->sum('tenant_survey');
+
+    //     $percentage = [];
+    //     foreach ($logs as $index => $log) {
+    //         $percentage[] = [
+
+    //             'questionnaire' => $log->questionnaire,
+    //             'questionnaire_color' => $log->questionnaire_color,
+    //             'questionnaire_answer' => $log->questionnaire_answer,
+    //             'tenant_survey' => $log->tenant_survey,
+
+    //             'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
+    //         ];
+    //     }
+
+    //     return $percentage;
+    // }
     public function getPercentage($request)
     {
+        $id = session()->get('room_id');
         $site_id = '';
         $filters = json_decode($request->filters);
 
@@ -102,7 +276,6 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
             $end_date = date('Y-m-d', strtotime($request->day)) . ' 23:59:59';
         } else if ($request->week) {
             $date = Carbon::parse($request->week);
-
             if ($request->by == 2) {
                 $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                 $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
@@ -111,8 +284,10 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                     $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
                 } else {
-                    $start_date = $request->start_date;
-                    $end_date = $request->end_date;
+                    $start_date = $request->start_date . ' 00:00:00';
+                    $end_date = $request->end_date . ' 23:59:59';
+                    //$start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+                    //$end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 }
             }
         } else if ($request->month) {
@@ -120,7 +295,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                if ($request->customized == 'month') { // echo '>>>>>>>>>>'.$request->end_date;
+                if ($request->customized == 'month') {
                     $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
                     $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 } else {
@@ -145,19 +320,21 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         }
 
 
-
-
         if ($filters)
             $site_id = $filters->site_id;
         if ($request->site_id)
             $site_id = $request->site_id;
+
+        ///echo $start_date .'---'. $end_date;
+
         $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
             return $query->where('site_id', $site_id);
         })
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->whereBetween('created_at', [$start_date, $end_date])
-            ->where('Remarks', 'Done')
+            ->where('remarks', 'Done')
             ->groupBy('questionnaire_id')
+            //->groupBy('jordan')
             ->orderBy('questionnaire_id', 'ASC')
             ->get();
 
@@ -181,6 +358,7 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
 
     public function getPercentageAnswer($request)
     {
+        $id = session()->get('room_id');
         $site_id = '';
         $filters = json_decode($request->filters);
 
@@ -197,8 +375,8 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
                     $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                     $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
                 } else {
-                    $start_date = $request->start_date;
-                    $end_date = $request->end_date;
+                    $start_date = $request->start_date . ' 00:00:00';
+                    $end_date = $request->end_date . ' 23:59:59';
                 }
             }
         } else if ($request->month) {
@@ -237,12 +415,14 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         if ($request->site_id)
             $site_id = $request->site_id;
 
+
+
         $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
             return $query->where('site_id', $site_id);
         })
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->whereBetween('created_at', [$start_date, $end_date])
-            ->where('Remarks', 'Done')
+            ->where('remarks', 'Done')
             ->groupBy('questionnaire_id')
             ->groupBy('questionnaire_answer_id')
             ->orderBy('questionnaire_id', 'ASC')
@@ -3168,19 +3348,31 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
     public function getFirstLastSurvey()
     {
         try {
-            $total_count = QuestionnaireSurvey::get()->count();
+            $id = session()->get('room_id');
+            $total_count = QuestionnaireSurvey::select('created_at')
+                ->where('site_building_room_id', $id)
+                ->get()->count();
 
             $first = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
+                ->where('site_building_room_id', $id)
                 ->orderBy('id', 'asc')
                 ->limit(1)
                 ->get();
             $last = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
+                ->where('site_building_room_id', $id)
                 ->orderBy('id', 'desc')
                 ->limit(1)
                 ->get();
+
             $first_last = array();
-            $first_last[] =  date('Y-m-d', strtotime($first[0]->created_at));
-            $first_last[] = date('Y-m-d', strtotime($last[0]->created_at));
+            if ($total_count == 0) {
+                $first_last[] =  date('Y-m-d');
+                $first_last[] = date('Y-m-d');
+            } else {
+                $first_last[] =  date('Y-m-d', strtotime($first[0]->created_at));
+                $first_last[] = date('Y-m-d', strtotime($last[0]->created_at));
+            }
+
 
             return $this->response($first_last, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {

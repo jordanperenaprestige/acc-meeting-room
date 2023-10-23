@@ -1912,8 +1912,8 @@ class DashboardController extends AppBaseController
                     $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                     $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
                 } else {
-                    $start_date = $request->start_date. ' 00:00:00';
-                    $end_date = $request->end_date. ' 23:59:59';
+                    $start_date = $request->start_date . ' 00:00:00';
+                    $end_date = $request->end_date . ' 23:59:59';
                     //$start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
                     //$end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 }
@@ -1953,7 +1953,7 @@ class DashboardController extends AppBaseController
         if ($request->site_id)
             $site_id = $request->site_id;
 
-///echo $start_date .'---'. $end_date;
+        ///echo $start_date .'---'. $end_date;
 
         $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
             return $query->where('site_id', $site_id);
@@ -2004,8 +2004,8 @@ class DashboardController extends AppBaseController
                     $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                     $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
                 } else {
-                    $start_date = $request->start_date. ' 00:00:00';
-                    $end_date = $request->end_date. ' 23:59:59';
+                    $start_date = $request->start_date . ' 00:00:00';
+                    $end_date = $request->end_date . ' 23:59:59';
                 }
             }
         } else if ($request->month) {
@@ -2182,7 +2182,9 @@ class DashboardController extends AppBaseController
     {
         try {
             $id = session()->get('room_id');
-            $total_count = QuestionnaireSurvey::get()->count();
+            $total_count = QuestionnaireSurvey::select('created_at')
+                ->where('site_building_room_id', $id)
+                ->get()->count();
 
             $first = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
                 ->where('site_building_room_id', $id)
@@ -2194,9 +2196,16 @@ class DashboardController extends AppBaseController
                 ->orderBy('id', 'desc')
                 ->limit(1)
                 ->get();
+
             $first_last = array();
-            $first_last[] =  date('Y-m-d', strtotime($first[0]->created_at));
-            $first_last[] = date('Y-m-d', strtotime($last[0]->created_at));
+            if ($total_count == 0) {
+                $first_last[] =  date('Y-m-d');
+                $first_last[] = date('Y-m-d');
+            } else {
+                $first_last[] =  date('Y-m-d', strtotime($first[0]->created_at));
+                $first_last[] = date('Y-m-d', strtotime($last[0]->created_at));
+            }
+
 
             return $this->response($first_last, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
