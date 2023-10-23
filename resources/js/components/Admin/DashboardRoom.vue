@@ -56,9 +56,8 @@
 										</div>
 										<div class="col-sm-2">
 											<div v-show="by_lifetime">
-												<label class="col-form-label"></label>
-												<div id ="by_lifetime">
-													</div>
+												<label class="col-form-label">&nbsp;&nbsp;</label>
+												<div id ="by_lifetime" style="margin-bottom: 12%;"></div>
 												
 											</div>
 											<div v-show="by_day">
