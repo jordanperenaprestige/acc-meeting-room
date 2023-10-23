@@ -304,7 +304,7 @@ export default {
 				if (y_start == y_end) { 
 					if (difference_in_days == 0) {
 						this.filter.day = d_end;
-						this.filterChartByDay(); alert(this.filter.end_date);
+						this.filterChartByDay(); 
 						$('#by_lifetime').text(this.filter.end_date);
 					} else if (difference_in_days >= 1 && difference_in_days <= 7) {
 						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
