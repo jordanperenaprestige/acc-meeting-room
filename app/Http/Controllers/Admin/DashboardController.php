@@ -435,7 +435,7 @@ class DashboardController extends AppBaseController
                 $day = date("m/d", strtotime($vDateRange));
                 $created_at[] = $day;
             }
-            
+
 
             foreach ($logs as $index => $log) {
                 $day = date("m/d", strtotime($log->created_at));
@@ -454,7 +454,6 @@ class DashboardController extends AppBaseController
                     'building_name' => $log->building_name . ',color' . $log->building_color,
                     'reports' => $log->total_survey,
                 ];
-
             }
             $per_day['legend'] = $this->sortWeek($per_building);
 
@@ -501,7 +500,7 @@ class DashboardController extends AppBaseController
                 $created_at[] = $day;
             }
 
-            
+
 
             foreach ($logs as $index => $log) {
                 $day = date("m/d", strtotime($log->created_at));
@@ -705,7 +704,7 @@ class DashboardController extends AppBaseController
                 ->groupBy(QuestionnaireSurveyViewModel::raw('hour(created_at)'))
                 ->orderBy('created_at', 'ASC')
                 ->get();
-            
+
             $per_hour = [];
             $per_building = [];
             foreach ($logs as $index => $log) {
@@ -744,7 +743,7 @@ class DashboardController extends AppBaseController
                     'reports' => $log->total_survey,
                 ];
             }
-            $per_hour['legend'] = $this->sortWeek($per_building); 
+            $per_hour['legend'] = $this->sortWeek($per_building);
             return $this->response($per_hour, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -944,8 +943,8 @@ class DashboardController extends AppBaseController
     }
 
     public function getTrendIncidentByWeek(Request $request)
-    {  
-        
+    {
+
         try {
             $id = session()->get('room_id');
             $site_id = '';
@@ -979,6 +978,7 @@ class DashboardController extends AppBaseController
                 ->where('site_building_room_id', $id)
                 ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
+                //->groupBy('joradn')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('day(created_at)'))
                 ->orderBy('created_at', 'ASC')
                 ->get();
@@ -1074,7 +1074,7 @@ class DashboardController extends AppBaseController
                     'questionnaire_color' => $log->questionnaire_color,
                     'questionnaire_answer' => $log->questionnaire_answer,
                     'tenant_survey' => $log->tenant_survey,
-                    
+
                     'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
                 ];
             }
@@ -1122,7 +1122,7 @@ class DashboardController extends AppBaseController
                     'questionnaire' => $log->questionnaire,
                     'questionnaire_answer' => $log->questionnaire_answer,
                     'tenant_survey' => $log->tenant_survey,
-                    
+
                     'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
                 ];
             }
@@ -1143,7 +1143,7 @@ class DashboardController extends AppBaseController
     {
         try {
             $id = session()->get('room_id');
-           
+
             $site_id = '';
             $filters = json_decode($request->filters);
             if ($filters)
@@ -1253,7 +1253,7 @@ class DashboardController extends AppBaseController
             ], 422);
         }
     }
-    
+
     public function getTrendReportByMonth(Request $request)
     {
         try {
@@ -1321,9 +1321,9 @@ class DashboardController extends AppBaseController
                     'reports' => $log->total_survey,
                 ];
             }
-            
+
             $per_month['legend'] = ($this->sortWeek($per_building)) ? $this->sortWeek($per_building) : '<div></div>';
- 
+
             foreach ($weeks as $weekNumber => $week) {
                 $monday = substr($week[0], 8);
                 $sunday = substr($week[1], 8);
@@ -1412,9 +1412,9 @@ class DashboardController extends AppBaseController
                     'reports' => $log->total_survey,
                 ];
             }
-            
+
             $per_month['legend'] = ($this->sortWeek($per_building)) ? $this->sortWeek($per_building) : '<div></div>';
- 
+
             foreach ($weeks as $weekNumber => $week) {
                 $monday = substr($week[0], 8);
                 $sunday = substr($week[1], 8);
@@ -1551,13 +1551,13 @@ class DashboardController extends AppBaseController
                 ->groupBy(QuestionnaireSurveyViewModel::raw('month(created_at)'))
                 ->orderBy('created_at', 'ASC')
                 ->get();
-            
+
             $per_month = [];
             $per_building = [];
             foreach ($logs as $index => $log) {
-                
+
                 $month = date("m", strtotime($log->created_at));
-                
+
                 $per_month[] = [
                     'building_name' => $log->building_name,
                     'building_color' => $log->building_color,
@@ -1620,13 +1620,13 @@ class DashboardController extends AppBaseController
                 ->groupBy(QuestionnaireSurveyViewModel::raw('month(created_at)'))
                 ->orderBy('created_at', 'ASC')
                 ->get();
-            
+
             $per_month = [];
             $per_building = [];
             foreach ($logs as $index => $log) {
-                
+
                 $month = date("m", strtotime($log->created_at));
-                
+
                 $per_month[] = [
                     'building_name' => $log->building_name,
                     'building_color' => $log->building_color,
@@ -1799,12 +1799,12 @@ class DashboardController extends AppBaseController
 
             foreach ($this->createDateRangeArray($request->start_date, $request->end_date, 'year') as $vDateRange) {
                 $created_at[] = $vDateRange;
-            } 
-            
+            }
+
             foreach ($logs as $index => $log) {
-                $year = date("Y", strtotime($log->created_at)); 
+                $year = date("Y", strtotime($log->created_at));
                 foreach ($created_at as $v) {
-                    $data_year[$v] = ($v == $year) ? $log->total_survey : ''; 
+                    $data_year[$v] = ($v == $year) ? $log->total_survey : '';
                 }
                 $per_year[] = [
                     'year' => $year,
@@ -1813,14 +1813,14 @@ class DashboardController extends AppBaseController
                     'building_name' => $log->building_name,
                     'building_color' => $log->building_color,
                     'data' => $data_year,
-                ]; 
+                ];
                 $per_building[] = [
                     'building_name' => $log->building_name . ',color' . $log->building_color,
                     'reports' => $log->total_survey,
                 ];
-            } 
+            }
             $per_year['legend'] = $this->sortWeek($per_building);
-          
+
             return $this->response($per_year, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -1850,7 +1850,7 @@ class DashboardController extends AppBaseController
                 ->where('site_building_room_id', $id)
                 ->where('created_at', '>=', date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00')
                 ->where('created_at', '<=', date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59')
-				->where('remarks', 'Done')
+                ->where('remarks', 'Done')
                 ->groupBy('site_building_id')
                 ->groupBy(QuestionnaireSurveyViewModel::raw('year(created_at)'))
                 ->orderBy('created_at', 'ASC')
@@ -1863,7 +1863,7 @@ class DashboardController extends AppBaseController
             foreach ($this->createDateRangeArray($request->start_date, $request->end_date, 'year') as $vDateRange) {
                 $created_at[] = $vDateRange;
             }
-    
+
             foreach ($logs as $index => $log) {
                 $year = date("Y", strtotime($log->created_at));
                 foreach ($created_at as $v) {
@@ -1913,8 +1913,10 @@ class DashboardController extends AppBaseController
                     $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                     $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
                 } else {
-                    $start_date = $request->start_date;
-                    $end_date = $request->end_date;
+                    //$start_date = $request->start_date;
+                    //$end_date = $request->end_date;
+                    $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 }
             }
         } else if ($request->month) {
@@ -1922,7 +1924,7 @@ class DashboardController extends AppBaseController
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                if ($request->customized == 'month') { 
+                if ($request->customized == 'month') {
                     $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
                     $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 } else {
@@ -1942,40 +1944,42 @@ class DashboardController extends AppBaseController
             $start_date = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
             $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
         } else {
-            $start_date = date("Y-m-d", strtotime("-1 months"));
-            $end_date = date("Y-m-d");
+            $start_date = date("Y-m-d", strtotime("-1 months")) . ' 00:00:00';
+            $end_date = date("Y-m-d") . ' 23:59:59';
         }
-        
-       
+
+
         if ($filters)
             $site_id = $filters->site_id;
         if ($request->site_id)
             $site_id = $request->site_id;
-        
-        
-       
+
+
+
         $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
             return $query->where('site_id', $site_id);
         })
-            ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
-            ->whereBetween('created_at', [$start_date, $end_date])
-            ->where('site_building_room_id', $id)
-            ->where('remarks', 'Done')
-            ->groupBy('questionnaire_id')
-            ->orderBy('questionnaire_id', 'ASC')
-            ->get();
-
+        ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
+        ->where('site_building_room_id', $id)
+        ->whereBetween('created_at', [$start_date, $end_date])
+        //->where('created_at', '>=', date('Y-m-d', strtotime($start_date)))
+        //->where('created_at', '<=', date('Y-m-d', strtotime($end_date)))
+        ->where('remarks', 'Done')
+        ->groupBy('questionnaire_id')
+        ->groupBy('questionnaire_answer_id')
+        ->orderBy('questionnaire_id', 'ASC')
+        ->get();
         $total = $logs->sum('tenant_survey');
 
         $percentage = [];
         foreach ($logs as $index => $log) {
             $percentage[] = [
-               
+
                 'questionnaire' => $log->questionnaire,
                 'questionnaire_color' => $log->questionnaire_color,
                 'questionnaire_answer' => $log->questionnaire_answer,
                 'tenant_survey' => $log->tenant_survey,
-                
+
                 'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
             ];
         }
@@ -2002,8 +2006,10 @@ class DashboardController extends AppBaseController
                     $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                     $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
                 } else {
-                    $start_date = $request->start_date;
-                    $end_date = $request->end_date;
+                      //$start_date = $request->start_date;
+                    //$end_date = $request->end_date;
+                    $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 }
             }
         } else if ($request->month) {
@@ -2011,7 +2017,7 @@ class DashboardController extends AppBaseController
                 $start_date  = date('Y-m-d', strtotime($request->month)) . ' 00:00:00';
                 $end_date = date('Y-m-t', strtotime($request->month)) . ' 23:59:59';
             } else {
-                if ($request->customized == 'month') { 
+                if ($request->customized == 'month') {
                     $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
                     $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 } else {
@@ -2035,21 +2041,23 @@ class DashboardController extends AppBaseController
             $end_date = date("Y-m-d");
         }
 
-        
-       
+
+
         if ($filters)
             $site_id = $filters->site_id;
         if ($request->site_id)
             $site_id = $request->site_id;
-        
-        
-       
+
+
+
         $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
             return $query->where('site_id', $site_id);
         })
             ->selectRaw('questionnaire_surveys.*, count(*) as tenant_survey')
             ->where('site_building_room_id', $id)
             ->whereBetween('created_at', [$start_date, $end_date])
+            //->where('created_at', '>=', date('Y-m-d', strtotime($start_date)))
+            //->where('created_at', '<=', date('Y-m-d', strtotime($end_date)))
             ->where('remarks', 'Done')
             ->groupBy('questionnaire_id')
             ->groupBy('questionnaire_answer_id')
@@ -2061,12 +2069,12 @@ class DashboardController extends AppBaseController
         $percentage = [];
         foreach ($logs as $index => $log) {
             $percentage[] = [
-               
+
                 'questionnaire' => $log->questionnaire,
                 'questionnaire_color' => $log->questionnaire_color,
                 'questionnaire_answer' => $log->questionnaire_answer,
                 'tenant_survey' => $log->tenant_survey,
-                
+
                 'percentage_share' => round(($log->tenant_survey / $total) * 100, 2)
             ];
         }
@@ -2082,11 +2090,11 @@ class DashboardController extends AppBaseController
             $currentDate = $currentDateTime->format('Y-m-d');
             $start_date  = date('Y-m-d', strtotime($currentDate)) . ' 00:00:00';
             $end_date = date('Y-m-d', strtotime($currentDate)) . ' 23:59:59';
-           
+
             $logs = QuestionnaireSurvey::where('site_building_room_id', $id)
                 ->whereBetween('updated_at', [$start_date, $end_date])
                 ->get()->count();
-           
+
             return $this->response($logs, 'Successfully Retreived!', 200);
         } catch (\Exception $e) {
             return response([
@@ -2100,7 +2108,7 @@ class DashboardController extends AppBaseController
     {
         $aWeeksOfMonth = [];
         $date = new DateTime("{$year}-{$month}-01");
-        
+
         $iDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         $aOneWeek = [$date->format('Y-m-d')];
         $weekNumber = 1;
@@ -2119,42 +2127,42 @@ class DashboardController extends AppBaseController
     }
 
     function createDateRangeArray($strDateFrom, $strDateTo, $filterBy = 'daily')
-	{
-		// takes two dates formatted as YYYY-MM-DD and creates an
-		// inclusive array of the dates between the from and to dates.
+    {
+        // takes two dates formatted as YYYY-MM-DD and creates an
+        // inclusive array of the dates between the from and to dates.
 
-		// could test validity of dates here but I'm already doing
-		// that in the main script
+        // could test validity of dates here but I'm already doing
+        // that in the main script
 
-		$aryRange = [];
+        $aryRange = [];
 
-		$iDateFrom = mktime(1, 0, 0, substr($strDateFrom, 5, 2), substr($strDateFrom, 8, 2), substr($strDateFrom, 0, 4));
-		$iDateTo = mktime(1, 0, 0, substr($strDateTo, 5, 2), substr($strDateTo, 8, 2), substr($strDateTo, 0, 4));
-		if ($filterBy == 'year') {
-			if ($iDateTo >= $iDateFrom) {
-				array_push($aryRange, date('Y', $iDateFrom)); // first entry
-				while ($iDateFrom < $iDateTo) {
-					$iDateFrom += 86400; // add 24 hours
-					array_push($aryRange, date('Y', $iDateFrom));
-				}
-			}
-			return array_unique($aryRange);
-		} else {
-			if ($iDateTo >= $iDateFrom) {
-				array_push($aryRange, date('Y-m-d', $iDateFrom)); // first entry
-				while ($iDateFrom < $iDateTo) {
-					$iDateFrom += 86400; // add 24 hours
-					array_push($aryRange, date('Y-m-d', $iDateFrom));
-				}
-			}
-			return $aryRange;
-		}
-	}
+        $iDateFrom = mktime(1, 0, 0, substr($strDateFrom, 5, 2), substr($strDateFrom, 8, 2), substr($strDateFrom, 0, 4));
+        $iDateTo = mktime(1, 0, 0, substr($strDateTo, 5, 2), substr($strDateTo, 8, 2), substr($strDateTo, 0, 4));
+        if ($filterBy == 'year') {
+            if ($iDateTo >= $iDateFrom) {
+                array_push($aryRange, date('Y', $iDateFrom)); // first entry
+                while ($iDateFrom < $iDateTo) {
+                    $iDateFrom += 86400; // add 24 hours
+                    array_push($aryRange, date('Y', $iDateFrom));
+                }
+            }
+            return array_unique($aryRange);
+        } else {
+            if ($iDateTo >= $iDateFrom) {
+                array_push($aryRange, date('Y-m-d', $iDateFrom)); // first entry
+                while ($iDateFrom < $iDateTo) {
+                    $iDateFrom += 86400; // add 24 hours
+                    array_push($aryRange, date('Y-m-d', $iDateFrom));
+                }
+            }
+            return $aryRange;
+        }
+    }
     public function sortWeek($per_building)
     {
         $buildings = [];
         $sort_buildings = [];
-       
+
         foreach ($per_building as $building) {
             $buildings[array_shift($building)][] = $building;
         }
@@ -2165,14 +2173,14 @@ class DashboardController extends AppBaseController
             foreach ($vBuilding as $k => $v) {
                 $a[] = $vBuilding[$k]['reports'];
             }
-           
+
             $sort_buildings[] = '<div style=" height: 50px;display:inline;font-size: 0.500em;color: #FF0000;padding-right: 10px;padding-left: 10px;"><di style="background: #4679BD; display: inline;
-            background-color: '.$building_color[1].';
+            background-color: ' . $building_color[1] . ';
             padding-top: .1px;
             padding-right: 35px;
             padding-bottom: .1px;
             
-        "></div>' . $building_color[0] . ' (Reports(s)'.array_sum($a).')</di>';
+        "></div>' . $building_color[0] . ' (Reports(s)' . array_sum($a) . ')</di>';
         }
         return implode($sort_buildings);
     }
@@ -2183,12 +2191,12 @@ class DashboardController extends AppBaseController
             $total_count = QuestionnaireSurvey::get()->count();
 
             $first = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
-            ->where('site_building_room_id', $id)
+                ->where('site_building_room_id', $id)
                 ->orderBy('id', 'asc')
                 ->limit(1)
                 ->get();
             $last = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
-            ->where('site_building_room_id', $id)
+                ->where('site_building_room_id', $id)
                 ->orderBy('id', 'desc')
                 ->limit(1)
                 ->get();
