@@ -56,7 +56,9 @@
 										</div>
 										<div class="col-sm-2">
 											<div v-show="by_lifetime">
-												<div id ="by_lifetime"></div>
+												<label class="col-form-label"></label>
+												<div id ="by_lifetime">
+													</div>
 												
 											</div>
 											<div v-show="by_day">
@@ -444,6 +446,7 @@ export default {
 				this.by_year = false;
 				this.by_start = false;
 				this.by_end = false;
+				this.by_lifetime = false;
 
 				const currentDay = moment(new Date()).format("YYYY-MM-DD");
 				this.filter.day = (this.filter.day == '') ? currentDay : this.filter.day;
@@ -458,6 +461,7 @@ export default {
 				this.by_year = false;
 				this.by_start = false;
 				this.by_end = false;
+				this.by_lifetime = false;
 
 				const currentDay = moment(new Date()).format("YYYY-MM-DD");
 				this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
@@ -471,6 +475,7 @@ export default {
 				this.by_year = false;
 				this.by_start = false;
 				this.by_end = false;
+				this.by_lifetime = false;
 				const currentMonth = moment(new Date()).format("YYYY-MM");
 
 				this.filter.month = currentMonth; (this.filter.month == '') ? currentMonth : this.filter.month;
@@ -484,6 +489,7 @@ export default {
 				this.by_year = true;
 				this.by_start = false;
 				this.by_end = false;
+				this.by_lifetime = false;
 				const currentYear = moment().year().toString();
 				this.filter.year = (this.filter.year == '') ? currentYear : this.filter.year;
 				this.filterChartByYear();
@@ -495,6 +501,7 @@ export default {
 				this.by_year = false;
 				this.by_start = true;
 				this.by_end = true;
+				this.by_lifetime = false;
 				var d_start = new Date(this.filter.start_date);
 				var d_end = new Date(this.filter.end_date);
 				var m_start = d_start.getMonth();
