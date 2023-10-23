@@ -1912,8 +1912,8 @@ class DashboardController extends AppBaseController
                     $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                     $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
                 } else {
-                    $start_date = $request->start_date;
-                    $end_date = $request->end_date;
+                    $start_date = $request->start_date. ' 00:00:00';
+                    $end_date = $request->end_date. ' 23:59:59';
                     //$start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
                     //$end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 }
@@ -1953,7 +1953,7 @@ class DashboardController extends AppBaseController
         if ($request->site_id)
             $site_id = $request->site_id;
 
-
+///echo $start_date .'---'. $end_date;
 
         $logs = QuestionnaireSurveyViewModel::when($site_id, function ($query) use ($site_id) {
             return $query->where('site_id', $site_id);
@@ -1963,6 +1963,7 @@ class DashboardController extends AppBaseController
             ->where('site_building_room_id', $id)
             ->where('remarks', 'Done')
             ->groupBy('questionnaire_id')
+            //->groupBy('jordan')
             ->orderBy('questionnaire_id', 'ASC')
             ->get();
 
@@ -2003,8 +2004,8 @@ class DashboardController extends AppBaseController
                     $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                     $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
                 } else {
-                    $start_date = $request->start_date;
-                    $end_date = $request->end_date;
+                    $start_date = $request->start_date. ' 00:00:00';
+                    $end_date = $request->end_date. ' 23:59:59';
                 }
             }
         } else if ($request->month) {
