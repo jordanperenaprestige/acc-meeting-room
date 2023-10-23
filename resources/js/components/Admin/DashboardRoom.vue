@@ -453,7 +453,7 @@ export default {
 				this.filterChartByDay();
 			}
 			else if (this.filter.by == 2) {//week
-				this.clear_filter();
+				//this.clear_filter();
 				this.by_day = false;
 				this.by_week = true;
 				this.by_month = false;
@@ -462,8 +462,8 @@ export default {
 				this.by_end = false;
 				this.by_lifetime = false;
 
-				const currentDay = moment(new Date()).format("YYYY-MM-DD");
-				this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week;
+				//const currentDay = moment(new Date()).format("YYYY-MM-DD");
+				//this.filter.week = (this.filter.week == '') ? currentDay : this.filter.week; alert(this.filter.week);
 				this.filterChartByWeek();
 			}
 			else if (this.filter.by == 3) {//month
@@ -1594,11 +1594,11 @@ export default {
 			var filter = this.filter;
 			filter.day = '';
 			filter.month = '';
-			filter.year = '';
+			filter.year = ''; 
 			console.log('week D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
 			const currentDay = moment(new Date()).format("YYYY-MM-DD");
 			filter.week = (filter.week == '') ? currentDay : filter.week;
-			this.filter.week = filter.week;
+			this.filter.week = filter.week; 
 			$.get("/admin/dashboard/trend-report-by-week/list", filter, function (data) {
 				console.log('trend-report-by-week');
 				let datasets = [];
@@ -3072,7 +3072,7 @@ export default {
 		weekSelected: function (e) {
 
 
-			if (this.filter.week != null) {
+			if (this.filter.week != null) { 
 				this.filterChartByWeek();
 			}
 		},
