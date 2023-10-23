@@ -1912,8 +1912,10 @@ class DashboardController extends AppBaseController
                     $start_date = $date->startOfWeek(Carbon::SUNDAY)->format('Y-m-d');
                     $end_date = $date->endOfWeek(Carbon::SATURDAY)->format('Y-m-d');
                 } else {
-                    $start_date = $request->start_date;
-                    $end_date = $request->end_date;
+                   // $start_date = $request->start_date;
+                    //$end_date = $request->end_date;
+                    $start_date  = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
+                    $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
                 }
             }
         } else if ($request->month) {
