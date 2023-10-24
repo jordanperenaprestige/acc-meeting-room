@@ -51,6 +51,22 @@
     <!-- Toastr -->
     <script src="{{ URL::to('plugins/toastr/toastr.min.js') }}"></script>
     <script src="{{ mix('/js/app.js') }}"></script>
+    <script>
+        document.addEventListener("gesturestart", function(e) {
+            e.preventDefault();
+            document.body.style.zoom = 0.99;
+        });
+
+        document.addEventListener("gesturechange", function(e) {
+            e.preventDefault();
+
+            document.body.style.zoom = 0.99;
+        });
+        document.addEventListener("gestureend", function(e) {
+            e.preventDefault();
+            document.body.style.zoom = 1;
+        });
+    </script>
     @stack('scripts') <!-- To include script links -->
 </body>
 

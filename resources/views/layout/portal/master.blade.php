@@ -85,6 +85,22 @@
     <script src="{{ URL::to('client/assets/libs/morris.js/morris.min.js') }}"></script>
     <script src="{{ URL::to('client/assets/libs/raphael/raphael.min.js') }}"></script>
     <script src="{{ URL::to('client/assets/js/pages/dashboard.init.js') }}"></script>
+    <script>
+        document.addEventListener("gesturestart", function(e) {
+            e.preventDefault();
+            document.body.style.zoom = 0.99;
+        });
+
+        document.addEventListener("gesturechange", function(e) {
+            e.preventDefault();
+
+            document.body.style.zoom = 0.99;
+        });
+        document.addEventListener("gestureend", function(e) {
+            e.preventDefault();
+            document.body.style.zoom = 1;
+        });
+    </script>
     @stack('scripts') <!-- To include script links -->
 </body>
 

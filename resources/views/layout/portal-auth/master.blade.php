@@ -29,5 +29,21 @@
         <script src="{{ URL::to('plugins/toastr/toastr.min.js') }}"></script>
         <!-- AdminLTE App -->
         <script src="{{ URL::to('dist/js/adminlte.min.js') }}"></script>
+        <script>
+        document.addEventListener("gesturestart", function(e) {
+            e.preventDefault();
+            document.body.style.zoom = 0.99;
+        });
+
+        document.addEventListener("gesturechange", function(e) {
+            e.preventDefault();
+
+            document.body.style.zoom = 0.99;
+        });
+        document.addEventListener("gestureend", function(e) {
+            e.preventDefault();
+            document.body.style.zoom = 1;
+        });
+    </script>
     </body>
 </html>
