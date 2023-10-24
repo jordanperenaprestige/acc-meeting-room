@@ -3350,28 +3350,28 @@ class ReportsController extends AppBaseController implements ReportsControllerIn
         try {
             $id = session()->get('room_id');
             $total_count = QuestionnaireSurvey::select('created_at')
-                ->where('site_building_room_id', $id)
+                //->where('site_building_room_id', $id)
                 ->get()->count();
 
             $first = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
-                ->where('site_building_room_id', $id)
+                //->where('site_building_room_id', $id)
                 ->orderBy('id', 'asc')
                 ->limit(1)
                 ->get();
             $last = $questionnaire_survey = QuestionnaireSurvey::select('created_at')
-                ->where('site_building_room_id', $id)
+                //->where('site_building_room_id', $id)
                 ->orderBy('id', 'desc')
                 ->limit(1)
                 ->get();
 
-            $first_last = array();
-            if ($total_count == 0) {
-                $first_last[] =  date('Y-m-d');
-                $first_last[] = date('Y-m-d');
-            } else {
+            //$first_last = array();
+            //if ($total_count == 0) {
+                //$first_last[] =  date('Y-m-d');
+                //$first_last[] = date('Y-m-d');
+            //} else {
                 $first_last[] =  date('Y-m-d', strtotime($first[0]->created_at));
                 $first_last[] = date('Y-m-d', strtotime($last[0]->created_at));
-            }
+           // }
 
 
             return $this->response($first_last, 'Successfully Retreived!', 200);
