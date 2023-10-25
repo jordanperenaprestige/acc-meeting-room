@@ -86,7 +86,7 @@
     <script src="{{ URL::to('client/assets/libs/raphael/raphael.min.js') }}"></script>
     <script src="{{ URL::to('client/assets/js/pages/dashboard.init.js') }}"></script>
     <script>
-        document.addEventListener('touchstart', function(e) {
+        document.addEventListener('touchstart', function(e) {alert('ssss');
             if (e.pageX > 10 && e.pageX < window.innerWidth - 10) return;
             e.preventDefault();
         });

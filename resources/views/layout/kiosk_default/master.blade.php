@@ -52,7 +52,7 @@
     <script src="{{ URL::to('plugins/toastr/toastr.min.js') }}"></script>
     <script src="{{ mix('/js/app.js') }}"></script>
     <script>
-        document.addEventListener('touchstart', function(e) {
+        document.addEventListener('touchstart', function(e) {alert('ssss');
             if (e.pageX > 10 && e.pageX < window.innerWidth - 10) return;
             e.preventDefault();
         });
