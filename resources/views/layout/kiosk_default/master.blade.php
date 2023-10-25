@@ -52,18 +52,9 @@
     <script src="{{ URL::to('plugins/toastr/toastr.min.js') }}"></script>
     <script src="{{ mix('/js/app.js') }}"></script>
     <script>
-        document.addEventListener('touchstart', function(e) {
-
-            // is not near edge of view, exit
-
+        document.addEventListener('touchstart', function(e) {alert('ssss');
             if (e.pageX > 10 && e.pageX < window.innerWidth - 10) return;
-
-
-
-            // prevent swipe to navigate gesture
-
             e.preventDefault();
-
         });
         document.addEventListener("gesturestart", function(e) {
             e.preventDefault();
