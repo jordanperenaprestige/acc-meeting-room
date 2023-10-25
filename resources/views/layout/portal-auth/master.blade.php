@@ -31,10 +31,6 @@
     <!-- AdminLTE App -->
     <script src="{{ URL::to('dist/js/adminlte.min.js') }}"></script>
     <script>
-        document.addEventListener('touchstart', function(e) { 
-            if (e.pageX > 10 && e.pageX < window.innerWidth - 10) return;
-            e.preventDefault();
-        });
         document.addEventListener("gesturestart", function(e) {
             e.preventDefault();
             document.body.style.zoom = 0.99;
