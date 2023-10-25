@@ -54,6 +54,13 @@
     <script src="{{ URL::to('plugins/toastr/toastr.min.js') }}"></script>
     <script src="{{ mix('/js/app.js') }}"></script>
     <script>
+        addEventListener("load", function() {
+            // Set a timeout...
+            setTimeout(function() {
+                // Hide the address bar!
+                window.scrollTo(0, 1);
+            }, 0);
+        });
         document.addEventListener("gesturestart", function(e) {
             e.preventDefault();
             document.body.style.zoom = 0.99;

@@ -88,6 +88,13 @@
     <script src="{{ URL::to('client/assets/libs/raphael/raphael.min.js') }}"></script>
     <script src="{{ URL::to('client/assets/js/pages/dashboard.init.js') }}"></script>
     <script>
+        addEventListener("load", function() {
+            // Set a timeout...
+            setTimeout(function() {
+                // Hide the address bar!
+                window.scrollTo(0, 1);
+            }, 0);
+        });
         document.addEventListener("gesturestart", function(e) {
             e.preventDefault();
             document.body.style.zoom = 0.99;
