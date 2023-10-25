@@ -31,7 +31,7 @@
     <!-- AdminLTE App -->
     <script src="{{ URL::to('dist/js/adminlte.min.js') }}"></script>
     <script>
-        document.addEventListener('touchstart', function(e) { alert('ssss');
+        document.addEventListener('touchstart', function(e) { 
             if (e.pageX > 10 && e.pageX < window.innerWidth - 10) return;
             e.preventDefault();
         });

@@ -27,7 +27,25 @@ html {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    touch-action: auto | none | [ [ pan-x | pan-left | pan-right ] || [ pan-y | pan-up | pan-down ] || pinch-zoom ] | manipulation
+    /* touch-action: auto | none | [ [ pan-x | pan-left | pan-right ] || [ pan-y | pan-up | pan-down ] || pinch-zoom ] | manipulation */
+    /* Keyword values */
+    touch-action: auto;
+    touch-action: none;
+    touch-action: pan-x;
+    touch-action: pan-left;
+    touch-action: pan-right;
+    touch-action: pan-y;
+    touch-action: pan-up;
+    touch-action: pan-down;
+    touch-action: pinch-zoom;
+    touch-action: manipulation;
+
+    /* Global values */
+    touch-action: inherit;
+    touch-action: initial;
+    touch-action: revert;
+    touch-action: revert-layer;
+    touch-action: unset;
 }
 
 .banner-ads {
@@ -1755,10 +1773,7 @@ span {
 
 /* ----------- iPad Pro ----------- */
 /* Portrait and Landscape */
-@media only screen 
-  and (min-width: 1024px) 
-  and (max-height: 1366px) 
-  and (-webkit-min-device-pixel-ratio: 1.5) {
+@media only screen and (min-width: 1024px) and (max-height: 1366px) and (-webkit-min-device-pixel-ratio: 1.5) {
     .grid-container {
         display: grid;
         column-gap: 50px;
@@ -1777,11 +1792,7 @@ span {
 }
 
 /* Portrait */
-@media only screen 
-  and (min-width: 1024px) 
-  and (max-height: 1366px) 
-  and (orientation: portrait) 
-  and (-webkit-min-device-pixel-ratio: 1.5) {
+@media only screen and (min-width: 1024px) and (max-height: 1366px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 1.5) {
     .grid-container {
         display: grid;
         column-gap: 50px;
@@ -1800,11 +1811,7 @@ span {
 }
 
 /* Landscape */
-@media only screen 
-  and (min-width: 1024px) 
-  and (max-height: 1366px) 
-  and (orientation: landscape) 
-  and (-webkit-min-device-pixel-ratio: 1.5) {
+@media only screen and (min-width: 1024px) and (max-height: 1366px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1.5) {
 
     .grid-container {
         display: grid;
