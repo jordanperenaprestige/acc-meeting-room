@@ -444,7 +444,7 @@ export default {
             this.room.input_four = '';
             this.show_resolve = false;
             this.show_admin_button = false;
-            //setTimeout(function () { window.location.reload(); }, 5000);
+            setTimeout(function () { window.location.reload(); }, 5000);
 
         },
         submit_pending: function () {
@@ -470,7 +470,7 @@ export default {
             this.show_pending_success = true;
             this.show_admin_button = false;
 
-            //setTimeout(function () { window.location.reload(); }, 5000);
+            setTimeout(function () { window.location.reload(); }, 5000);
 
         },
         show_button: function () {
