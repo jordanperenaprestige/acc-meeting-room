@@ -1859,10 +1859,10 @@ span {
 }
 
 .show-success {
-    margin-top: 12rem;
+    margin-top: 11rem;
     border: 1cm;
     font-family: Henry Sans Regular;
-    font-size: 30px;
+    font-size: 25px;
     font-weight: 500;
     text-align: center;
 }
