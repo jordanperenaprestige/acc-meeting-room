@@ -47,14 +47,13 @@
                             <img :src="survey_pending.questionnaire_button.replace('.png', '_gray.png')">
                         </div>
                         <!-- test -->
-                        <div v-if="survey_pending.questionnaire_user_role == user_role" 
-                             style="font-family: Henry Sans Regular; color: #FFFFFF; font-size: 16px; text-align: center; padding: 0.em;">
-                        {{survey_pending.questionnaire_name }}
-                    </div>
-                        <div v-else 
-                             style="font-family: Henry Sans Regular; 
+                        <div v-if="survey_pending.questionnaire_user_role == user_role"
+                            style="font-family: Henry Sans Regular; color: #FFFFFF; font-size: 16px; text-align: center; padding: 0.em;">
+                            {{ survey_pending.questionnaire_name }}
+                        </div>
+                        <div v-else style="font-family: Henry Sans Regular; 
     color: #D3D3D3; font-size: 16px; text-align: center; padding: 0.em;">
-                        {{ survey_pending.questionnaire_name }}
+                            {{ survey_pending.questionnaire_name }}
                         </div>
                     </div>
                 </div>
@@ -64,13 +63,13 @@
                     </div>
                 </div>
             </div>
-            <div v-show="show_success">
+            <div v-show="show_success" class="show-success">
                 <div class="row justify-content-center">
                     <div class="col-6 mr-2">
                         <img :src="this.success_logo">
                     </div>
                 </div>
-                <div class="row justify-content-center" style="border: 1cm;">
+                <div class="row justify-content-center">
                     <div class="col-12 concern-title">
                         THANK YOU!
                     </div>
@@ -86,8 +85,8 @@
                     </div>
                 </div>
             </div>
-            <div v-show="show_pending_success">
-                <div class="row justify-content-center" style="border: 1cm;">
+            <div v-show="show_pending_success" class="show-success">
+                <div class="row justify-content-center">
                     <div class="col-6">
                         <img :src="this.success_logo">
                     </div>
@@ -101,13 +100,13 @@
                     </div>
                 </div>
             </div>
-            <div v-show="show_switch_room_success">
+            <div v-show="show_switch_room_success" class="show-success">
                 <div class="row justify-content-center">
                     <div class="col-6">
                         <img :src="this.success_logo">
                     </div>
                 </div>
-                <div class="row justify-content-center" style="border: 1cm;">
+                <div class="row justify-content-center">
                     <div class="col-12 concern-title">
                         THANK YOU!
                     </div>
@@ -445,7 +444,7 @@ export default {
             this.room.input_four = '';
             this.show_resolve = false;
             this.show_admin_button = false;
-            setTimeout(function () { window.location.reload(); }, 5000);
+            //setTimeout(function () { window.location.reload(); }, 5000);
 
         },
         submit_pending: function () {
@@ -471,7 +470,7 @@ export default {
             this.show_pending_success = true;
             this.show_admin_button = false;
 
-            setTimeout(function () { window.location.reload(); }, 5000);
+            //setTimeout(function () { window.location.reload(); }, 5000);
 
         },
         show_button: function () {
