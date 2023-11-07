@@ -139,7 +139,7 @@
 								<div class="col-md-6">
 									<div class="chart-responsive">
 										<canvas id="pieChartSurvey"
-											style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+											style="min-height: 250px; height: 250px; max-height: 500px; max-width: 500px;"></canvas>
 									</div>
 								</div>
 								<div class="col-md-6">
