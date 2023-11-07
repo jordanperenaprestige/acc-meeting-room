@@ -139,7 +139,7 @@
 								<div class="col-md-6">
 									<div class="chart-responsive">
 										<canvas id="pieChartSurvey"
-											style="min-height: 250px; height: 250px; max-height: 500px; max-width: 500px;"></canvas>
+											style="min-height: 220px; height: 230px;  max-height: 230px; max-width:490px;"></canvas>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -762,7 +762,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -1087,7 +1087,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -1405,7 +1405,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -1781,7 +1781,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -2125,7 +2125,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -2458,7 +2458,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -2776,7 +2776,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -3131,7 +3131,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}

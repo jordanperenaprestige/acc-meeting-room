@@ -57,8 +57,8 @@
 										<div class="col-sm-2">
 											<div v-show="by_lifetime">
 												<label class="col-form-label">&nbsp;&nbsp;</label>
-												<div id ="by_lifetime" style="margin-bottom: 12%;"></div>
-												
+												<div id="by_lifetime" style="margin-bottom: 12%;"></div>
+
 											</div>
 											<div v-show="by_day">
 												<!-- v-show="show_concerns" -->
@@ -168,7 +168,7 @@
 								<div class="col-md-6">
 									<div class="chart-responsive">
 										<canvas id="pieChartSurvey"
-											style="min-height: 250px; height: 250px; max-height: 500px; max-width: 500px;"></canvas>
+											style="min-height: 220px; height: 230px;  max-height: 230px; max-width:490px;"></canvas>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -253,8 +253,8 @@ export default {
 			by_month: false,
 			by_year: false,
 			by_lifetime: false,
-			by_start:false,
-			by_end:false,
+			by_start: false,
+			by_end: false,
 			survey_number_day: 0,
 			reports_total: 0,
 			incidents_total: 0,
@@ -271,83 +271,83 @@ export default {
 	},
 
 	methods: {
-		getLifetime: function(){
+		getLifetime: function () {
 			axios.get('/admin/dashboard/getFirstLastsurvey')
-			.then(response => { 
-				this.first_last_survey = response.data.data;               
-				this.by_day = false; 
-				this.by_week = false;
-				this.by_month = false;
-				this.by_year = false;
-				this.by_start = false;
-				this.by_end = false;
-				this.filter.start_date = ''; 
-				this.filter.end_date = '';
+				.then(response => {
+					this.first_last_survey = response.data.data;
+					this.by_day = false;
+					this.by_week = false;
+					this.by_month = false;
+					this.by_year = false;
+					this.by_start = false;
+					this.by_end = false;
+					this.filter.start_date = '';
+					this.filter.end_date = '';
 
-				this.filter.start_date = this.first_last_survey[0]; 
-				this.filter.end_date = this.first_last_survey[1]; 
-				var d_start = new Date(this.filter.start_date);
-				var d_end = new Date(this.filter.end_date);
-				var m_start = d_start.getMonth();
-				var m_end = d_end.getMonth();
-				var y_start = d_start.getFullYear();
-				var y_end = d_end.getFullYear();
-				var date_start = d_start.getDate();
-				var day_start = d_start.getDay();
-				var date_end = d_end.getDate();
-				var day_end = d_end.getDay();
+					this.filter.start_date = this.first_last_survey[0];
+					this.filter.end_date = this.first_last_survey[1];
+					var d_start = new Date(this.filter.start_date);
+					var d_end = new Date(this.filter.end_date);
+					var m_start = d_start.getMonth();
+					var m_end = d_end.getMonth();
+					var y_start = d_start.getFullYear();
+					var y_end = d_end.getFullYear();
+					var date_start = d_start.getDate();
+					var day_start = d_start.getDay();
+					var date_end = d_end.getDate();
+					var day_end = d_end.getDay();
 
-				var difference_in_time = d_end.getTime() - d_start.getTime();
-				var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
-				
-				if (y_start == y_end) { 
-					if (difference_in_days == 0) {
-						this.filter.day = d_end;
-						this.filterChartByDay(); 
-						$('#by_lifetime').text(this.filter.end_date);
-					} else if (difference_in_days >= 1 && difference_in_days <= 7) {
-						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
-						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
-						if (y_start == y_end) {
-							if (week_of_month_start == week_of_month_end) { 
-								this.customize = 'week';
-								this.filter.week = this.filter.end_date;
-								this.filterChartByWeek();
-							} else { 
-								this.filter.customized = 'month';
-								this.filter.month = this.filter.end_date.substring(0, 7);
-								this.filterChartByMonth();
+					var difference_in_time = d_end.getTime() - d_start.getTime();
+					var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
+
+					if (y_start == y_end) {
+						if (difference_in_days == 0) {
+							this.filter.day = d_end;
+							this.filterChartByDay();
+							$('#by_lifetime').text(this.filter.end_date);
+						} else if (difference_in_days >= 1 && difference_in_days <= 7) {
+							var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+							var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+							if (y_start == y_end) {
+								if (week_of_month_start == week_of_month_end) {
+									this.customize = 'week';
+									this.filter.week = this.filter.end_date;
+									this.filterChartByWeek();
+								} else {
+									this.filter.customized = 'month';
+									this.filter.month = this.filter.end_date.substring(0, 7);
+									this.filterChartByMonth();
+								}
+							} else {
+								// wishlist
 							}
-						} else {
-							// wishlist
 						}
-					}
-					else if (difference_in_days >= 8 && difference_in_days <= 31) {
-						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
-						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
-						if (y_start == y_end) {
-							if (week_of_month_start == week_of_month_end) {
-								this.filterChartByDaily();
+						else if (difference_in_days >= 8 && difference_in_days <= 31) {
+							var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
+							var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
+							if (y_start == y_end) {
+								if (week_of_month_start == week_of_month_end) {
+									this.filterChartByDaily();
+								} else {
+									this.filterChartByYear();
+								}
 							} else {
-								this.filterChartByYear();
+								if (m_start == m_end) {
+									this.filter.customized = 'month';
+									this.filter.month = this.filter.end_date.substring(0, 7);
+									this.filterChartByMonth();
+								} else {
+
+									this.filterChartByYear();
+								}
 							}
 						} else {
-							if (m_start == m_end) {
-								this.filter.customized = 'month';
-								this.filter.month = this.filter.end_date.substring(0, 7);
-								this.filterChartByMonth();
-							} else {
-
-								this.filterChartByYear();
-							}
+							this.filterChartByYear();
 						}
 					} else {
-						this.filterChartByYear();
+						this.filterChartByYears();
 					}
-				} else { 
-					this.filterChartByYears();
-				}
-			});
+				});
 		},
 		getRoom: function () {
 			axios.get('/admin/dashboad/room/get-survey')
@@ -436,7 +436,7 @@ export default {
 				this.by_start = false;
 				this.by_end = false;
 				this.by_lifetime = true;
-				this.getLifetime(); 
+				this.getLifetime();
 			} else if (this.filter.by == 1) {//day
 
 				this.by_day = true;
@@ -521,11 +521,11 @@ export default {
 						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 						if (y_start == y_end) {
-							if (week_of_month_start == week_of_month_end) { 
+							if (week_of_month_start == week_of_month_end) {
 								this.customize = 'week';
 								this.filter.week = this.filter.end_date;
 								this.filterChartByWeek();
-							} else { 
+							} else {
 								this.filter.customized = 'month';
 								this.filter.month = this.filter.end_date.substring(0, 7);
 								this.filterChartByMonth();
@@ -822,7 +822,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -842,14 +842,14 @@ export default {
 				var cleanliness = '#90EE90';
 				var supplies = '#808000';
 				var functionality = '#FAF884';
-			
+
 				if (data.data.length > 0) {
 					$.each(data.data, function (key, value) {
 						var jordan = value.questionnaire_answer;
 						labels_answer.push(jordan);
 						incident_report_answer += parseInt(value.tenant_survey);
 						data_value_answer.push(value.percentage_share);
-						
+
 						if (value.questionnaire == 'CLEANLINESS') {
 							randomBackgroundColor.push(cleanliness);
 						} else if (value.questionnaire == 'SUPPLIES') {
@@ -1157,7 +1157,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -1485,7 +1485,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -1592,7 +1592,7 @@ export default {
 			var filter = this.filter;
 			filter.day = '';
 			filter.month = '';
-			filter.year = ''; 
+			filter.year = '';
 			//console.log('week D ' + filter.day + ' W ' + filter.week + ' M ' + filter.month + ' Y ' + filter.year);
 			const currentDay = moment(new Date()).format("YYYY-MM-DD");
 			filter.week = (filter.week == '') ? currentDay : filter.week;
@@ -1841,7 +1841,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -2182,7 +2182,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -2513,7 +2513,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -2956,7 +2956,7 @@ export default {
 							ctx.font = fontSize + "em sans-serif";
 							ctx.textBaseline = "middle";
 
-							ctx.fillText("INCIDENTS", (textX - 35), textY + 35);
+							ctx.fillText("INCIDENTS", (textX - 30), textY + 35);
 
 							ctx.save();
 						}
@@ -3070,7 +3070,7 @@ export default {
 		weekSelected: function (e) {
 
 
-			if (this.filter.week != null) { 
+			if (this.filter.week != null) {
 				this.filterChartByWeek();
 			}
 		},
@@ -3094,7 +3094,7 @@ export default {
 		},
 
 		customizedSelected: function (e) {
-			
+
 			if (this.filter.by != 0) {
 				var d_start = new Date(this.filter.start_date);
 				var d_end = new Date(this.filter.end_date);
@@ -3109,7 +3109,7 @@ export default {
 				var lastDay = moment(new Date(d_end.getFullYear(), d_end.getMonth() + 1, 0)).format("DD");
 				var difference_in_time = d_end.getTime() - d_start.getTime();
 				var difference_in_days = difference_in_time / (1000 * 3600 * 24); console.log(this.filter);
-				
+
 				if (y_start == y_end) {
 					if (difference_in_days == 0) {
 						this.filter.day = d_end;
@@ -3118,11 +3118,11 @@ export default {
 						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 						if (y_start == y_end) {
-							if (week_of_month_start == week_of_month_end) { 
+							if (week_of_month_start == week_of_month_end) {
 								this.customize = 'week';
 								this.filter.week = this.filter.end_date;
 								this.filterChartByWeek();
-							} else { 
+							} else {
 								this.filter.customized = 'month';
 								this.filter.month = this.filter.end_date.substring(0, 7);
 								this.filterChartByMonth();
@@ -3135,8 +3135,8 @@ export default {
 						var week_of_month_start = Math.ceil((date_start - 1 - day_start) / 7);
 						var week_of_month_end = Math.ceil((date_end - 1 - day_end) / 7);
 						if (y_start == y_end) {
-							
-							if (week_of_month_start == week_of_month_end) { 
+
+							if (week_of_month_start == week_of_month_end) {
 								if (m_start == m_end) {
 									this.filterChartByDaily();
 								} else {
